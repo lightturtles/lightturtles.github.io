@@ -2,7 +2,7 @@
 layout: post
 title: "Breadboarding an STM32 (Another Teaching Moment)"
 date: 2026-09-08
-type: video
+type: talk
 subjects:
   - hardware
 venue: DigiKey
