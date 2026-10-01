@@ -16,13 +16,15 @@
   --text-muted: #6b4f3f;
   --text-dim:   #9c7a5b;
 
-  --amber:      #046307;
-  --amber-dim:  #024504;
-  --green:      #2f7f73;
-  --green-dim:  #1e5249;
+  --primary:     #046307;
+  --primary-dim: #024504;
+  --teal:        #2f7f73;
+  --teal-dim:    #1e5249;
+  --orange:      #c4622d;
 
   --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
   --font-sans: 'IBM Plex Sans', 'Helvetica Neue', sans-serif;
+  --font-serif: 'IBM Plex Serif', Georgia, serif;
 
   --radius: 3px;
   --max-w: 1140px;
@@ -53,7 +55,7 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
 }
 
-a { color: var(--amber); text-decoration: none; }
+a { color: var(--primary); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
 img { max-width: 100%; height: auto; }
@@ -98,7 +100,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   text-transform: uppercase;
   transition: color 0.2s;
 }
-.nav-links a:hover { color: var(--amber); text-decoration: none; }
+.nav-links a:hover { color: var(--primary); text-decoration: none; }
 
 .nav-toggle {
   display: none;
@@ -143,7 +145,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   font-size: 0.72rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--primary);
   margin-bottom: 1rem;
 }
 
@@ -162,9 +164,9 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   text-decoration: none;
 }
 .btn-primary {
-  background: var(--amber);
+  background: var(--primary);
   color: #f8f7f3;
-  border-color: var(--amber);
+  border-color: var(--primary);
 }
 .btn-primary:hover { background: #0a7a0e; border-color: #0a7a0e; text-decoration: none; }
 .btn-ghost {
@@ -172,7 +174,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   color: var(--text);
   border-color: var(--border-hi);
 }
-.btn-ghost:hover { border-color: var(--amber); color: var(--amber); text-decoration: none; }
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); text-decoration: none; }
 
 /* ── Tags ─────────────────────────────────────────────────────── */
 .tag {
@@ -185,10 +187,10 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   border-radius: 2px;
   border: 1px solid;
 }
-.tag-type        { color: var(--amber);    border-color: var(--amber-dim); }
-.tag-article     { color: var(--amber);    border-color: var(--amber-dim); }
+.tag-type        { color: var(--primary);    border-color: var(--primary-dim); }
+.tag-article     { color: var(--primary);    border-color: var(--primary-dim); }
 .tag-video       { color: #7e22ce;         border-color: #6b21a8; }
-.tag-talk        { color: var(--green);    border-color: var(--green-dim); }
+.tag-talk        { color: var(--teal);    border-color: var(--teal-dim); }
 .tag-tutorial    { color: #0e7490;         border-color: #155e75; }
 .tag-subject     { color: var(--text-muted); border-color: var(--border); }
 
@@ -237,7 +239,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   font-size: 0.75rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--primary);
   margin-bottom: 1.5rem;
 }
 
@@ -248,7 +250,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
 }
 .hero-headline em {
   font-style: italic;
-  color: var(--amber);
+  color: var(--primary);
 }
 
 .hero-sub {
@@ -294,7 +296,7 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   font-size: clamp(1.6rem, 3vw, 2.2rem);
   margin-bottom: 1.25rem;
 }
-.about-text h2 em { font-style: italic; color: var(--amber); }
+.about-text h2 em { font-style: italic; color: var(--primary); }
 .about-text p { color: var(--text-muted); margin-bottom: 1rem; }
 
 .about-pillars-row {
@@ -312,12 +314,12 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   border-radius: var(--radius);
   background: var(--bg-card);
 }
-.pillar-icon { font-size: 1.2rem; color: var(--amber); display: block; margin-bottom: 0.5rem; }
+.pillar-icon { font-size: 1.2rem; color: var(--primary); display: block; margin-bottom: 0.5rem; }
 .pillar h3 { font-size: 0.9rem; margin-bottom: 0.4rem; }
 .pillar p { font-size: 0.88rem; color: var(--text-muted); }
 
 .mission-block {
-  border-left: 3px solid var(--amber);
+  border-left: 3px solid var(--primary);
   padding: 1.5rem 1.75rem;
   background: var(--bg-card);
   border-radius: 0 var(--radius) var(--radius) 0;
@@ -372,8 +374,8 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   transition: color 0.15s, border-color 0.15s;
 }
 a.credential-chip:hover {
-  color: var(--amber);
-  border-color: var(--amber);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 /* ── Services ─────────────────────────────────────────────────── */
@@ -406,7 +408,7 @@ a.credential-chip:hover {
 .service-num {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  color: var(--amber);
+  color: var(--primary);
   letter-spacing: 0.1em;
 }
 
@@ -424,11 +426,11 @@ a.credential-chip:hover {
 .service-link {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--green);
+  color: var(--teal);
   letter-spacing: 0.04em;
   margin-top: 0.5rem;
 }
-.service-link:hover { color: var(--amber); text-decoration: none; }
+.service-link:hover { color: var(--primary); text-decoration: none; }
 
 /* ── Works preview (homepage) ─────────────────────────────────── */
 .section-works { background: var(--bg-raised); }
@@ -454,7 +456,7 @@ a.credential-chip:hover {
   transition: border-color 0.2s, transform 0.15s;
 }
 .work-card:hover {
-  border-color: var(--amber);
+  border-color: var(--primary);
   transform: translateY(-2px);
   text-decoration: none;
   color: var(--text);
@@ -528,11 +530,11 @@ a.credential-chip:hover {
   cursor: pointer;
   transition: all 0.15s;
 }
-.filter-btn:hover { border-color: var(--amber); color: var(--amber); }
+.filter-btn:hover { border-color: var(--primary); color: var(--primary); }
 .filter-btn.active {
-  background: var(--amber);
+  background: var(--primary);
   color: #f8f7f3;
-  border-color: var(--amber);
+  border-color: var(--primary);
 }
 
 .filter-sort { margin-left: auto; }
@@ -572,7 +574,7 @@ a.credential-chip:hover {
 .work-card-full .work-card-title a {
   color: var(--text);
 }
-.work-card-full .work-card-title a:hover { color: var(--amber); text-decoration: none; }
+.work-card-full .work-card-title a:hover { color: var(--primary); text-decoration: none; }
 
 .work-card-full .work-card-excerpt {
   font-size: 0.9rem;
@@ -596,10 +598,10 @@ a.credential-chip:hover {
 .read-link {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--green);
+  color: var(--teal);
   margin-left: auto;
 }
-.read-link:hover { color: var(--amber); text-decoration: none; }
+.read-link:hover { color: var(--primary); text-decoration: none; }
 
 .no-results {
   text-align: center;
@@ -611,7 +613,7 @@ a.credential-chip:hover {
 .no-results button {
   background: none;
   border: none;
-  color: var(--amber);
+  color: var(--primary);
   cursor: pointer;
   font-family: inherit;
   text-decoration: underline;
@@ -636,7 +638,7 @@ a.credential-chip:hover {
 .post-title {
   font-size: clamp(1.6rem, 4vw, 2.4rem);
   margin-bottom: 1rem;
-  color: var(--text);
+  color: var(--primary);
 }
 
 .post-excerpt {
@@ -663,7 +665,7 @@ a.credential-chip:hover {
 .post-documents {
   background: var(--bg-card);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--green);
+  border-left: 3px solid var(--teal);
   border-radius: 0 var(--radius) var(--radius) 0;
   padding: 1.25rem 1.5rem;
   margin-bottom: 2rem;
@@ -673,7 +675,7 @@ a.credential-chip:hover {
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--green);
+  color: var(--teal);
   margin-bottom: 0.75rem;
 }
 
@@ -689,9 +691,9 @@ a.credential-chip:hover {
   padding: 0.4rem 0;
   border-bottom: 1px solid var(--border);
 }
-.document-link:hover { color: var(--amber); text-decoration: none; }
+.document-link:hover { color: var(--primary); text-decoration: none; }
 .document-link:last-child { border-bottom: none; }
-.doc-icon { color: var(--green); }
+.doc-icon { color: var(--teal); }
 .doc-type {
   font-size: 0.65rem;
   color: var(--text-dim);
@@ -700,9 +702,20 @@ a.credential-chip:hover {
 
 /* Post content typography */
 .post-content {
+  font-family: var(--font-serif);
+  font-weight: 400;
   font-size: 1rem;
   line-height: 1.8;
   color: var(--text);
+}
+
+.post-content h1, .post-content h2 { color: var(--primary); }
+
+.post-content h1 {
+  font-size: 1.6rem;
+  margin: 3rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
 }
 
 .video-embed {
@@ -723,13 +736,13 @@ a.credential-chip:hover {
   border-bottom: 1px solid var(--border);
 }
 
-.post-content h3 { font-size: 1.1rem; margin: 2rem 0 0.75rem; color: var(--amber); }
+.post-content h3 { font-size: 1.1rem; margin: 2rem 0 0.75rem; color: var(--primary); }
 .post-content h4 { font-size: 0.95rem; margin: 1.5rem 0 0.5rem; color: var(--text-muted); }
 
 .post-content p { margin-bottom: 1.25rem; }
 
-.post-content a { color: var(--amber); }
-.post-content a:hover { color: #ffaa4a; }
+.post-content a { color: var(--primary); }
+.post-content a:hover { color: var(--orange); }
 
 .post-content ul, .post-content ol {
   margin: 0 0 1.25rem 1.5rem;
@@ -737,7 +750,7 @@ a.credential-chip:hover {
 .post-content li { margin-bottom: 0.35rem; }
 
 .post-content blockquote {
-  border-left: 3px solid var(--amber);
+  border-left: 3px solid var(--primary);
   margin: 1.5rem 0;
   padding: 1rem 1.5rem;
   background: var(--bg-card);
@@ -752,7 +765,7 @@ a.credential-chip:hover {
   border-radius: 2px;
   padding: 0.15em 0.4em;
   font-size: 0.85em;
-  color: var(--green);
+  color: var(--primary);
 }
 
 .post-content pre {
@@ -771,6 +784,37 @@ a.credential-chip:hover {
   padding: 0;
   font-size: 0.875rem;
   color: var(--text);
+}
+
+/* ```ascii fences: tight lines so box-drawing characters connect */
+.post-content pre:has(> code.language-ascii) { font-size: 0.875rem; line-height: 1.1; }
+
+/* > blockquote + {: .question} — active-learning questions / asides */
+.post-content blockquote.question {
+  font-style: normal;
+  color: var(--text);
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+}
+.post-content blockquote.question p:last-child { margin-bottom: 0; }
+
+/* Table of contents generated by kramdown's {:toc} */
+.post-content #markdown-toc {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1rem 1rem 2.5rem;
+  margin: 0 0 2rem;
+}
+.post-content #markdown-toc ul { margin: 0.25rem 0 0.25rem 1.25rem; }
+
+/* MathJax display equations ($$ on their own lines): scroll instead of overflowing */
+.post-content mjx-container[display="true"] {
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .post-content hr {
@@ -815,7 +859,7 @@ a.credential-chip:hover {
   font-size: 0.8rem;
   color: var(--text-muted);
 }
-.back-link:hover { color: var(--amber); text-decoration: none; }
+.back-link:hover { color: var(--primary); text-decoration: none; }
 
 .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
@@ -831,7 +875,7 @@ a.credential-chip:hover {
 @media (max-width: 800px) { .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
 
 .contact-text h2 { font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 1rem; }
-.contact-text h2 em { font-style: italic; color: var(--amber); }
+.contact-text h2 em { font-style: italic; color: var(--primary); }
 .contact-text p { color: var(--text-muted); margin-bottom: 1.5rem; }
 
 .contact-details { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1.5rem; }
@@ -855,7 +899,7 @@ a.credential-chip:hover {
   padding: 0.3em 0.8em;
   transition: all 0.15s;
 }
-.social-link:hover { color: var(--amber); border-color: var(--amber); text-decoration: none; }
+.social-link:hover { color: var(--primary); border-color: var(--primary); text-decoration: none; }
 
 /* Contact form */
 .contact-form {
@@ -894,7 +938,7 @@ a.credential-chip:hover {
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
-  border-color: var(--amber);
+  border-color: var(--primary);
 }
 .contact-form textarea { resize: vertical; }
 
@@ -939,7 +983,7 @@ a.credential-chip:hover {
 
 .footer-col { display: flex; flex-direction: column; gap: 0.4rem; }
 .footer-col a { font-size: 0.88rem; color: var(--text-muted); }
-.footer-col a:hover { color: var(--amber); text-decoration: none; }
+.footer-col a:hover { color: var(--primary); text-decoration: none; }
 .footer-hours { font-size: 0.8rem; color: var(--text-dim); }
 
 .footer-bottom {
@@ -965,4 +1009,4 @@ a.credential-chip:hover {
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border-hi); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-dim); }

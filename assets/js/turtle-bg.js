@@ -6,7 +6,7 @@
   var ctx = cvs.getContext('2d');
 
   var BG_RGB  = '248,247,243'; // matches --bg: #f8f7f3
-  var INK     = '#046307';     // matches --amber (dark green)
+  var INK     = '#046307';     // matches --primary (dark green)
   var FWD_SPD = 120;           // px / second
   var ROT_SPD = 180;           // degrees / second
   var SPRITE_SZ = 52;          // display size of turtle sprite (px)
