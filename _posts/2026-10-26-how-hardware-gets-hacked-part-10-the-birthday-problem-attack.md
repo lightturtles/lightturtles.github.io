@@ -5,7 +5,7 @@ date: 2026-10-26
 type: article
 subjects:
   - security
-venue: Mindstorms Engineering
+venue: LightTurtles
 math: true
 excerpt: >
     A 32-bit nonce gives over 4.3 billion possible values, which sounds like plenty, until

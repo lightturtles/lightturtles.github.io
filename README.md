@@ -1,6 +1,6 @@
-# Mindstorms Engineering — Jekyll Site
+# LightTurtles — Jekyll Site
 
-A static Jekyll site for [mindstormsengineering.github.io](https://mindstormsengineering.github.io),
+A static Jekyll site for [lightturtles.github.io](https://lightturtles.github.io),
 migrated from WordPress. Custom theme with no external dependencies beyond two Google Font
 families and the standard `jekyll-feed` / `jekyll-seo-tag` plugins.
 
@@ -147,7 +147,7 @@ Until you do this, the form renders fine but submissions go nowhere.
 ## Deploying to GitHub Pages
 
 Push to the `main` (or `master`) branch of your
-`nathancharlesjones/nathancharlesjones.github.io` repository. GitHub Pages
+`lightturtles/lightturtles.github.io` repository. GitHub Pages
 builds Jekyll automatically. No Actions workflow needed for a standard setup.
 
 If you add plugins beyond `jekyll-feed` and `jekyll-seo-tag`, you may need a

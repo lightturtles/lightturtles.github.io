@@ -1,4 +1,4 @@
-title: Mindstorms Engineering, LLC
+title: LightTurtles, LLC
 tagline: Embedded Systems, Thoughtfully Engineered
 description: >
   Consulting, education, and technical writing at the intersection of
@@ -6,7 +6,7 @@ description: >
 
 author:
   name: Nathan Jones
-  email: contact@mindstormsengineering.com
+  email: contact@mindstormsengineering.com  # TODO: replace once a LightTurtles mailbox exists
   phone: "615.488.4789"
   business_hours: "8:30am – 2:30pm CT, Monday – Friday"
   linkedin: https://www.linkedin.com/in/nathancharlesjones
@@ -14,7 +14,7 @@ author:
   tindie: https://www.tindie.com/stores/0xc0decafe/
 
 baseurl: ""
-url: "https://mindstormsengineering.github.io"
+url: "https://lightturtles.github.io"
 timezone: America/Chicago
 
 # Build settings

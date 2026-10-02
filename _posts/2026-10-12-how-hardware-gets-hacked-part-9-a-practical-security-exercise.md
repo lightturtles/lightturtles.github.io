@@ -5,7 +5,7 @@ date: 2026-10-12
 type: article
 subjects:
   - security
-venue: Mindstorms Engineering
+venue: LightTurtles
 excerpt: >
   A hands-on exercise in securing the eCTF key fob's feature-enabling process:
   review the design, identify the missing security requirements, forge a

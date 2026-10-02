@@ -1,4 +1,4 @@
-# References for ["Nothing is Safe: An Introduction to Hardware (In)Security"](https://mindstormsengineering.github.io/works/2026/07/25/teardown26-nothing-is-safe/)
+# References for ["Nothing is Safe: An Introduction to Hardware (In)Security"](https://lightturtles.github.io/works/2026/07/25/teardown26-nothing-is-safe/)
 
 1. https://tinyurl.com/4v5nmrf6
 2. https://tinyurl.com/bdew33pb
@@ -17,16 +17,16 @@
 14. https://www.istgroup.com/en/wp-content/uploads/2017/06/Service_FIB_ic-fib-circuit-edit_04.jpg
 15. Prior work
 
-    - You can find a summary of all of my previous work at [mindstormsengineering.github.io]()
+    - You can find a summary of all of my previous work at [lightturtles.github.io](https://lightturtles.github.io/works.html)
     - Teardown
-      - ["You Don't Need an RTOS"](https://mindstormsengineering.github.io/works/2025/06/21/teardown25-you-dont-need-an-rtos/)
-      - ["Retro Computing with the Hackaday Supercon Badge"](https://mindstormsengineering.github.io/works/2024/06/22/teardown24-voja4/)
-      - ["Building a Simple CLI"](https://mindstormsengineering.github.io/works/2024/06/21/teardown24-simple-cli/)
-      - ["Make Your Own MCU Boards"](https://mindstormsengineering.github.io/works/2023/06/25/teardown23-make-your-own-mcu-boards/)
-      - ["Build Hackerbox #0040"](https://mindstormsengineering.github.io/works/2023/06/25/teardown23-pic-of-destiny/)
-    - EmbeddedRelated.com: ["Simulate Your Embedded Project"](https://mindstormsengineering.github.io/works/2024/10/02/simulating-your-embedded-project-part-1/)
-    - Hackaday Supercon: ["Inside the Voja4"](https://mindstormsengineering.github.io/works/2023/11/04/supercon23-inside-the-voja4/)
-    - Embedded Online Conference: ["An Introduction to Hardware (In)Security with the ChipWhisperer-Nano"](https://mindstormsengineering.github.io/works/2026/05/14/eoc26-intro-to-hw-insecurity/)
-    - Digikey: ["How Hardware Gets Hacked"](https://mindstormsengineering.github.io/works/2025/12/17/how-hardware-gets-hacked-part-1/)
+      - ["You Don't Need an RTOS"](https://lightturtles.github.io/works/2025/06/21/teardown25-you-dont-need-an-rtos/)
+      - ["Retro Computing with the Hackaday Supercon Badge"](https://lightturtles.github.io/works/2024/06/22/teardown24-voja4/)
+      - ["Building a Simple CLI"](https://lightturtles.github.io/works/2024/06/21/teardown24-simple-cli/)
+      - ["Make Your Own MCU Boards"](https://lightturtles.github.io/works/2023/06/25/teardown23-make-your-own-mcu-boards/)
+      - ["Build Hackerbox #0040"](https://lightturtles.github.io/works/2023/06/25/teardown23-pic-of-destiny/)
+    - EmbeddedRelated.com: ["Simulate Your Embedded Project"](https://lightturtles.github.io/works/2024/10/02/simulating-your-embedded-project-part-1/)
+    - Hackaday Supercon: ["Inside the Voja4"](https://lightturtles.github.io/works/2023/11/04/supercon23-inside-the-voja4/)
+    - Embedded Online Conference: ["An Introduction to Hardware (In)Security with the ChipWhisperer-Nano"](https://lightturtles.github.io/works/2026/05/14/eoc26-intro-to-hw-insecurity/)
+    - Digikey: ["How Hardware Gets Hacked"](https://lightturtles.github.io/works/2025/12/17/how-hardware-gets-hacked-part-1/)
 
     
