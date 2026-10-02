@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════════════════════
    Mindstorms Engineering — main.css
-   Aesthetic: Technical Journal / Warm Dark
-   Fonts: IBM Plex Mono (headings) + IBM Plex Sans (body)
+   Aesthetic: Technical Journal / Warm Light
+   Fonts: IBM Plex Mono (headings) + IBM Plex Sans (body) + IBM Plex Serif (post text)
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Custom Properties ────────────────────────────────────────── */
@@ -79,7 +79,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
 .nav-brand {
   display: flex;
   align-items: center;
-  white-space: nowrap;
 }
 .nav-brand:hover { text-decoration: none; opacity: 0.85; }
 .nav-logo { height: 36px; width: auto; display: block; }
@@ -161,7 +160,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   border: 1px solid transparent;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
-  text-decoration: none;
 }
 .btn-primary {
   background: var(--primary);
@@ -188,8 +186,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   border: 1px solid;
 }
 .tag-type        { color: var(--primary);    border-color: var(--primary-dim); }
-.tag-article     { color: var(--primary);    border-color: var(--primary-dim); }
-.tag-video       { color: #7e22ce;         border-color: #6b21a8; }
 .tag-talk        { color: var(--teal);    border-color: var(--teal-dim); }
 .tag-tutorial    { color: #0e7490;         border-color: #155e75; }
 .tag-subject     { color: var(--text-muted); border-color: var(--border); }
@@ -226,7 +222,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
 }
 
 .hero-inner {
-  max-width: var(--max-w);
   margin: 0 auto;
   width: 100%;
   max-width: 680px;
@@ -246,7 +241,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
 .hero-headline {
   font-size: clamp(2.4rem, 6vw, 4.2rem);
   margin-bottom: 1.5rem;
-  color: var(--text);
 }
 .hero-headline em {
   font-style: italic;
@@ -258,7 +252,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   color: var(--text-muted);
   max-width: 520px;
   margin-bottom: 2.5rem;
-  line-height: 1.7;
 }
 
 .hero-cta { display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -329,7 +322,6 @@ time { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted
   font-size: 0.95rem;
   color: var(--text-muted);
   font-style: italic;
-  line-height: 1.7;
 }
 
 /* ── Credential strip ─────────────────────────────────────────── */
@@ -412,10 +404,7 @@ a.credential-chip:hover {
   letter-spacing: 0.1em;
 }
 
-.service-card h3 {
-  font-size: 1rem;
-  color: var(--text);
-}
+.service-card h3 { font-size: 1rem; }
 
 .service-card p {
   font-size: 0.88rem;
@@ -451,7 +440,6 @@ a.credential-chip:hover {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
-  text-decoration: none;
   color: var(--text);
   transition: border-color 0.2s, transform 0.15s;
 }
@@ -459,7 +447,6 @@ a.credential-chip:hover {
   border-color: var(--primary);
   transform: translateY(-2px);
   text-decoration: none;
-  color: var(--text);
 }
 
 .work-card-meta {
@@ -469,10 +456,7 @@ a.credential-chip:hover {
   flex-wrap: wrap;
 }
 
-.work-card-title {
-  font-size: 1rem;
-  margin: 0;
-}
+.work-card-title { font-size: 1rem; }
 
 .work-card-excerpt {
   font-size: 0.85rem;
@@ -486,7 +470,6 @@ a.credential-chip:hover {
 
 /* ── Works Archive Page ───────────────────────────────────────── */
 .works-page { padding: 2rem; padding-top: calc(var(--nav-h) + 3rem); }
-.works-page .section-inner { max-width: var(--max-w); margin: 0 auto; }
 
 .works-header { margin-bottom: 3rem; }
 .works-header h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); margin-bottom: 0.75rem; }
@@ -567,19 +550,13 @@ a.credential-chip:hover {
 }
 .work-card-full:hover { background: var(--bg-raised); }
 
-.work-card-full .work-card-title {
-  font-size: 1.15rem;
-  margin: 0;
-}
+.work-card-full .work-card-title { font-size: 1.15rem; }
 .work-card-full .work-card-title a {
   color: var(--text);
 }
 .work-card-full .work-card-title a:hover { color: var(--primary); text-decoration: none; }
 
-.work-card-full .work-card-excerpt {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
+.work-card-full .work-card-excerpt { font-size: 0.9rem; }
 
 .work-card-footer {
   display: flex;
@@ -689,10 +666,8 @@ a.credential-chip:hover {
   font-size: 0.82rem;
   color: var(--text);
   padding: 0.4rem 0;
-  border-bottom: 1px solid var(--border);
 }
 .document-link:hover { color: var(--primary); text-decoration: none; }
-.document-link:last-child { border-bottom: none; }
 .doc-icon { color: var(--teal); }
 .doc-type {
   font-size: 0.65rem;
@@ -704,44 +679,21 @@ a.credential-chip:hover {
 .post-content {
   font-family: var(--font-serif);
   font-weight: 400;
-  font-size: 1rem;
   line-height: 1.8;
-  color: var(--text);
 }
 
-.post-content h1, .post-content h2 { color: var(--primary); }
-
-.post-content h1 {
-  font-size: 1.6rem;
-  margin: 3rem 0 1rem;
+.post-content h1, .post-content h2, .post-content h3 { color: var(--primary); }
+.post-content h1, .post-content h2 {
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border);
 }
-
-.video-embed {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  margin-bottom: 1.5rem;
-}
-.video-embed iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-}
-
-.post-content h2 {
-  font-size: 1.4rem;
-  margin: 2.5rem 0 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.post-content h3 { font-size: 1.1rem; margin: 2rem 0 0.75rem; color: var(--primary); }
+.post-content h1 { font-size: 1.6rem; margin: 3rem 0 1rem; }
+.post-content h2 { font-size: 1.4rem; margin: 2.5rem 0 1rem; }
+.post-content h3 { font-size: 1.1rem; margin: 2rem 0 0.75rem; }
 .post-content h4 { font-size: 0.95rem; margin: 1.5rem 0 0.5rem; color: var(--text-muted); }
 
 .post-content p { margin-bottom: 1.25rem; }
 
-.post-content a { color: var(--primary); }
 .post-content a:hover { color: var(--orange); }
 
 .post-content ul, .post-content ol {
@@ -789,15 +741,15 @@ a.credential-chip:hover {
 /* ```ascii fences: tight lines so box-drawing characters connect */
 .post-content pre:has(> code.language-ascii) { font-size: 0.875rem; line-height: 1.1; }
 
-/* > blockquote + {: .question} — active-learning questions / asides */
-.post-content blockquote.question {
+/* > blockquote + {: .aside} — active-learning questions / asides */
+.post-content blockquote.aside {
   font-style: normal;
   color: var(--text);
   background: var(--bg-raised);
   border: 1px solid var(--border);
   border-left: 3px solid var(--primary);
 }
-.post-content blockquote.question p:last-child { margin-bottom: 0; }
+.post-content blockquote.aside p:last-child { margin-bottom: 0; }
 
 /* Table of contents generated by kramdown's {:toc} */
 .post-content #markdown-toc {
@@ -913,7 +865,6 @@ a.credential-chip:hover {
   flex-direction: column;
   gap: 0.3rem;
 }
-.form-row-full { grid-column: 1 / -1; }
 
 .contact-form label {
   font-family: var(--font-mono);
@@ -964,14 +915,6 @@ a.credential-chip:hover {
   margin-bottom: 2rem;
 }
 
-.footer-brand {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  color: var(--text);
-  margin-bottom: 0.35rem;
-}
-.footer-sub { font-size: 0.85rem; color: var(--text-muted); }
-
 .footer-label {
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -994,15 +937,6 @@ a.credential-chip:hover {
   font-family: var(--font-mono);
   font-size: 0.72rem;
   color: var(--text-dim);
-}
-
-/* ── Utilities ─────────────────────────────────────────────────── */
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  white-space: nowrap;
 }
 
 /* ── Scrollbar ─────────────────────────────────────────────────── */
