@@ -8,7 +8,11 @@ subjects:
 venue: Mindstorms Engineering
 math: true
 excerpt: >
-  Filler filler filler
+    A 32-bit nonce gives over 4.3 billion possible values, which sounds like plenty, until
+    the "birthday problem" shows that an attacker with a table of recorded (nonce, response)
+    pairs can expect to see a repeat in seconds. In this article we break our challenge-response
+    unlock with a birthday-problem replay attack, defend against it by widening the nonce to
+    128 bits, and look at why "oracles" (devices an attacker can query at will) can be so dangerous.
 documents:
   - title: "The 'Birthday Problem' Attack (PDF)"
     url: /assets/hhghp10/hhghp9b_birthday_bound.pdf
@@ -30,7 +34,7 @@ Ah, famous last words. In this article, we’ll discover *yet another* type of r
 
 # The “Birthday Problem”
 
-Let’s take a closer look at the phrase “totally random nonce.” In reality, this isn’t quite true. Sure, an attacker can’t guess what nonce values are coming next. But the nonce itself has a predetermined size, so there are only so many nonces that could be generated before our PRNG has to emit a duplicate. If our car repeats a nonce more than once and an attacker happened to save the fob’s MAC response for that first nonce, then we’re back in replay territory! 
+Let’s take a closer look at the phrase “totally random nonce.” In reality, this isn’t quite true. Sure, an attacker can’t guess what nonce values are coming next. But the nonce itself has a predetermined size, so there are only so many nonces that could be generated before our PRNG has to emit a duplicate. If our car repeats a nonce and an attacker happened to save the fob’s MAC response for that first nonce, then we’re back in replay territory! 
 
 ![]({{ '/assets/hhghp10/hhghp9b_01_table_attack_300.png' | relative_url }})
 
@@ -47,14 +51,14 @@ In both cases, the attacker records enough valid unlock responses that when they
 
 > “But c’mon! Nonces are currently 32 bits wide, giving over *4.3 billion* possible values. How likely is it, really, for an attacker to find a repeated nonce?”
 
-Let’s find out! First, let’s assume that an attacker can trigger an unlock and store the `(nonce, response)` pair every 3.4 ms[^1]. This means that if an attacker had control of a fob for a mere 30 minutes (like a valet might) they could potentially trigger 530,973 unlocks. We want to find out how long would it take that attacker to later break into that car by requesting unlocks until the car challenged them with one of the 530,973 nonces they recorded earlier.
+Let’s find out! First, let’s assume that an attacker can trigger an unlock and store the `(nonce, response)` pair every 3.4 ms[^1]. This means that if an attacker had control of a fob for a mere 30 minutes (like a valet might) they could potentially trigger 530,973 unlocks. We want to find out how long it would take that attacker to later break into that car by requesting unlocks until the car challenged them with one of the 530,973 nonces they recorded earlier.
 
-The general statement for this problem is “Given a set of T values from a distribution of size N, what’s the probability that in M random draws from that set at least one of them matches a value from T?” It’s known as the “birthday problem” since another example of this exact same question is “Assume you have a group of T people with different birthdays and you ask M random strangers for *their* birthdays. What are the chances that at least one of those M people shares a birthday with someone in the group of T people?”[^2] (in this case, “dates in a year” forms the pool of “N” values, N being 365).
+The general statement for this problem is “Given a set of T values from a distribution of size N, what’s the probability that in M random draws from that distribution at least one of them matches a value from T?” It’s known as the “birthday problem” since another example of this exact same question is “Assume you have a group of T people with different birthdays and you ask M random strangers for *their* birthdays. What are the chances that at least one of those M people shares a birthday with someone in the group of T people?”[^2] (in this case, “dates in a year” forms the pool of “N” values, N being 365).
 
 The formula for this probability is $$P(M) = 1 - ( 1 - {T \over N})^M$$[^3], which can be approximated as $$P(M) \approx 1 - e^{-TM/N}$$. Weirdly, M doesn’t need to be that big to have a really good chance of finding a match! If you took a group of 20 people with different birthdays, it would only take about *12 random strangers* to have a 50/50 chance of finding someone who shared a birthday with a person from the original group!
 
 ![]({{ '/assets/hhghp10/hhghp9b_03_birthday_bound_graph_300.png' | relative_url }})
-*Figure 1: In a group of 20 people, it would only take about 12 random strangers to have a 50% chance of finding someone who shared a birthday with one of the people from the group. Image from https://picryl.com/media/crowd-human-silhouettes-6333fd.*
+*In a group of 20 people, it would only take about 12 random strangers to have a 50% chance of finding someone who shared a birthday with one of the people from the group. Image from https://picryl.com/media/crowd-human-silhouettes-6333fd.*
 
 {: .aside}
 
@@ -74,9 +78,9 @@ In the case of our key fob, $$T = 530,973$$ and $$N = 2^{32} = 4,294,967,296$$. 
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
-Let’s see, $$P(M) = 1 - ( 1 - {T \over N})^M = 1 - (1 - {530973 \over 4294967296}^{942408}) = 1$$.
+Let’s see, $$P(M) = 1 - ( 1 - {T \over N})^M = 1 - (1 - {530973 \over 4294967296})^{942408} = 1$$.
 
-Woah, it’s basically guaranteed?! I’m afraid so. In fact, it gets even worse. We can rearrange the “birthday problem” formula to calculate approximately how many unlocks (M) we’d need to have a 50% chance of a repeated value, and that formula is $$M = {\log {1-P} \over \log {1-T/N}}$$ . For our 4.3 billion nonces and 530,973 table size, an attacker would only need to trigger about **5,606 unlocks** before they had a 50% chance of seeing a repeated value, which they could do with our system in as little as ***11 seconds***.
+Woah, it’s basically guaranteed?! I’m afraid so. In fact, it gets even worse. We can rearrange the “birthday problem” formula to calculate approximately how many unlocks (M) we’d need to have a 50% chance of a repeated value, and that formula is $$M = {\log (1-P) \over \log (1-T/N)}$$ . For our 4.3 billion nonces and 530,973 table size, an attacker would only need to trigger about **5,606 unlocks** before they had a 50% chance of seeing a repeated value, which they could do with our system in as little as ***11 seconds***.
 
 {: .aside}
 
@@ -109,11 +113,11 @@ So, *apparently* 4.3 billion possible nonce values isn’t enough. (Perhaps you 
 #define NONCE_SIZE 16  // nonce is 16 bytes
 ```
 
-If an attacker now attempts to unlock our car using their table of 530,973 stored (nonce, response) pairs, it will take them over *4.16 x 10<sup>17</sup>* *centuries* (over *30 million times the age of our universe*) to even have a 50% chance of success! (Note that the time per attempt went up from 1.91 ms to 2.95 ms, since nonce messages are now 18 bytes instead of 6.)
+If an attacker now attempts to unlock our car using their table of 530,973 stored (nonce, response) pairs, it will take them over *4.16 x 10<sup>20</sup>* *centuries* (over *3 trillion times the age of our universe*) to even have a 50% chance of success! (Note that the time per attempt went up from 1.91 ms to 2.95 ms, since nonce messages are now 18 bytes instead of 6.)
 
 
 $$
-Time = M attempts \cdot 2.95 {ms \over attempts} = {\log {1-0.5} \over \log {1-530973/2^{128}}} \cdot 2.95 = 4.44 x 10^{32} \cdot 2.95 = 1.31x10^{30} ms
+\text {Time} = \text {M attempts} \cdot 2.95 {ms \over attempts} = {\log (1-0.5) \over \log (1-530973/2^{128})} \cdot 2.95 = 4.44 \times 10^{32} \cdot 2.95 = 1.31 \times 10^{33} ms
 $$
 
 
@@ -130,10 +134,10 @@ Lowering the nonce length back to 4 bytes and re-running the test also confirms 
 Widening the nonces may have been the obvious solution, but there are others that we could consider. For instance, we could apply to this situation the same reasoning that was described in [Part 8](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks) about protecting the pairing pin from brute force attacks by:
 
 - **Making each attempt categorically more difficult**: Requiring an attacker to provide a fingerprint scan alongside the unlock request or using a non-repeating PRNG algorithm and locking/erasing the device after 2<sup>32</sup> total unlock attempts over the lifetime of the car.
-- **Making each individual attempt take longer**: Enforce a rate-limit of one unlock per second or having a 1 minute timeout after 3 unsuccessful unlock attempts.
+- **Making each individual attempt take longer**: Enforcing a rate-limit of one unlock per second or having a 1 minute timeout after 3 unsuccessful unlock attempts.
 - **Decreasing the odds of any single guess being successful** by widening the nonce (which we did above)
 
-As with the pairing pin, though, the competition and it’s specific threat model eliminate many of these as viable options.
+As with the pairing pin, though, the competition and its specific threat model eliminate many of these as viable options.
 
 - We can’t change the competition rules (or the hardware!) to require a fingerprint scan or other additional requirement to make unlocking more difficult.
 - Attackers can still reflash the hardware at will, making it meaningless to save counters or timeout values or to even have any sort of saved system state whatsoever (attackers in the competition could simply reflash the target with fresh firmware whenever they wanted, resetting any variables that were intended to be stored between power cycles).
@@ -147,9 +151,10 @@ Adding a roughly 1 second delay for each unlock request (the maximum time an unl
 > The problem with pseudo-random number generation is that *every* possible answer should have the same probability of showing up on any given step, giving rise to the “birthday problem.” An alternative to this form of random number generation might be to encrypt a monotonically increasing counter using something like AES, a technique that was brought up during our initial discussion about PRNGs in [Part 7](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-7-freshness-and-randomness):
 >
 > ```c
+> static uint32_t counter = 0;
 > uint32_t rand(void)
 > {
->     // return upper 2 bytes of AES_CMAC(prng_key, counter++);
+>  // return upper 4 bytes of AES_CMAC(prng_key, counter++);
 > }
 > ```
 >
@@ -163,7 +168,7 @@ Adding a roughly 1 second delay for each unlock request (the maximum time an unl
 Part of the reason the “birthday problem” attack works at all is that both the fob and the car act as **oracles**: devices that an attacker can query at will to learn some information about the system.
 
 1. Attackers can send unlock messages to a car whenever they want to see which nonce message is sent back.
-2. They can also trigger an unlock on the fob and then send the fob a made up nonce message to see what response the fob sends back.
+2. They can also trigger an unlock on the fob and then send the fob a made-up nonce message to see what response the fob sends back.
 
 ![]({{ '/assets/hhghp10/hhghp9b_08_oracles_300.png' | relative_url }})
 
@@ -194,11 +199,11 @@ The car would refuse to send a nonce for any unlock message that didn’t have t
 
 Fundamentally, systems that try to authenticate devices with a single message (static passwords, rolling codes + MAC, etc) end up being vulnerable to attacks that simply reflash the device and reset whatever state was supposed to be saved between unlock attempts. The challenge-response we developed in Part 7 fixed this, but at the cost of the car acting like an oracle, for which there isn’t a workaround: the car can’t withhold a challenge before a device has authenticated itself if it’s using that challenge to authenticate the other device!
 
-Or perhaps we try to eliminate the fob as an oracle by requiring that nonce messages also be accompanied with a MAC value (using a new, unique key, separate from the unlock key, of course!), verifying that they came from a real car.
+Or perhaps we try to eliminate the fob as an oracle by requiring that nonce messages also be accompanied by a MAC value (using a new, unique key, separate from the unlock key, of course!), verifying that they came from a real car.
 
 ![]({{ '/assets/hhghp10/hhghp9b_09_nonce_mac_300.png' | relative_url }})
 
-The fob would refuse to reply with it’s own MAC response (computed using the unlock key) unless it could validate the nonce MAC using it’s own “nonce key.”
+The fob would refuse to reply with its own MAC response (computed using the unlock key) unless it could validate the nonce MAC using its own “nonce key.”
 
 This one is interesting, since it *does* prevent an attacker from querying a fob by itself to generate the table of `(nonce, response)` pairs. However, in both of the realistic attack scenarios that were mentioned above (a valet or an attacker who has installed a listening device outside a person’s home), this would have no effect on the attacker, since the fob is already interacting with an authentic car and the attacker is merely listening to that conversation.
 
@@ -214,19 +219,19 @@ The primary **pitfall** (a plausibly wrong solution) in trying to defend against
 
 Two additional pitfalls are the ideas that:
 
-- A valid PRNG algorithm like the one we’re using *won’t* repeat any values (they will; that’s kind of the whole point of this article) and
+- A valid PRNG algorithm like the one we’re using *won’t* repeat any values (it will; that’s kind of the whole point of this article) and
 - That it’s possible to prevent a nonce from being repeated by simply tracking in software which ones have already been sent out. This pitfall is vulnerable to devices being reflashed and having that history reset.
 
-The only two **alternatives** to widening the nonce (defenses that would or could have worked as well it) would have been to have:
+The only two **alternatives** to widening the nonce (defenses that would or could have worked as well as it) would have been to have:
 
 - Added something to the unlock process like a fingerprint scan or requiring the fob to be within a certain distance of the car (such as in a **passive keyless entry** system, which uses RF signals to detect if a fob is near the car) or
 - Replaced our PRNG with a non-repeating algorithm whose counter was stored in an anti-rollback counter.
 
-Adding some sort of timeout after N unlock attempts within a certain small window might also have worked, had our threat model not included reflashing (i.e. had our design/the competition have prevented that from happening).
+Adding some sort of timeout after N unlock attempts within a certain small window might also have worked, had our threat model not included reflashing (i.e. had our design/the competition prevented that from happening).
 
 In addition to widening the nonce, there are a few things that could be **add-ons** to the design for additional security or better features.
 
-- Adding a 0.75 or 1 sec delay to each unlocking (the maximum length of time the rules say unlocking is allowed to take) would make the “birthday problem” attack take a few hundred times longer than it would otherwise.
+- Adding a 0.75 or 1 sec delay to each unlock (the maximum length of time the rules say unlocking is allowed to take) would make the “birthday problem” attack take a few hundred times longer than it would otherwise.
 - Adding a MAC to the nonce message would prevent an attacker from querying a fob directly for response values, forcing them to obtain that data via a live unlock session between a valid fob and car.
 - Had the hardware/rules allowed it, logging, locking, or erasing the device upon a rapid sequence of unlock requests or failed attempts could have made this attack much harder or even categorically infeasible.
 
@@ -242,7 +247,7 @@ If you’ve made it this far, thanks for reading and happy hacking!
 [^2]: This is technically a form of the “birthday problem” called a “two-set cross-collision”, the two sets being T and M. A simpler formulation (the one you’re likely to find described if you search for “birthday problem”) is a “single-set cross-collision”, in which we ask “given a set of T values taken from a distribution of size N, what’s the probability that at least two of those T values are the same?” In birthday terms, this is like asking “Given a group of T people, what are the chances that two of them share a birthday?”
 [^3]: The probability works like this: pretend you have a box of 10 green balls (N) and you pull out 4 of them (T) and paint them orange. If you reach in to pull out a ball 3 times (M), what’s the probability of pulling out at least one orange ball? Well, there are only four possible outcomes in terms of the colors of those 3 balls: 3 orange, 2 orange/1 green, 1 orange/2 green, or 3 green. The probability of drawing at least one orange ball (the “birthday problem”) is the summed probability of the first three scenarios or, put another way, “1 – the probability of the last scenario”. The probability of the last scenario is the chance of drawing a green ball, $${N-T} \over N$$ or simply $$1-{T \over N}$$, M times in a row, which has a probability of $$(1-T/N)^M$$. In this case, that’s $$P(collision)=1-(1-4/10)^3=0.784$$.<br>![](/assets/hhghp10/hhghp9b_11_birthday_probability_300.png)
 [^4]: A failed unlock attempt includes everything from a normal unlock transaction minus a start message. See note 1 (above) for how that time could be calculated.
-[^5]: It seems reasonable to me to guess that a person might unlock their car 2-3 times a day, which we’ll approximate as 1000 total unlocks over the course of a year. Thus, an attacker would need $$M = {\log {1-P} \over \log {1-T/N}} = {\log {1-0.5} \over \log {1-1000/4.3billion}} = 2,977,044$$ attempts using that table to have a 50% chance of unlocking the car, which they could accomplish in as little as 1.58 hours.
+[^5]: It seems reasonable to me to guess that a person might unlock their car 2-3 times a day, which we’ll approximate as 1000 total unlocks over the course of a year. Thus, an attacker would need $$M = {\log (1-P) \over \log (1-T/N)} = {\log (1-0.5) \over \log (1-1000/4.3billion)} = 2,977,044$$ attempts using that table to have a 50% chance of unlocking the car, which they could accomplish in as little as 1.58 hours.
 [^6]: This non-repeating quality is also what makes this a **bad** PRNG construction, actually, since as numbers are produced by the algorithm it gives the remaining numbers a *higher* probability of being the next one produced. This is why the CTR-DRBG construction recommended by NIST includes several more steps than merely “encrypting an increasing counter”.
 [^7]: The “non-repeating PRNG algorithm” wouldn’t survive the attackers in the competition since they can reflash the car at will, resetting the counter to 0. We defeated that system in [Part 7](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-7-freshness-and-randomness) by simply recording valid `(nonce, response)` pairs and then resetting the car, making all those responses valid again since the car was about to reissue all of the same nonces! If this were a production device and we could add a hardware security module (HSM) with an anti-rollback counter on it, however, this could be a viable defense.
 [^8]: The fundamental problem is that this is exactly the design we arrived at in [Part 6](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-6) and subsequently broke in [Part 7](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-7-freshness-and-randomness)! Thus, “authenticating the fob using a rolling code + MAC” is defeated by any of the attacks we looked at in Part 7 (RollJam, Forced Rollback, Forced Rollover) and, plus, it makes the subsequent challenge-response rather redundant.

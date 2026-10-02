@@ -21,6 +21,7 @@ documents:
 
 * TOC
 {:toc}
+
 # Introduction
 
 In the [last article](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks) we shifted our attention away from the unlocking process (which would seem to have required some rather sophisticated attacks after [Part 7](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-7-freshness-and-randomness)) to the pairing process, which was vulnerable to some very simple brute force and timing attacks. The last thing left to secure for the competition is the process of **packaging and enabling a feature**.
@@ -64,7 +65,7 @@ In the competition, the `package.py` tool also had read/write access to any “h
 
 ![]({{ '/assets/hhghp9/hhghp9a_01_rules_package_feature_300.png' | relative_url }})
 
-Features are packaged at the “factory” (i.e. by the MITRE competition organizers) and were distributed to attacking teams alongside the encrypted firmware binaries for each of the car scenarios (except for Car #5; more on this in just a bit).
+Features were packaged at the “factory” (i.e. by the MITRE competition organizers) and were distributed to attacking teams alongside the encrypted firmware binaries for each of the car scenarios (except for Car #5; more on this in just a bit).
 
 ![]({{ '/assets/hhghp9/hhghp9a_02_rules_cars_300.png' | relative_url }})
 
@@ -72,9 +73,9 @@ Features are packaged at the “factory” (i.e. by the MITRE competition organi
 
 > **❓ What is the format of a feature file?**
 >
-> What did a feature file actually look like? What is actually being saved to disk or sent over the UART port when a feature is being packaged or enabled?
+> What does a feature file actually look like? What is actually being saved to disk or sent over the UART port when a feature is being packaged or enabled?
 >
-> *Hint*: You can find this information in either: [the repo README](https://github.com/nathancharlesjones/howHardwareGetsHacked/tree/main/application), [HHGH (Part 1)](https://www.digikey.com/en/maker/blogs/2025/how-hardware-gets-hacked-part-1), or by reviewing the [code](https://github.com/nathancharlesjones/howHardwareGetsHacked/blob/main/tools/package.py).
+> *Hint*: You can find this information in either the [repo README](https://github.com/nathancharlesjones/howHardwareGetsHacked/tree/main/application), [HHGH (Part 1)](https://www.digikey.com/en/maker/blogs/2025/how-hardware-gets-hacked-part-1), or by reviewing the [code](https://github.com/nathancharlesjones/howHardwareGetsHacked/blob/main/tools/package.py).
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
@@ -100,11 +101,11 @@ Feature files are simply binary files composed of the car ID and a feature numbe
 Features were enabled on a paired fob by sending it the ASCII message `enable <feature>\n` to the HOST UART port, where `<feature>` is the Base16-encoded contents of the binary feature file. (Base16 encoding converts binary or hex values like `0b1001 1111` (`0x9F`) into ASCII `“9F”` (`0x39 0x46`), which makes it easier to read and debug later on when looking at a transcript of what was sent to a fob.)
 
 <div style="display:flex; gap:1em; justify-content:center;">
-    <img src="/assets/hhghp9/hhghp9a_03_enabling_sequence_diagram_300.png" style="height:400px; width:auto;">
-    <img src="/assets/hhghp9/hhghp9a_04_enabling_flowchart_300.png" style="height:400px; width:auto;">
+    <img src="{{ '/assets/hhghp9/hhghp9a_03_enabling_sequence_diagram_300.png' | relative_url }}" style="height:400px; width:auto;">
+    <img src="{{ '/assets/hhghp9/hhghp9a_04_enabling_flowchart_300.png' | relative_url }}" style="height:400px; width:auto;">
   </div>
 
-An unpaired fob would reject the message straightaway. A paired fob would check that the feature file was valid (length was greater than or equal to the expected value, car ID in the feature file matched it’s own car ID, feature number within range) and that it could be enabled (feature list wasn’t full, feature wasn’t already enabled) before enabling it, sending back `OK` or `ERROR` (with an error message) as appropriate.
+An unpaired fob would reject the message straightaway. A paired fob would check that the feature file was valid (length was greater than or equal to the expected value, car ID in the feature file matched its own car ID, feature number within range) and that it could be enabled (feature list wasn’t full, feature wasn’t already enabled) before enabling it, sending back `OK` or `ERROR` (with an error message) as appropriate.
 
 ## Security analysis of “features”
 
@@ -118,7 +119,7 @@ Now that we have a thorough understanding of the "enable feature" process, we ca
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
-In the MITRE eCTF competition, teams could capture a flag if they could cause Car #5 to emit it’s flag for “Feature 2” (which wasn’t given to the attacking teams; see the graphic above of the attack scenarios) and which was only *supposed* to be possible if the paired fob for Car #5 had Feature 2 legitimately enabled.
+In the MITRE eCTF competition, teams could capture a flag if they could cause Car #5 to emit its flag for “Feature 2” (which wasn’t given to the attacking teams; see the graphic above of the attack scenarios) and which was only *supposed* to be possible if the paired fob for Car #5 had Feature 2 legitimately enabled.
 
 More broadly, features should only ever be made for owners who’ve paid for them, car owners should not be able to enable a feature without a valid feature file from the manufacturer, and they should also not be able to enable a feature on their car using a valid feature file that was created by the manufacturer for a different car (these are, essentially, security requirements #5 and #6 from the competition rules).
 
@@ -132,7 +133,7 @@ In a real production system, you may also want to ensure that feature files are 
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
-If a fob needs to enforce that a feature file which it has received has come from none other than the manufacturer themselves, then they are needing to **authenticate** that feature file. Additionally, if it’s important that a valid feature file not be modified by an attacker to enable a feature on a different car or to enable a different feature on the same car, then the fob needs a way to verify the **integrity** of each feature file.
+If a fob needs to enforce that a feature file which it has received has come from none other than the manufacturer themselves, then it needs to **authenticate** that feature file. Additionally, if it’s important that a valid feature file not be modified by an attacker to enable a feature on a different car or to enable a different feature on the same car, then the fob needs a way to verify the **integrity** of each feature file.
 
 ## A possible attack and its defense (Attack/Defense #6)
 
@@ -163,7 +164,7 @@ We’ll call this **“Attack #6: Forging a feature file”**.
 
 > **❓ What would a security test for this attack look like?**
 >
-> How would you write the test to go in test_security.py that implements this attack? Write it out in Python (or in pseudocode) and then run it to make sure that it fails, as expected!
+> How would you write the test to go in `test_security.py` that implements this attack? Write it out in Python (or in pseudocode) and then run it to make sure that it fails, as expected!
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
@@ -222,11 +223,11 @@ Our new feature file will have a MAC value appended to the end, computed over th
 >
 > If keys are being derived from a `fob_key`, then `fob_key` should *never* be used in any other context (to ensure proper key separation).
 
- The fob will test that this MAC value matches the one it computes over the first part of the message using its feature key before going on to check any of the other fields, failing early if it doesn’t match.
+The fob will test that this MAC value matches the one it computes over the first part of the message using its feature key before going on to check any of the other fields, failing early if it doesn’t match.
 
-<img src="/assets/hhghp9/hhghp9a_08_new_feature_flowchart_300.png" style="display: block; margin: 0 auto;">
+<img src="{{ '/assets/hhghp9/hhghp9a_08_new_feature_flowchart_300.png' | relative_url }}" style="display: block; margin: 0 auto;">
 
-Since an attacker doesn’t have access to the feature key, they can’t recompute a new MAC for a modified message nor can they construct new messages. Even a one bit change to either the car ID or the feature number causes the MACs to mismatch, which the fob will then reject.
+Since an attacker doesn’t have access to the feature key, they can’t recompute a new MAC for a modified message nor can they construct new messages. Even a one-bit change to either the car ID or the feature number causes the MACs to mismatch, which the fob will then reject.
 
 We’ll call this **“Defense #6: Authenticating feature files with MACs”**.
 
@@ -259,13 +260,13 @@ There’s a subtlety to this defense, though; a vulnerability we’ve seen befor
 >
 > <center>⮮ ANSWER BELOW ⮯</center>
 
-When comparing MACs, don’t forget to use a **constant-time** **memcmp** (i.e. `memcmp_ct`), like we did in [Part 8](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks) when comparing pairing pins. Otherwise you’ll leave yourself open to a timing attack!
+When comparing MACs, don’t forget to use a **constant-time memcmp** (i.e. `memcmp_ct`), like we did in [Part 8](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks) when comparing pairing pins. Otherwise you’ll leave yourself open to a timing attack!
 
 {: .aside}
 
 > **❗ Attack it!**
 >
-> Write a test to conduct a timing attack on the naive code above and run it to prove that it’s possible. Then switch out memcmp for memcmp_ct and prove that the code is no longer susceptible to a timing attack on the feature file’s MAC value. ([One possible answer](https://github.com/nathancharlesjones/howHardwareGetsHacked/blob/681d8aad130e557a97590c9332e5b270947dbe88/testing/test_security.py#L481))
+> Write a test to conduct a timing attack on the naive code above and run it to prove that it’s possible. Then switch out `memcmp` for `memcmp_ct` and prove that the code is no longer susceptible to a timing attack on the feature file’s MAC value. ([One possible answer](https://github.com/nathancharlesjones/howHardwareGetsHacked/blob/681d8aad130e557a97590c9332e5b270947dbe88/testing/test_security.py#L481))
 
 # The “blast radius” problem again
 
@@ -279,11 +280,11 @@ The downside is that our design gets a little more complex. Our company database
 
 If we wanted to reduce the blast radius even further, we could replace our MAC algorithm with a **digital signature**, which uses asymmetric cryptography, a.k.a. public-key cryptography. Asymmetric cryptography uses two keys, a “public” and a “private” key, as opposed to symmetric cryptography, which uses just one key. (We’ve been using symmetric cryptographic algorithms this whole time, as evidenced by the fact that our unlock and feature keys needed to be shared by all devices computing the same MAC values: one key on all devices.)
 
-In asymmetric cryptography the private key is kept secret from *everybody* except the person or device holding the key while the public key can be distributed to anyone. The weird and neat thing about asymmetric cryptography is that you can’t “double dip”: if the public key is used to sign/encrypt a message then only the private key can be used to decrypt it; trying to decrypt the message with the public key again just yields garbledy-gook. Similarly, if a message is signed/encrypted with the private key then only the public key can decrypt it.
+In asymmetric cryptography the private key is kept secret from *everybody* except the person or device holding the key while the public key can be distributed to anyone. The weird and neat thing about asymmetric cryptography is that you can’t “double dip”: if the **public** key is used to encrypt a message then only the **private** key can be used to decrypt it; trying to decrypt it with the public key just yields garbledy-gook. Similarly, if a message is signed with a **private** key then only the matching **public** key can verify it.
 
 ![]({{ '/assets/hhghp9/hhghp9a_11_digital_signature_300.png' | relative_url }})
 
-That second scenario is essentially how a digital signature works: an entity performs a signing operation on a message with its private key, which anyone else can then verify using that same entity’s public key. If the verify operation returns true, then it *had* to have been that actual entity that did the signing in the first place (since no one else could produce a valid signature to pass the verify operation without knowing the value of the private key). What’s more, there’s no shared secret that could get leaked if an attacker extracts a key from a device using the public key.
+That’s the essence of a digital signature: an entity signs a message with its private key, which anyone else can then verify using that same entity’s public key. If the verify operation returns true, then it *had* to have been that actual entity that did the signing in the first place (since no one else could produce a valid signature to pass the verify operation without knowing the value of the private key). What’s more, there’s no shared secret that could get leaked if an attacker extracts a device's keys; the only key that's actually on the device is already public knowledge.
 
 Using this system, we would generate a public/private key pair during build time and put the public key inside every fob. The private key would be used to sign any feature files, which the fobs could then verify. This system has the smallest blast radius (it’s essentially none), since there’s no key on the fob that could be extracted to allow an attacker the ability to forge a feature file.
 
@@ -291,13 +292,13 @@ Using this system, we would generate a public/private key pair during build time
 
 Now I’m going to step back even further, by letting you run through that same process to identify *where else* the feature data is vulnerable, to describe and mount the attack, and then to design and implement an appropriate defense.
 
-To clarify, yes, there is one other place in the current code where an attacker could force a car to divulge it’s feature message despite not having that feature enabled on the fob. **But where?** (Take a second to consider your answer before moving on!)
+To clarify, yes, there is one other place in the current code where an attacker could force a car to divulge its feature message despite not having that feature enabled on the fob. **But where?** (Take a second to consider your answer before moving on!)
 
 <center>⮮ ANSWER BELOW ⮯ </center>
 
 Sending a feature file to a fob is only the first of two places where the feature data can be attacked. The second is when it’s being transmitted as part of a start message after a car has been successfully unlocked!
 
-<img src="/assets/hhghp9/hhghp9a_12_vulnerable_start_message_300.png" style="height:600px; width:auto; display: block; margin: 0 auto;">
+<img src="{{ '/assets/hhghp9/hhghp9a_12_vulnerable_start_message_300.png' | relative_url }}" style="height:600px; width:auto; display: block; margin: 0 auto;">
 
 Each start message contains the fob’s list of enabled features, and these are sent to the car in plaintext, with no additional security features whatsoever.
 
@@ -314,13 +315,13 @@ The updated threat model (scoped just to show the latest attacks) is depicted be
 A few things worth noting that weren’t previously discussed:
 
 - One **pitfall** to watch out for is using an algorithm that provides integrity but not authentication. An example would be a hash, like SHA256 or MD5.
-  <img src="/assets/hhghp9/hhghp9a_14_hash_300.png" style="width:500px;">
+  <img src="{{ '/assets/hhghp9/hhghp9a_14_hash_300.png' | relative_url }}" style="width:500px;">
   
   These algorithms could help a fob or car detect *accidental* errors in a feature file or start message, but they wouldn’t stop an attacker from changing a value and then computing a new hash (these are public algorithms, after all!).
 - An alternative to adding a MAC value to each feature file or start message is to **encrypt them** using an authenticated encryption algorithm like AES-GCM. This would be only moderately more complicated than computing a MAC and would add “confidentiality” to our feature enabling process, but that’s not necessarily something we care about.
 - The Python **`secrets`** **module** could be used to generate the keys instead of `randbytes` (previously mentioned when discussing how unlock keys were generated in [Part 6](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-6)).
-- We could **remove the explicit chain of error messages** in enableFeature. If an attacker is able to somehow generate a valid MAC, then the rest of this function is set up to inform them exactly which part of their feature file (if any) is invalid for this specific fob. This is another example of a “side-channel leakage” (introduced in [Part 8](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks)) and although it may not be exploitable today, it’s a thing to keep your eye on.
-- **Compiler optimizations** could still remove the “constant-time” feature of our constant-time `memcmp,` `memcmp_ct`.
+- We could **remove the explicit chain of error messages** in `enableFeature`. If an attacker is able to somehow generate a valid MAC, then the rest of this function is set up to inform them exactly which part of their feature file (if any) is invalid for this specific fob. This is another example of a “side-channel leakage” (introduced in [Part 8](https://www.digikey.com/en/maker/blogs/2026/how-hardware-gets-hacked-part-8-brute-force-and-timing-attacks)) and although it may not be exploitable today, it’s a thing to keep your eye on.
+- **Compiler optimizations** could still remove the “constant-time” feature of our constant-time `memcmp`, `memcmp_ct`.
 - An **added delay** during each enabling attempt would further help to defend against timing attacks or any other attack that relied on repeatedly and quickly attempting to enable a new feature.
 
 # Conclusion
@@ -333,7 +334,7 @@ If you’ve made it this far, thanks for reading and happy hacking!
 
 # Attacking and defending “start” messages 
 
-We’re going to start this process of security analysis over again, walking gradually onto yet another important defense. As before, I want to emphasize that we’ve already discussed all of the tools you’d need to do this on your own and I want to encourage you to answer each question to yourself (even just in your head) before reading my answers.
+We’re going to start this process of security analysis over again, walking gradually toward yet another important defense. As before, I want to emphasize that we’ve already discussed all of the tools you’d need to do this on your own and I want to encourage you to answer each question to yourself (even just in your head) before reading my answers.
 
 Let’s start at the top.
 
@@ -373,8 +374,8 @@ START MSG:     │0x57│0x0F│  Feature info (15 bytes)   │
 The fob sends active features to the car after it receives the ACK SUCCESS message from the car during the unlocking process.
 
 <div style="display:flex; gap:1em; justify-content:center;">
-    <img src="/assets/hhghp9/hhghp9a_15_unlock_sequence_diagram_300.png" style="height:500px; width:auto;">
-    <img src="/assets/hhghp9/hhghp9a_16_unlock_flowchart_300.png" style="height:500px; width:auto;">
+    <img src="{{ '/assets/hhghp9/hhghp9a_15_unlock_sequence_diagram_300.png' | relative_url }}" style="height:500px; width:auto;">
+    <img src="{{ '/assets/hhghp9/hhghp9a_16_unlock_flowchart_300.png' | relative_url }}" style="height:500px; width:auto;">
   </div>
 
 The car checks only that the ID in the start message matches its own and that each active feature number is within a valid range (1-3 for us) before sending out the associated flag over its HOST UART port. 
@@ -433,13 +434,13 @@ To verify that the test currently fails, I’ve also added a car test command ca
 
 > **❓ How can we defend against that attack?**
 >
-> What’s a way we can prevent an attacker from enabling a forged feature file?
+> What’s a way we can prevent an attacker from enabling a forged start message?
 >
 > *Hint*: We’ve already talked about how a car can authenticate an unlock message from a fob ([Parts 5-7](https://www.digikey.com/en/maker/search-results?t=Nathan%20Jones%20How%20Hardware%20Gets%20Hacked&f=1981359301)); how could you adapt or modify that solution to the problem of authenticating a start message?
 
 Given the similarity of each of these attacks on the feature data, it will hopefully come as no surprise to learn that the easiest defense against this attack is to add a MAC to the end of each start message, which the car will also verify before it sends out any flags. If an attacker modifies even a single bit of the start message sent by the paired fob (or tries to forge their own), they won’t be able to correctly compute the MAC value without the “start message” key.
 
-<img src="/assets/hhghp9/hhghp9a_20_start_msg_mac_check_300.png" style="display: block; margin: 0 auto;">
+<img src="{{ '/assets/hhghp9/hhghp9a_20_start_msg_mac_check_300.png' | relative_url }}" style="display: block; margin: 0 auto;">
 
 We’ll call this **“Defense #7: Authenticating start messages with MACs”**.
 
