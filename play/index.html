@@ -19,8 +19,8 @@ title: Play
     <!-- Data attributes match works.html so filter.js can be reused once
          there are enough entries to make filter buttons worthwhile. -->
     <div class="works-grid" id="works-grid">
-      {% comment %} Entries are the pages in play/ that set a `type`. {% endcomment %}
-      {% assign entries = site.pages | where_exp: "p", "p.dir contains '/play/'" | where_exp: "p", "p.type" | sort: "date" | reverse %}
+      {% comment %} Entries are the pages in play/ that set a `type` and aren't `unlisted`. {% endcomment %}
+      {% assign entries = site.pages | where_exp: "p", "p.dir contains '/play/'" | where_exp: "p", "p.type" | where_exp: "p", "p.unlisted != true" | sort: "date" | reverse %}
       {% for entry in entries %}
       <article
         class="work-card work-card-full"
