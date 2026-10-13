@@ -1,0 +1,83 @@
+---
+layout: default
+---
+{% comment %}
+  A hex skill tree: play/<tree>/index.md, with one folder per skill below it.
+  The hex layout (palette, grid, tiles) is in this page's front matter, kept
+  up to date by _scripts/skilltree_layout.py. The list view is rendered here so
+  the page works without JavaScript; skilltree.js draws the hexes and tracks
+  progress.
+{% endcomment %}
+{% include skilltree-context.html tree_url=page.url %}
+
+<section class="works-page skilltree-page" data-tree="{{ page.url }}">
+  <div class="section-inner">
+
+    <header class="works-header">
+      <div class="section-label"><a href="{{ '/play/' | relative_url }}">Play</a>{% if page.event %} · {{ page.event }}{% endif %}</div>
+      <h1>{{ page.title }}</h1>
+      {% if page.excerpt %}<p class="works-intro">{{ page.excerpt | strip_html }}</p>{% endif %}
+    </header>
+
+    {% if content != "" %}
+    <div class="post-content skilltree-intro">{{ content }}</div>
+    {% endif %}
+
+    <div class="skilltree-toolbar">
+      <div class="filter-buttons" role="group" aria-label="View">
+        <button class="filter-btn" data-view="tree" hidden>Tree</button>
+        <button class="filter-btn" data-view="list" hidden>List</button>
+      </div>
+      <ul class="skilltree-legend">
+        {% for pair in page.palette %}
+        <li><span class="skilltree-swatch" style="background: {{ pair[1] }}"></span>{{ pair[0] }}</li>
+        {% endfor %}
+      </ul>
+      <div class="filter-status" id="skilltree-progress" aria-live="polite"></div>
+    </div>
+
+    <div class="skilltree-view" id="skilltree-tree" hidden></div>
+
+    <div class="skilltree-view" id="skilltree-list">
+      {% for pair in page.palette %}
+        {% assign tier_skills = skills | where: "tier", pair[0] | sort: "difficulty" %}
+        {% if tier_skills.size > 0 %}
+        <h2 class="skilltree-tier" style="--tier: {{ pair[1] }}">{{ pair[0] }}</h2>
+        <ul class="skilltree-list">
+          {% for s in tier_skills %}
+          {% assign slug = s.dir | split: "/" | last %}
+          <li>
+            <label class="skill-check" hidden>
+              <input type="checkbox" data-skill="{{ slug }}">
+              <span class="visually-hidden">Done</span>
+            </label>
+            <a href="{{ s.url | relative_url }}">{{ s.title }}</a>
+            {% if s.time %}<span class="skill-time">{{ s.time }}</span>{% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<script type="application/json" id="skilltree-data">
+{
+  "grid": {{ page.grid | jsonify }},
+  "tiles": {{ page.tiles | jsonify }},
+  "palette": {{ page.palette | jsonify }},
+  "skills": {
+    {%- for s in skills %}
+    {{ s.dir | split: "/" | last | jsonify }}: {
+      "label": {{ s.label | default: s.title | jsonify }},
+      "title": {{ s.title | jsonify }},
+      "tier": {{ s.tier | jsonify }},
+      "url": {{ s.url | relative_url | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  }
+}
+</script>
+<script src="{{ '/assets/js/skilltree.js' | relative_url }}"></script>

@@ -1,0 +1,7 @@
+{% comment %}
+  For skill pages: including this file makes facts.* refer to the
+  `facts:` in the skill tree's front matter (the index.md one folder up).
+{% endcomment %}
+{%- assign _facts_dir = page.dir | split: "/" | pop | join: "/" | append: "/" -%}
+{%- assign _facts_tree = site.pages | where: "url", _facts_dir | first -%}
+{%- assign facts = _facts_tree.facts -%}

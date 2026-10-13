@@ -1,0 +1,60 @@
+---
+layout: default
+title: Play
+---
+
+<section class="works-page">
+  <div class="section-inner">
+
+    <header class="works-header">
+      <div class="section-label">Play</div>
+      <h1>Objects to Think With</h1>
+      <p class="works-intro">
+        Seymour Papert gave kids a turtle to steer around the screen, and with it a way
+        to think about geometry, programs, and their own thinking. These are my turtles:
+        skill trees, sandboxes, and tools you can poke at, break, and learn from.
+      </p>
+    </header>
+
+    <!-- Data attributes match works.html so filter.js can be reused once
+         there are enough entries to make filter buttons worthwhile. -->
+    <div class="works-grid" id="works-grid">
+      {% comment %} Entries are the pages in play/ that set a `type`. {% endcomment %}
+      {% assign entries = site.pages | where_exp: "p", "p.dir contains '/play/'" | where_exp: "p", "p.type" | sort: "date" | reverse %}
+      {% for entry in entries %}
+      <article
+        class="work-card work-card-full"
+        data-type="{{ entry.type }}"
+        data-subjects="{{ entry.subjects | join: ',' | downcase | replace: ' ', '-' }}"
+        data-venue="{{ entry.event | downcase | replace: ' ', '-' | replace: '.', '' }}"
+        data-date="{{ entry.date | date: '%s' }}"
+      >
+        <div class="work-card-meta">
+          <span class="tag tag-type tag-{{ entry.type }}">{{ entry.type | replace: '-', ' ' }}</span>
+          {% if entry.event %}<span class="tag tag-venue">{{ entry.event }}</span>{% endif %}
+        </div>
+
+        <h2 class="work-card-title">
+          <a href="{{ entry.url | relative_url }}">{{ entry.title }}</a>
+        </h2>
+
+        {% if entry.excerpt %}
+        <p class="work-card-excerpt">{{ entry.excerpt | strip_html | truncate: 180 }}</p>
+        {% endif %}
+
+        <div class="work-card-footer">
+          {% if entry.subjects %}
+          <div class="work-card-subjects">
+            {% for s in entry.subjects %}
+            <span class="tag tag-subject">{{ s }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <a href="{{ entry.url | relative_url }}" class="read-link">Open →</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>

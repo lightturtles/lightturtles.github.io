@@ -37,6 +37,13 @@ defaults:
     values:
       layout: "post"
       permalink: /works/:year/:month/:day/:title/
+  # "Play" section: plain folders, one per page (play/<entry>/index.md, with
+  # its images etc. alongside). Pages default to the skill layout; play/index.html
+  # and each entry's index.md name their own layout.
+  - scope:
+      path: "play"
+    values:
+      layout: "skill"
 
 exclude:
   - README.md

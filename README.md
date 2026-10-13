@@ -115,6 +115,46 @@ From anywhere on the site (e.g. a service card on the landing page):
 
 ---
 
+## Play (skill trees, sandboxes, tools)
+
+`/play/` lists every page in `play/` that sets a `type` in its front matter
+(plus `title`, `event`, `subjects`, `date`, `excerpt`). Each entry is a plain
+folder: `play/<name>/index.md`, with its images and files alongside.
+
+A **skill tree** is one folder per skill under the tree's folder:
+
+```
+play/supercon26/
+  index.md              ← the tree (layout: skill-tree): intro, facts, hex layout
+  repl/
+    index.md            ← a skill → /play/supercon26/repl/  (id = folder name)
+    thonny.png          ← linked from the page as ![...](thonny.png)
+```
+
+Skill pages get the `skill` layout automatically. Front matter the site uses:
+`title`, `label` (hex text), `tier` (must match a `palette` key), `difficulty`
+(list order), `needs`, `time`, `video` (YouTube ID). In the body, `[[id]]`
+links to another skill; ids with no page yet show as "coming soon".
+
+Badge details that may change live under `facts:` in the tree's `index.md`.
+A skill page that uses them starts with `{% include facts.html %}` right
+after its front matter, then writes `{{ facts.leds.pin }}` etc. Liquid
+doesn't run inside front matter, so keep facts out of titles.
+
+After adding, removing, or re-tiering skills, update the hex layout:
+
+```bash
+python3 _scripts/skilltree_layout.py play/supercon26
+```
+
+It rewrites only the block between the "Skill tree layout" and "end of layout"
+comments in the tree's front matter. Move tiles by editing `tiles:` there;
+reruns keep your edits.
+
+Progress checkboxes are saved in the visitor's browser only (localStorage).
+
+---
+
 ## Contact Form
 
 The contact form uses [Formspree](https://formspree.io) (free tier handles up

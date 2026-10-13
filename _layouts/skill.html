@@ -1,0 +1,86 @@
+---
+layout: default
+---
+{% comment %}
+  One skill in a skill tree: play/<tree>/<id>/index.md, with its images etc.
+  alongside. The tree is the index.md one folder up. [[id]] in the page becomes
+  a link to that skill; any left over (no page yet) are marked "coming soon"
+  by skilltree.js.
+{% endcomment %}
+{% assign slug = page.dir | split: "/" | last %}
+{% assign tree_url = page.dir | split: "/" | pop | join: "/" | append: "/" %}
+{% include skilltree-context.html tree_url=tree_url %}
+
+{% assign body = content %}
+{% for s in skills %}
+  {% capture wikilink %}[[{{ s.dir | split: "/" | last }}]]{% endcapture %}
+  {% capture anchor %}<a href="{{ s.url | relative_url }}">{{ s.label | default: s.title }}</a>{% endcapture %}
+  {% assign body = body | replace: wikilink, anchor %}
+{% endfor %}
+
+<article class="post-page skill-page" data-tree="{{ tree_url }}">
+
+  <header class="post-header">
+    <div class="post-meta-top">
+      <a href="{{ tree_page.url | relative_url }}" class="back-link">← {{ tree_page.title | default: "Skill tree" }}</a>
+    </div>
+
+    <div class="post-meta-top">
+      <span class="tag skill-tier" style="--tier: {{ tree_page.palette[page.tier] }}">{{ page.tier }}</span>
+      {% if page.time %}<span class="tag tag-subject">{{ page.time }}</span>{% endif %}
+      <label class="skill-done skill-done-compact" hidden>
+        <input type="checkbox" data-skill="{{ slug }}">
+        Done
+      </label>
+    </div>
+
+    <h1 class="post-title">{{ page.title }}</h1>
+
+    {% if page.needs.size > 0 %}
+    <p class="skill-needs">
+      <span class="filter-label">Needs</span>
+      <span>
+      {%- for n in page.needs -%}
+        {%- assign need_url = tree_url | append: n | append: "/" -%}
+        {%- assign need = skills | where: "url", need_url | first -%}
+        {%- if need %}<a href="{{ need.url | relative_url }}">{{ need.label | default: need.title }}</a>{% else %}{{ n }} <em>(coming soon)</em>{% endif %}{% unless forloop.last %}, {% endunless -%}
+      {%- endfor -%}
+      </span>
+    </p>
+    {% endif %}
+  </header>
+
+  {% if page.video %}
+    {% include youtube.html id=page.video %}
+  {% endif %}
+
+  <div class="post-content">
+    {{ body }}
+  </div>
+
+  <label class="skill-done" hidden>
+    <input type="checkbox" data-skill="{{ slug }}">
+    I've done this one
+  </label>
+
+  <footer class="post-footer">
+    {% assign unlocks = "" | split: "" %}
+    {% for s in skills %}
+      {% if s.needs contains slug %}{% assign unlocks = unlocks | push: s %}{% endif %}
+    {% endfor %}
+    {% if unlocks.size > 0 %}
+    <p class="skill-needs">
+      <span class="filter-label">Up next</span>
+      <span>
+      {%- for s in unlocks -%}
+        <a href="{{ s.url | relative_url }}">{{ s.label | default: s.title }}</a>{% unless forloop.last %}, {% endunless -%}
+      {%- endfor -%}
+      </span>
+    </p>
+    {% endif %}
+    <a href="{{ tree_page.url | relative_url }}" class="back-link">← Back to the skill tree</a>
+  </footer>
+
+</article>
+
+<script src="{{ '/assets/js/skilltree.js' | relative_url }}"></script>

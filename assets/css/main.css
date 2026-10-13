@@ -815,6 +815,134 @@ a.credential-chip:hover {
 
 .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
+/* ── Play: skill trees ─────────────────────────────────────────── */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap;
+}
+[hidden] { display: none !important; }
+
+.section-label a { color: inherit; }
+
+.skilltree-intro { max-width: 720px; margin-bottom: 2rem; }
+
+.skilltree-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.skilltree-legend {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: lowercase;
+  color: var(--text-muted);
+}
+.skilltree-legend li { display: flex; align-items: center; gap: 0.4rem; }
+.skilltree-swatch {
+  width: 0.9rem; height: 0.9rem;
+  border: 1px solid var(--text);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+
+.skilltree-reset {
+  background: none; border: none; padding: 0;
+  font: inherit; color: var(--primary);
+  text-decoration: underline; cursor: pointer;
+}
+
+.skilltree-svg { display: block; width: 100%; height: auto; margin: 0 auto; }
+.skilltree-svg text { font-family: var(--font-sans); font-size: 14px; font-weight: 600; }
+.skilltree-tile polygon { stroke: var(--text); stroke-width: 2; transition: filter 0.15s; }
+.skilltree-tile a:hover polygon,
+.skilltree-tile a:focus polygon { filter: brightness(1.12); stroke-width: 3; }
+.skilltree-tile-pending { color: var(--text-dim); }
+.skilltree-tile-pending polygon { stroke: var(--border-hi); stroke-dasharray: 6 4; }
+.skilltree-tile.done polygon { stroke-width: 4; }
+.skilltree-toggle { cursor: pointer; }
+.skilltree-toggle circle { fill: rgba(255, 255, 255, 0.25); stroke-width: 2; }
+.skilltree-toggle text { display: none; font-size: 16px !important; }
+.skilltree-toggle:hover circle,
+.skilltree-toggle:focus circle { fill: rgba(255, 255, 255, 0.5); }
+.skilltree-toggle:focus { outline: none; }
+.skilltree-toggle:focus-visible circle { stroke-width: 3; }
+.skilltree-tile.done .skilltree-toggle text { display: inline; }
+
+.skilltree-tier {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 2rem 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.skilltree-tier::before {
+  content: "";
+  width: 1rem; height: 1rem;
+  background: var(--tier);
+  border: 1px solid var(--text);
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+}
+.skilltree-list {
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.skilltree-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  padding: 0.75rem 1rem;
+}
+.skilltree-list a { color: var(--text); flex: 1; }
+.skilltree-list a:hover { color: var(--primary); }
+.skill-time,
+.skill-needs {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+.skill-check input,
+.skill-done input { width: 1.1rem; height: 1.1rem; accent-color: var(--primary); }
+
+.skill-tier { color: var(--text); border-color: var(--text); background: var(--tier); }
+.skill-needs { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: baseline; margin-top: 1rem; }
+.skill-needs .filter-label { min-width: 0; }
+.skill-done.skill-done-compact {
+  margin: 0;
+  padding: 0.1em 0.6em;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  gap: 0.4rem;
+}
+.skill-done.skill-done-compact input { width: 0.85rem; height: 0.85rem; }
+.skill-done {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2rem 0;
+  padding: 1rem 1.25rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
 /* ── Contact ───────────────────────────────────────────────────── */
 .section-contact { background: var(--bg-raised); }
 

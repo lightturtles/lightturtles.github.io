@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1091 1045" width="1091" height="1045" font-family="Helvetica, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="545.3" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="#111">Supercon Ten Badge Skill Tree</text>
+<polygon points="90.6,102.0 149.5,136.0 149.5,204.0 90.6,238.0 31.7,204.0 31.7,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="90.6" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">1</text>
+<polygon points="211.9,102.0 270.8,136.0 270.8,204.0 211.9,238.0 153.0,204.0 153.0,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="211.9" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">2</text>
+<polygon points="333.1,102.0 392.0,136.0 392.0,204.0 333.1,238.0 274.2,204.0 274.2,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="333.1" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">3</text>
+<polygon points="454.4,102.0 513.2,136.0 513.2,204.0 454.4,238.0 395.5,204.0 395.5,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="454.4" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">4</text>
+<polygon points="575.6,102.0 634.5,136.0 634.5,204.0 575.6,238.0 516.7,204.0 516.7,136.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="575.6" y="166.6" text-anchor="middle" font-size="15" fill="#fff">Reach the</text>
+<text x="575.6" y="183.9" text-anchor="middle" font-size="15" fill="#fff">REPL</text>
+<text x="575.6" y="122.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">5</text>
+<polygon points="696.8,102.0 755.7,136.0 755.7,204.0 696.8,238.0 637.9,204.0 637.9,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="696.8" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">6</text>
+<polygon points="818.1,102.0 877.0,136.0 877.0,204.0 818.1,238.0 759.2,204.0 759.2,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="818.1" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">7</text>
+<polygon points="939.3,102.0 998.2,136.0 998.2,204.0 939.3,238.0 880.4,204.0 880.4,136.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="939.3" y="175.0" text-anchor="middle" font-size="14" fill="#bbb">8</text>
+<polygon points="151.2,207.0 210.1,241.0 210.1,309.0 151.2,343.0 92.4,309.0 92.4,241.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="151.2" y="280.0" text-anchor="middle" font-size="14" fill="#bbb">9</text>
+<polygon points="272.5,207.0 331.4,241.0 331.4,309.0 272.5,343.0 213.6,309.0 213.6,241.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="272.5" y="280.0" text-anchor="middle" font-size="14" fill="#bbb">10</text>
+<polygon points="393.7,207.0 452.6,241.0 452.6,309.0 393.7,343.0 334.8,309.0 334.8,241.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="393.7" y="280.2" text-anchor="middle" font-size="15" fill="#111">Join WiFi</text>
+<text x="393.7" y="227.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">11</text>
+<polygon points="515.0,207.0 573.9,241.0 573.9,309.0 515.0,343.0 456.1,309.0 456.1,241.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="515.0" y="271.6" text-anchor="middle" font-size="15" fill="#fff">Map the</text>
+<text x="515.0" y="288.9" text-anchor="middle" font-size="15" fill="#fff">firmware</text>
+<text x="515.0" y="227.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">12</text>
+<polygon points="636.2,207.0 695.1,241.0 695.1,309.0 636.2,343.0 577.3,309.0 577.3,241.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="636.2" y="271.6" text-anchor="middle" font-size="15" fill="#fff">Light one</text>
+<text x="636.2" y="288.9" text-anchor="middle" font-size="15" fill="#fff">LED</text>
+<text x="636.2" y="227.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">13</text>
+<polygon points="757.5,207.0 816.4,241.0 816.4,309.0 757.5,343.0 698.6,309.0 698.6,241.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="757.5" y="280.0" text-anchor="middle" font-size="14" fill="#bbb">14</text>
+<polygon points="878.7,207.0 937.6,241.0 937.6,309.0 878.7,343.0 819.8,309.0 819.8,241.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="878.7" y="280.0" text-anchor="middle" font-size="14" fill="#bbb">15</text>
+<polygon points="999.9,207.0 1058.8,241.0 1058.8,309.0 999.9,343.0 941.1,309.0 941.1,241.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="999.9" y="280.0" text-anchor="middle" font-size="14" fill="#bbb">16</text>
+<polygon points="90.6,312.0 149.5,346.0 149.5,414.0 90.6,448.0 31.7,414.0 31.7,346.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="90.6" y="385.0" text-anchor="middle" font-size="14" fill="#bbb">17</text>
+<polygon points="211.9,312.0 270.8,346.0 270.8,414.0 211.9,448.0 153.0,414.0 153.0,346.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="211.9" y="385.0" text-anchor="middle" font-size="14" fill="#bbb">18</text>
+<polygon points="333.1,312.0 392.0,346.0 392.0,414.0 333.1,448.0 274.2,414.0 274.2,346.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="333.1" y="385.2" text-anchor="middle" font-size="15" fill="#111">SAO pinout</text>
+<text x="333.1" y="332.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">19</text>
+<polygon points="454.4,312.0 513.2,346.0 513.2,414.0 454.4,448.0 395.5,414.0 395.5,346.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="454.4" y="376.6" text-anchor="middle" font-size="15" fill="#fff">Back up the</text>
+<text x="454.4" y="393.9" text-anchor="middle" font-size="15" fill="#fff">badge</text>
+<text x="454.4" y="332.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">20</text>
+<polygon points="575.6,312.0 634.5,346.0 634.5,414.0 575.6,448.0 516.7,414.0 516.7,346.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="575.6" y="376.6" text-anchor="middle" font-size="15" fill="#fff">Read a</text>
+<text x="575.6" y="393.9" text-anchor="middle" font-size="15" fill="#fff">button</text>
+<text x="575.6" y="332.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">21</text>
+<polygon points="696.8,312.0 755.7,346.0 755.7,414.0 696.8,448.0 637.9,414.0 637.9,346.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="696.8" y="376.6" text-anchor="middle" font-size="15" fill="#111">Inspect the</text>
+<text x="696.8" y="393.9" text-anchor="middle" font-size="15" fill="#111">firmware</text>
+<text x="696.8" y="332.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">22</text>
+<polygon points="818.1,312.0 877.0,346.0 877.0,414.0 818.1,448.0 759.2,414.0 759.2,346.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="818.1" y="385.0" text-anchor="middle" font-size="14" fill="#bbb">23</text>
+<polygon points="939.3,312.0 998.2,346.0 998.2,414.0 939.3,448.0 880.4,414.0 880.4,346.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="939.3" y="385.0" text-anchor="middle" font-size="14" fill="#bbb">24</text>
+<polygon points="151.2,417.0 210.1,451.0 210.1,519.0 151.2,553.0 92.4,519.0 92.4,451.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="151.2" y="490.0" text-anchor="middle" font-size="14" fill="#bbb">25</text>
+<polygon points="272.5,417.0 331.4,451.0 331.4,519.0 272.5,553.0 213.6,519.0 213.6,451.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="272.5" y="481.6" text-anchor="middle" font-size="15" fill="#111">Scan for</text>
+<text x="272.5" y="498.9" text-anchor="middle" font-size="15" fill="#111">I2C devices</text>
+<text x="272.5" y="437.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">26</text>
+<polygon points="393.7,417.0 452.6,451.0 452.6,519.0 393.7,553.0 334.8,519.0 334.8,451.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="393.7" y="481.6" text-anchor="middle" font-size="15" fill="#fff">Update the</text>
+<text x="393.7" y="498.9" text-anchor="middle" font-size="15" fill="#fff">firmware</text>
+<text x="393.7" y="437.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">27</text>
+<polygon points="515.0,417.0 573.9,451.0 573.9,519.0 515.0,553.0 456.1,519.0 456.1,451.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="515.0" y="481.6" text-anchor="middle" font-size="15" fill="#fff">Your name</text>
+<text x="515.0" y="498.9" text-anchor="middle" font-size="15" fill="#fff">badge</text>
+<text x="515.0" y="437.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">28</text>
+<polygon points="636.2,417.0 695.1,451.0 695.1,519.0 636.2,553.0 577.3,519.0 577.3,451.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="636.2" y="481.6" text-anchor="middle" font-size="15" fill="#111">Three kinds</text>
+<text x="636.2" y="498.9" text-anchor="middle" font-size="15" fill="#111">of reset</text>
+<text x="636.2" y="437.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">29</text>
+<polygon points="757.5,417.0 816.4,451.0 816.4,519.0 757.5,553.0 698.6,519.0 698.6,451.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="757.5" y="481.6" text-anchor="middle" font-size="15" fill="#111">Light all</text>
+<text x="757.5" y="498.9" text-anchor="middle" font-size="15" fill="#111">the LEDs</text>
+<text x="757.5" y="437.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">30</text>
+<polygon points="878.7,417.0 937.6,451.0 937.6,519.0 878.7,553.0 819.8,519.0 819.8,451.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="878.7" y="490.0" text-anchor="middle" font-size="14" fill="#bbb">31</text>
+<polygon points="999.9,417.0 1058.8,451.0 1058.8,519.0 999.9,553.0 941.1,519.0 941.1,451.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="999.9" y="490.0" text-anchor="middle" font-size="14" fill="#bbb">32</text>
+<polygon points="90.6,522.0 149.5,556.0 149.5,624.0 90.6,658.0 31.7,624.0 31.7,556.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="90.6" y="595.0" text-anchor="middle" font-size="14" fill="#bbb">33</text>
+<polygon points="211.9,522.0 270.8,556.0 270.8,624.0 211.9,658.0 153.0,624.0 153.0,556.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="211.9" y="595.0" text-anchor="middle" font-size="14" fill="#bbb">34</text>
+<polygon points="333.1,522.0 392.0,556.0 392.0,624.0 333.1,658.0 274.2,624.0 274.2,556.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="333.1" y="586.6" text-anchor="middle" font-size="15" fill="#111">Blink on</text>
+<text x="333.1" y="603.9" text-anchor="middle" font-size="15" fill="#111">the SAO</text>
+<text x="333.1" y="542.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">35</text>
+<polygon points="454.4,522.0 513.2,556.0 513.2,624.0 454.4,658.0 395.5,624.0 395.5,556.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="454.4" y="586.6" text-anchor="middle" font-size="15" fill="#111">Add a</text>
+<text x="454.4" y="603.9" text-anchor="middle" font-size="15" fill="#111">library</text>
+<text x="454.4" y="542.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">36</text>
+<polygon points="575.6,522.0 634.5,556.0 634.5,624.0 575.6,658.0 516.7,624.0 516.7,556.0" fill="#e4572e" stroke="#222" stroke-width="2"/>
+<text x="575.6" y="586.6" text-anchor="middle" font-size="15" fill="#fff">Break it,</text>
+<text x="575.6" y="603.9" text-anchor="middle" font-size="15" fill="#fff">fix it</text>
+<text x="575.6" y="542.4" text-anchor="middle" font-size="10" fill="#fff" opacity="0.6">37</text>
+<polygon points="696.8,522.0 755.7,556.0 755.7,624.0 696.8,658.0 637.9,624.0 637.9,556.0" fill="#7bb661" stroke="#222" stroke-width="2"/>
+<text x="696.8" y="586.6" text-anchor="middle" font-size="15" fill="#111">Save across</text>
+<text x="696.8" y="603.9" text-anchor="middle" font-size="15" fill="#111">reboots</text>
+<text x="696.8" y="542.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">38</text>
+<polygon points="818.1,522.0 877.0,556.0 877.0,624.0 818.1,658.0 759.2,624.0 759.2,556.0" fill="#7bb661" stroke="#222" stroke-width="2"/>
+<text x="818.1" y="586.6" text-anchor="middle" font-size="15" fill="#111">Mount and</text>
+<text x="818.1" y="603.9" text-anchor="middle" font-size="15" fill="#111">run</text>
+<text x="818.1" y="542.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">39</text>
+<polygon points="939.3,522.0 998.2,556.0 998.2,624.0 939.3,658.0 880.4,624.0 880.4,556.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="939.3" y="595.0" text-anchor="middle" font-size="14" fill="#bbb">40</text>
+<polygon points="151.2,627.0 210.1,661.0 210.1,729.0 151.2,763.0 92.4,729.0 92.4,661.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="151.2" y="700.0" text-anchor="middle" font-size="14" fill="#bbb">41</text>
+<polygon points="272.5,627.0 331.4,661.0 331.4,729.0 272.5,763.0 213.6,729.0 213.6,661.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="272.5" y="700.0" text-anchor="middle" font-size="14" fill="#bbb">42</text>
+<polygon points="393.7,627.0 452.6,661.0 452.6,729.0 393.7,763.0 334.8,729.0 334.8,661.0" fill="#7bb661" stroke="#222" stroke-width="2"/>
+<text x="393.7" y="691.6" text-anchor="middle" font-size="15" fill="#111">What did I</text>
+<text x="393.7" y="708.9" text-anchor="middle" font-size="15" fill="#111">change?</text>
+<text x="393.7" y="647.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">43</text>
+<polygon points="515.0,627.0 573.9,661.0 573.9,729.0 515.0,763.0 456.1,729.0 456.1,661.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="515.0" y="700.2" text-anchor="middle" font-size="15" fill="#111">Start fresh</text>
+<text x="515.0" y="647.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">44</text>
+<polygon points="636.2,627.0 695.1,661.0 695.1,729.0 636.2,763.0 577.3,729.0 577.3,661.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="636.2" y="700.2" text-anchor="middle" font-size="15" fill="#111">Post-mortem</text>
+<text x="636.2" y="647.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">45</text>
+<polygon points="757.5,627.0 816.4,661.0 816.4,729.0 757.5,763.0 698.6,729.0 698.6,661.0" fill="#f3a712" stroke="#222" stroke-width="2"/>
+<text x="757.5" y="700.2" text-anchor="middle" font-size="15" fill="#111">Boot rescue</text>
+<text x="757.5" y="647.4" text-anchor="middle" font-size="10" fill="#111" opacity="0.6">46</text>
+<polygon points="878.7,627.0 937.6,661.0 937.6,729.0 878.7,763.0 819.8,729.0 819.8,661.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="878.7" y="700.0" text-anchor="middle" font-size="14" fill="#bbb">47</text>
+<polygon points="999.9,627.0 1058.8,661.0 1058.8,729.0 999.9,763.0 941.1,729.0 941.1,661.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="999.9" y="700.0" text-anchor="middle" font-size="14" fill="#bbb">48</text>
+<polygon points="90.6,732.0 149.5,766.0 149.5,834.0 90.6,868.0 31.7,834.0 31.7,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="90.6" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">49</text>
+<polygon points="211.9,732.0 270.8,766.0 270.8,834.0 211.9,868.0 153.0,834.0 153.0,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="211.9" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">50</text>
+<polygon points="333.1,732.0 392.0,766.0 392.0,834.0 333.1,868.0 274.2,834.0 274.2,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="333.1" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">51</text>
+<polygon points="454.4,732.0 513.2,766.0 513.2,834.0 454.4,868.0 395.5,834.0 395.5,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="454.4" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">52</text>
+<polygon points="575.6,732.0 634.5,766.0 634.5,834.0 575.6,868.0 516.7,834.0 516.7,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="575.6" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">53</text>
+<polygon points="696.8,732.0 755.7,766.0 755.7,834.0 696.8,868.0 637.9,834.0 637.9,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="696.8" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">54</text>
+<polygon points="818.1,732.0 877.0,766.0 877.0,834.0 818.1,868.0 759.2,834.0 759.2,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="818.1" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">55</text>
+<polygon points="939.3,732.0 998.2,766.0 998.2,834.0 939.3,868.0 880.4,834.0 880.4,766.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="939.3" y="805.0" text-anchor="middle" font-size="14" fill="#bbb">56</text>
+<polygon points="151.2,837.0 210.1,871.0 210.1,939.0 151.2,973.0 92.4,939.0 92.4,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="151.2" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">57</text>
+<polygon points="272.5,837.0 331.4,871.0 331.4,939.0 272.5,973.0 213.6,939.0 213.6,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="272.5" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">58</text>
+<polygon points="393.7,837.0 452.6,871.0 452.6,939.0 393.7,973.0 334.8,939.0 334.8,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="393.7" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">59</text>
+<polygon points="515.0,837.0 573.9,871.0 573.9,939.0 515.0,973.0 456.1,939.0 456.1,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="515.0" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">60</text>
+<polygon points="636.2,837.0 695.1,871.0 695.1,939.0 636.2,973.0 577.3,939.0 577.3,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="636.2" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">61</text>
+<polygon points="757.5,837.0 816.4,871.0 816.4,939.0 757.5,973.0 698.6,939.0 698.6,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="757.5" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">62</text>
+<polygon points="878.7,837.0 937.6,871.0 937.6,939.0 878.7,973.0 819.8,939.0 819.8,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="878.7" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">63</text>
+<polygon points="999.9,837.0 1058.8,871.0 1058.8,939.0 999.9,973.0 941.1,939.0 941.1,871.0" fill="none" stroke="#ccc" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="999.9" y="910.0" text-anchor="middle" font-size="14" fill="#bbb">64</text>
+<polygon points="345.3,986.0 353.9,991.0 353.9,1001.0 345.3,1006.0 336.6,1001.0 336.6,991.0" fill="#e4572e" stroke="#222"/>
+<text x="361.285115251741" y="1001.0" font-size="14" fill="#333">core</text>
+<polygon points="485.3,986.0 493.9,991.0 493.9,1001.0 485.3,1006.0 476.6,1001.0 476.6,991.0" fill="#f3a712" stroke="#222"/>
+<text x="501.285115251741" y="1001.0" font-size="14" fill="#333">developmental</text>
+<polygon points="625.3,986.0 633.9,991.0 633.9,1001.0 625.3,1006.0 616.6,1001.0 616.6,991.0" fill="#7bb661" stroke="#222"/>
+<text x="641.285115251741" y="1001.0" font-size="14" fill="#333">stretch</text>
+</svg>
