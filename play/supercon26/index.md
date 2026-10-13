@@ -9,7 +9,7 @@ subjects:
 date: 2026-10-12
 excerpt: >
   A hex "skill tree" for hacking the Supercon Ten badge. Start at the top,
-  follow the red tiles, and branch out wherever you like. Each tile links to
+  follow the green tiles, and branch out wherever you like. Each tile links to
   step-by-step instructions.
 
 # Details likely to change before/during Supercon. Skill pages that start with
