@@ -943,6 +943,60 @@ a.credential-chip:hover {
   cursor: pointer;
 }
 
+/* ── Play: metro-map skill trees ───────────────────────────────── */
+.metro-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+.metro-svg { display: block; max-width: none; }
+.metro-casing { fill: none; stroke: var(--bg); stroke-width: 13; stroke-linecap: round; stroke-linejoin: round; }
+.metro-line { fill: none; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.metro-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+.metro-legend li { display: flex; align-items: center; gap: 0.45rem; }
+.metro-swatch { width: 1.4rem; height: 0.35rem; border-radius: 3px; }
+.metro-ring { width: 0.8rem; height: 0.8rem; border-radius: 50%; border: 2.5px solid #c8102e; }
+.metro-legend .metro-hint { flex-basis: 100%; font-style: italic; }
+.metro-needs { pointer-events: none; }
+.metro-need-halo { fill: none; stroke: var(--bg); stroke-width: 7; }
+.metro-need-link { fill: none; stroke: var(--text); stroke-width: 2.2; stroke-dasharray: 7 4; }
+.metro-arrow { fill: var(--text); }
+.metro-focus .metro-toggle circle,
+.metro-need .metro-toggle circle { stroke: var(--text); stroke-width: 4.5; }
+.metro-focus .metro-label,
+.metro-need .metro-label { font-weight: 600; }
+.metro-label { font-family: var(--font-sans); font-size: 11.5px; fill: var(--text); }
+.metro-stop a:hover .metro-label,
+.metro-stop a:focus .metro-label { fill: var(--primary); text-decoration: underline; }
+.metro-pending .metro-label { fill: var(--text-muted); }
+.metro-start .metro-label { font-weight: 600; font-size: 12.5px; }
+.metro-start-tag { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; fill: #c8102e; }
+.metro-ws { fill: none; stroke: #c8102e; stroke-width: 2.5; }
+.metro-toggle { cursor: pointer; }
+.metro-toggle circle { fill: var(--bg); stroke: var(--line); stroke-width: 3.5; }
+.metro-toggle text { display: none; font-family: var(--font-sans); font-size: 11px; font-weight: 600; fill: var(--bg); }
+.metro-toggle:hover circle { stroke-width: 5; }
+.metro-toggle:focus { outline: none; }
+.metro-toggle:focus-visible circle { stroke: var(--text); stroke-width: 4; }
+.metro-stop.done .metro-toggle circle { fill: var(--line); }
+.metro-stop.done .metro-toggle text { display: inline; }
+.metro-start.done .metro-toggle text { font-size: 14px; }
+.metro-line-name::before { clip-path: none; height: 0.35rem; width: 1.4rem; border: none; border-radius: 3px; }
+.metro-pending { color: var(--text-muted); flex: 1; }
+.metro-workshop {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #c8102e;
+  border: 1.5px solid #c8102e;
+  border-radius: 999px;
+  padding: 0 0.5rem;
+}
+
 /* ── Contact ───────────────────────────────────────────────────── */
 .section-contact { background: var(--bg-raised); }
 

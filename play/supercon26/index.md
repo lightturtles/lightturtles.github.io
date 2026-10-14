@@ -135,38 +135,38 @@ grid: |
 
 tiles:
   5: repl
-  11: wifi-join
-  12: map-firmware
-  13: one-led
-  14: asyncio-basics
-  19: sao-pinout
-  20: backup
-  21: read-button
+  14: wifi-join
+  13: map-firmware
+  12: one-led
+  30: asyncio-basics
+  11: sao-pinout
+  24: backup
+  31: read-button
   22: inspect-firmware
-  23: firmware-diagram
-  26: i2c-scan
-  27: update-firmware
-  28: name-badge
-  29: resets
-  30: all-leds
-  35: sao-blink
-  36: add-a-library
-  37: break-and-restore
-  38: save-settings
-  39: mount-and-run
-  42: first-app
-  43: badge-diff
-  44: start-fresh
-  45: post-mortem
-  46: recover
-  50: live-data
-  51: hog-the-cpu
-  53: lvgl-hello
-  54: app-crash
-  58: share-hardware
-  60: app-screen
-  61: eink-refresh
-  69: demo
+  29: firmware-diagram
+  36: i2c-scan
+  37: update-firmware
+  21: name-badge
+  39: resets
+  20: all-leds
+  45: sao-blink
+  46: add-a-library
+  47: break-and-restore
+  48: save-settings
+  49: mount-and-run
+  38: first-app
+  53: badge-diff
+  54: start-fresh
+  55: post-mortem
+  56: recover
+  60: live-data
+  61: hog-the-cpu
+  63: lvgl-hello
+  64: app-crash
+  68: share-hardware
+  70: app-screen
+  71: eink-refresh
+  79: demo
 # ── end of layout ─────────────────────────────────────────────────────────
 ---
 Made for the *Badge Hacking for Beginners* workshop at Hackaday Supercon 2026, but

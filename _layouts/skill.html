@@ -26,7 +26,13 @@ layout: default
     </div>
 
     <div class="post-meta-top">
+      {% if page.tier %}
       <span class="tag skill-tier" style="--tier: {{ tree_page.palette[page.tier] }}">{{ page.tier }}</span>
+      {% elsif page.topic %}
+      {% assign line = tree_page.metro.lines | where: "topic", page.topic | first %}
+      <span class="tag skill-tier" style="--tier: {{ line.color }}">{{ line.title | default: page.topic }}</span>
+      {% endif %}
+      {% if page.workshop %}<span class="tag tag-subject">Workshop</span>{% endif %}
       {% if page.time %}<span class="tag tag-subject">{{ page.time }}</span>{% endif %}
       <label class="skill-done skill-done-compact" hidden>
         <input type="checkbox" data-skill="{{ slug }}">

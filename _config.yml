@@ -50,6 +50,10 @@ defaults:
       path: "play/supercon26"
     values:
       unlisted: true
+  - scope:
+      path: "play/supercon26_v2"
+    values:
+      unlisted: true
 
 exclude:
   - README.md

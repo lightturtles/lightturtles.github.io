@@ -1,0 +1,320 @@
+# Supercon 2026 skill tree, v2 (topic-based layout). Planning list: 58 skills.
+#
+# Skills are grouped by topic; within a topic they're listed roughly in order,
+# with a few side branches. No core/developmental/stretch tiers: distance from
+# the start implies difficulty.
+#
+#   needs:    real prerequisites only, by id. Most stay inside the topic.
+#   workshop: used by the "Badge Hacking for Beginners" workshop projects.
+#   color:    the topic's line color on the map.
+#   change:   relation to the v1 pages in play/supercon26/ (ids kept where reused).
+#
+# Retired from v1: live-data (split into read-register and web-data; battery
+# option dropped), app-crash (merged into post-mortem), demo (moves to the
+# projects list).
+
+topics:
+
+  - id: basics
+    title: Basics / Connecting
+    color: "#4a4a48"
+    group: basics
+    skills:
+      - id: repl
+        title: Connect to the REPL
+        description: "Connect over USB-C, reach >>>, run one line."
+        needs: []
+        workshop: true
+      - id: map-firmware
+        title: Find the files
+        description: "The badge's files next to the official folder: which are system files, which are yours, which are badge data."
+        needs: [repl]
+        workshop: true
+      - id: explore-badge
+        title: Explore the badge object
+        description: "dir(), help() and Tab on badge_obj: what this badge can do, under the firmware's own names."
+        needs: [repl]
+      - id: backup
+        title: Back up your badge
+        description: "Copy your files and data/ to your laptop."
+        needs: [map-firmware]
+        workshop: true
+      - id: update-firmware
+        title: Update the firmware
+        description: "Copy newer system files from the folder without losing yours."
+        needs: [backup]
+        workshop: true
+      - id: start-fresh
+        title: Start fresh
+        description: "Make the badge match the official folder exactly."
+        needs: [backup]
+
+  - id: modify-app
+    title: "Software: Modify an app"
+    color: "#5aa89a"
+    group: software
+    skills:
+      - id: firmware-diagram
+        title: Diagram the firmware
+        description: "What main.py does; boot → main → menu → apps → hardware."
+        needs: [map-firmware]
+      - id: name-badge
+        title: Edit the base app
+        description: "Change some text → swap an image → show a sensor value (I2C) → change a widget (Display). Each variant links to what it needs."
+        needs: [update-firmware]
+        workshop: true
+      - id: resets
+        title: Three kinds of reset
+        description: "Soft vs. hard reset vs. power cycle, and which one picks up your edit."
+        needs: [name-badge]
+      - id: badge-diff
+        title: What did I change?
+        description: "Diff the badge against the folder."
+        needs: [backup]
+      - id: share-apps
+        title: Share and install apps
+        description: "Install someone else's app (copy the file, register it in the menu); share yours with a README or a PR."
+        needs: [update-firmware]
+        workshop: true
+
+  - id: write-app
+    title: "Software: Write your own app"
+    color: "#2f7f73"
+    group: software
+    skills:
+      - id: first-app
+        title: Your first app
+        description: "From the template: print, read buttons the app way, watch the app come and go."
+        needs: [firmware-diagram]
+      - id: asyncio-basics
+        title: Take turns with asyncio
+        description: "Why the apps have to share the processor; two tasks taking turns at the REPL."
+        needs: [firmware-diagram]
+      - id: hog-the-cpu
+        title: Preventing freezes
+        description: "Freeze the badge, find the culprit with Ctrl+C, fix it."
+        needs: [first-app, break-and-restore]
+      - id: fsm
+        title: Break work into states
+        description: "FSMs, persistent state in module/instance variables, the rules of cooperative scheduling."
+        needs: [hog-the-cpu, asyncio-basics]
+      - id: on-time
+        title: Doing things on time
+        description: "ticks_ms/ticks_diff, periodic vs. event-driven, time your foreground to know your budget."
+        needs: [fsm]
+      - id: pass-data
+        title: Passing data between tasks
+        description: "Why shared variables are usually safe; when you need Event, ThreadSafeFlag or a queue."
+        needs: [fsm]
+      - id: share-hardware
+        title: Share the LEDs
+        description: "Two apps fight over the LEDs; fix it with one shared object."
+        needs: [first-app, all-leds]
+      - id: background-app
+        title: A background-only app
+        description: "An app that keeps working without a screen."
+        needs: [fsm]
+      - id: save-settings
+        title: Save across reboots
+        description: "Persist data with the config module."
+        needs: [first-app]
+      - id: out-of-memory
+        title: Running out of memory
+        description: "gc.mem_free(), MemoryError, why images and big strings hurt."
+        needs: [first-app]
+
+  - id: gpio
+    title: "Hardware: GPIO"
+    color: "#c4622d"
+    group: hardware
+    skills:
+      - id: one-led
+        title: Light one LED
+        description: "Set one WS2812 from the REPL."
+        needs: [repl]
+        workshop: true
+      - id: read-button
+        title: Read a button
+        description: "Read a button's pin from the REPL."
+        needs: [repl]
+        workshop: true
+      - id: all-leds
+        title: Light all the LEDs
+        description: "The whole chain; colors and rainbows."
+        needs: [one-led]
+      - id: animate-leds
+        title: Animate without blocking
+        description: "LED animation one step per tick."
+        needs: [all-leds, on-time]
+      - id: interrupts
+        title: Polling vs. interrupts
+        description: "Pin IRQs, micropython.schedule, handing work off to a task."
+        needs: [read-button, asyncio-basics]
+      - id: sao-blink
+        title: Blink on the SAO
+        description: "Drive an SAO GPIO pin."
+        needs: [sao-pinout, one-led]
+
+  - id: i2c
+    title: "Hardware: I2C"
+    color: "#8f4a1f"
+    group: hardware
+    skills:
+      - id: sao-pinout
+        title: SAO pinout, and connect your sensor
+        description: "Find each pin's GPIO; plug in or wire up the sensor."
+        needs: [map-firmware]
+        workshop: true
+      - id: i2c-scan
+        title: Scan for I2C devices
+        description: "Find what's on the bus and at which address."
+        needs: [sao-pinout]
+        workshop: true
+      - id: read-register
+        title: Read a register
+        description: "readfrom_mem at the REPL; raw bytes."
+        needs: [i2c-scan]
+        workshop: true
+      - id: real-units
+        title: Raw bytes to real units
+        description: "Use the datasheet to turn bytes into °C."
+        needs: [read-register]
+        workshop: true
+      - id: add-a-library
+        title: Add a library
+        description: "Skip the datasheet: drop a driver into lib/."
+        needs: [i2c-scan]
+
+  - id: display
+    title: "Hardware: Display (e-ink + LVGL)"
+    color: "#c9902f"
+    group: hardware
+    skills:
+      - id: lvgl-hello
+        title: Hello, LVGL
+        description: "One label on the screen from your app."
+        needs: [first-app]
+      - id: app-screen
+        title: Layout and fonts
+        description: "Containers, alignment, fonts; build a real screen."
+        needs: [lvgl-hello]
+      - id: draw-pixels
+        title: Draw pixels, shapes and charts
+        description: "An LVGL canvas or chart (or a framebuffer): graphs, game boards, generated art."
+        needs: [lvgl-hello]
+      - id: eink-images
+        title: Images on a 3-color panel
+        description: "Convert and dither for black/white/red; show your image."
+        needs: [lvgl-hello]
+      - id: use-red
+        title: Use red on purpose
+        description: "Highlight with the third color, and what it costs in refresh time."
+        needs: [eink-images]
+      - id: eink-refresh
+        title: Why e-ink is slow
+        description: "Time a refresh; ghosting; how LVGL's redraws turn into panel refreshes."
+        needs: [lvgl-hello]
+      - id: eink-updates
+        title: Update the screen well
+        description: "What to change, how often, full vs. partial refresh. LEDs for fast feedback, e-ink for slow."
+        needs: [eink-refresh, on-time]
+      - id: qr-code
+        title: Show a QR code
+        description: "Your site or socials on your badge."
+        needs: [app-screen]
+      - id: sleep-with-image
+        title: Sleep with your image showing
+        description: "Deep sleep, wake on a button; the e-ink keeps the image."
+        needs: [eink-refresh]
+
+  - id: wifi
+    title: "Hardware: WiFi"
+    color: "#3b5b92"
+    group: radio
+    skills:
+      - id: wifi-join
+        title: Join WiFi
+        description: "Connect from the REPL."
+        needs: [repl]
+      - id: web-data
+        title: Fetch data from the web
+        description: "requests, parsing JSON, closing the response, keeping replies small, and why the badge stutters while it waits."
+        needs: [wifi-join]
+      - id: fetch-without-freezing
+        title: Fetch without freezing
+        description: "Fetch with asyncio (sockets or aiohttp) so the rest of the badge keeps running."
+        needs: [web-data, asyncio-basics]
+      - id: ntp-time
+        title: Set the clock
+        description: "NTP, time zones, show the time."
+        needs: [wifi-join]
+
+  - id: espnow
+    title: "Hardware: ESP-NOW"
+    color: "#7a5ea8"
+    group: radio
+    skills:
+      - id: espnow-hello
+        title: Badge-to-badge hello
+        description: "Send/receive from the REPL; your badge's ID (MAC or machine.unique_id()); the same-channel rule."
+        needs: [wifi-join]
+      - id: espnow-in-app
+        title: Messages in your app
+        description: "Receive in the background, show in the foreground."
+        needs: [espnow-hello, pass-data]
+      - id: espnow-messages
+        title: Design a message
+        description: "Pack/unpack with struct or JSON, message type and sender, the 250-byte limit; broadcast vs. one badge, pairing, acks and retries."
+        needs: [espnow-in-app]
+      - id: espnow-nearby
+        title: Who's nearby?
+        description: "Count badges and estimate distance from signal strength."
+        needs: [espnow-hello]
+
+  - id: workflow
+    title: "Build & debug: Workflow"
+    color: "#5e9b45"
+    group: build
+    skills:
+      - id: repl-setup
+        title: A faster REPL
+        description: "dev.py for your setup, main.py's leftover globals after Ctrl+C, reload a module without rebooting."
+        needs: [map-firmware]
+      - id: drive-app
+        title: Drive your app by hand
+        description: "Make your app object at >>>, call run_foreground() yourself, inspect self."
+        needs: [first-app, repl-setup]
+      - id: mount-and-run
+        title: Work from your laptop
+        description: "Keep your app on your laptop (and in git); mount or copy it to the badge."
+        needs: [backup]
+
+  - id: debugging
+    title: "Build & debug: Debugging"
+    color: "#046307"
+    group: build
+    skills:
+      - id: break-and-restore
+        title: Read a traceback
+        description: "Break a file on purpose; read the file, line and error; restore it."
+        needs: [name-badge]
+      - id: post-mortem
+        title: Post-mortem
+        description: "Crash or Ctrl+C a running app; see what survives; inspect its state."
+        needs: [break-and-restore]
+      - id: bp
+        title: Pause and poke
+        description: "A bp() breakpoint: what it freezes, and how to see locals."
+        needs: [post-mortem]
+      - id: better-prints
+        title: Better print debugging
+        description: "Tags, timestamps, printing on change."
+        needs: [first-app]
+      - id: log-and-plot
+        title: Log and plot
+        description: "Save the serial output; plot it with Thonny's Plotter."
+        needs: [better-prints]
+      - id: recover
+        title: Boot rescue
+        description: "Recover a badge that crashes at boot."
+        needs: [break-and-restore]
