@@ -2,10 +2,8 @@
 id: read-button
 title: Read a button from the REPL
 label: Read a button
-tier: core
-difficulty: 3
-group: buttons
-icon: hand-pointer
+topic: gpio
+workshop: true
 needs: [repl]
 time: 10 min
 touches: []
@@ -66,7 +64,7 @@ the pin to ground, which wins over the weak pull-up, so it reads `0`.
 Pressed = 0 seems backwards at first, but it's very common.
 
 Your loop checks the button ten times a second. That's called **polling**.
-If you tap the button quickly, the loop might miss it.
+If you tap the button quickly, the loop might miss it. [[interrupts]] fixes that.
 
 <!-- TODO(diagram): 3.3 V → pull-up resistor → pin → button → GND, with "not pressed: 1" and "pressed: 0" -->
 
@@ -90,4 +88,6 @@ while True:
     time.sleep(0.02)
 ```
 
-Can you find the pins for the other buttons? (Hint: [[inspect-firmware]].)
+Can you find the pins for the other buttons? (Hint: `{{ facts.firmware.pins_file }}`, or [[explore-badge]].)
+
+Make each press step LED 0 to the next color in a list: red, green, blue, off. If one press skips several colors, wait for the button to be released before you check again.

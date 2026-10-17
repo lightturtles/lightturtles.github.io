@@ -2,10 +2,8 @@
 id: one-led
 title: Light one LED from the REPL
 label: Light one LED
-tier: core
-difficulty: 2
-group: lights
-icon: lightbulb
+topic: gpio
+workshop: true
 needs: [repl]
 time: 10 min
 touches: []

@@ -1,11 +1,9 @@
 ---
 id: repl
 title: Connect over USB-C; reach the REPL; run one line
-label: Reach the REPL           # short text for the hex (falls back to title)
-tier: core                      # core | developmental | stretch
-difficulty: 0                   # 0 (start tile) … 9 (outer edge)
-group: getting-started          # layout hint: keeps related skills near each other
-icon: terminal
+label: Connect to the REPL
+topic: basics
+workshop: true
 needs: []
 time: 10 min
 touches: []                     # firmware files this page depends on

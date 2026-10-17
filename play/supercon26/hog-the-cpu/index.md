@@ -1,11 +1,9 @@
 ---
 id: hog-the-cpu
 title: Hog the processor; find the culprit with Ctrl+C; fix it
-label: Freeze the badge
-tier: core
-difficulty: 7
-group: debugging
-icon: hourglass
+label: Preventing freezes
+topic: write-app
+workshop: false
 needs: [first-app, break-and-restore]
 time: 20 min
 touches: [main.py, apps/base_app.py, apps/userA.py]
@@ -114,11 +112,11 @@ On a frozen badge, that's always the guilty line, so the traceback points straig
 it. That's the most useful debugging trick on the badge, and it costs nothing.
 
 The fix is the shape every app takes: **keep your state in `self`, do one small step per
-call, and return.** The usual hogs in real apps are:
+call, and return.** [[fsm]] turns that into a habit. The usual hogs in real apps are:
 
-- `time.sleep(...)`: use a timestamp and `time.ticks_diff()` instead
+- `time.sleep(...)`: use a timestamp and `time.ticks_diff()` instead (see [[on-time]])
 - `while` loops waiting for something to happen: check once per call instead
-- network requests and big file reads: do them rarely, and expect a stutter (see [[live-data]])
+- network requests and big file reads: do them rarely, and expect a stutter (see [[web-data]])
 
 A badge that **stutters** rather than freezes has the same problem, just smaller. Ctrl+C
 won't catch it in the act, but timing like step 7 will.
@@ -142,3 +140,5 @@ won't catch it in the act, but timing like step 7 will.
 - Have a logic analyzer? Toggle a spare SAO GPIO (see [[sao-pinout]]) high at the start of
   `run_foreground()` and low at the end. You'll *see* every slice, and printing won't
   slow your code down while you measure it.
+- A progressive fractal: compute a Mandelbrot set one strip per slice, and update the screen as each strip finishes (see [[draw-pixels]] and [[eink-updates]]).
+- A maze generator and solver: build the maze one step per slice, then watch the solver draw its path. Pick the algorithm with a button (depth-first, breadth-first, follow-the-wall) and see which one wanders the most (see [[draw-pixels]] and [[fsm]]).

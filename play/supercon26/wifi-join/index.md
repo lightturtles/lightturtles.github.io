@@ -2,10 +2,8 @@
 id: wifi-join
 title: Join WiFi from the REPL
 label: Join WiFi
-tier: developmental
-difficulty: 3
-group: connectivity
-icon: wifi
+topic: wifi
+workshop: false
 needs: [repl]
 time: 10 min
 touches: []
@@ -80,6 +78,7 @@ you'll ever use. If it doesn't work, it's probably not you. Try a phone hotspot.
 
 ## Have fun!
 
-- Set the clock: `import ntptime, time; ntptime.settime(); time.localtime()` (the time is UTC).
-- Fetch a web page: `import requests; requests.get("http://example.com").text[:200]`
+- Set the clock, and show it in your time zone: [[ntp-time]].
+- Fetch something from the web: [[web-data]].
+- Talk to other badges directly, no router needed: [[espnow-hello]].
 - Make the badge join WiFi on its own at startup with a setting saved in [[save-settings]].

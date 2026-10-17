@@ -1,12 +1,10 @@
 ---
 id: save-settings
-title: Save data across reboots with {{ facts.config.module }}
+title: Save data across reboots with the config module
 label: Save across reboots
-tier: stretch
-difficulty: 6
-group: firmware-internals
-icon: save
-needs: [resets, backup]
+topic: write-app
+workshop: false
+needs: [first-app]
 time: 20 min
 touches: []                     # TODO: the config module's source file
 verified_against: null
@@ -84,7 +82,7 @@ Flash wears out after many thousands of writes to the same spot. Save when a set
 
 | Symptom | Fix |
 |---|---|
-| `ImportError` | Check the module name with `help('modules')`, or see [[inspect-firmware]]. |
+| `ImportError` | Check the module name with `help('modules')`, or see [[explore-badge]]. |
 | Value gone after reboot | Did you call `config.save()`? |
 | `get` returns `None` | The key name must match exactly, including capitals. |
 | Badge won't boot after editing the file by hand | Restore the file from your [[backup]], or delete it and reboot to get defaults. |
@@ -99,3 +97,4 @@ mpremote fs cat :{{ facts.config.file }}
 
 - Count how many times the badge has booted: read a number, add 1, save it.
 - Save your name from [[name-badge]] so it survives a reflash of your app.
+- An e-reader: page through a text file with the buttons, and save your page so the book opens where you left off. Read one page at a time, not the whole book (see [[out-of-memory]]).

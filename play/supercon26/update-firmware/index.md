@@ -2,10 +2,8 @@
 id: update-firmware
 title: Update the badge's firmware without losing your files
 label: Update the firmware
-tier: core
-difficulty: 4
-group: files
-icon: download
+topic: basics
+workshop: true
 needs: [backup]
 time: 20 min
 touches: []

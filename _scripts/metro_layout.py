@@ -3,7 +3,7 @@
 metro_layout.py — lay out a metro-map skill tree from TREE/skills.yml.
 
 Usage:
-    python3 _scripts/metro_layout.py play/supercon26_v2
+    python3 _scripts/metro_layout.py play/supercon26
 
 skills.yml is the file you edit: topics in order, each with a title, a color
 and its skills in order. Each topic becomes one line on the map and its skills

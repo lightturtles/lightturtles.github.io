@@ -1,11 +1,9 @@
 ---
 id: eink-refresh
 title: "Why is e-ink so slow? Time a refresh; see ghosting; unplug it"
-label: How e-ink works
-tier: developmental
-difficulty: 6
-group: display
-icon: stopwatch
+label: Why e-ink is slow
+topic: display
+workshop: false
 needs: [lvgl-hello]
 time: 15 min
 touches: [hardware/display.py, hardware/lvgl_setup.py]

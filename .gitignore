@@ -8,3 +8,4 @@ _site
 *.webm
 *.mkv
 .~lock.*
+__pycache__/

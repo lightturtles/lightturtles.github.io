@@ -2,10 +2,8 @@
 id: firmware-diagram
 title: Draw how the badge's code fits together (boot → main.py → apps → hardware)
 label: Diagram the firmware
-tier: core
-difficulty: 5
-group: firmware-internals
-icon: sitemap
+topic: modify-app
+workshop: false
 needs: [map-firmware]
 time: 20 min
 touches: [boot.py, main.py, hardware/badge.py, apps/base_app.py, apps/app_menu.py]
@@ -30,6 +28,12 @@ at the same time, and which code talks to which piece of hardware.
 1. **Start at power-up.** Open `boot.py` and `main.py`. MicroPython runs `boot.py`,
    then `main.py`. Draw a box for each, with an arrow from one to the next. (`boot.py`
    may be empty; draw it anyway.)
+
+   Skim `main.py` before you draw anything else. Don't change it. Look for:
+   - the `import` lines near the top. Each one points at a file or folder from [[map-firmware]].
+   - a list of apps. That's where the menu comes from.
+   - a loop at the bottom that runs forever. That's what's running whenever you're *not*
+     at `>>>`, and why **Ctrl+C** is needed to get there.
 
 2. **Find what `main.py` creates.** Scroll to `async def main()`. Every line that looks
    like `Something(...)` makes an object. Draw a box for each one under `main.py`, with

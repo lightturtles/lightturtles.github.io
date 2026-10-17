@@ -2,10 +2,8 @@
 id: all-leds
 title: Light all the LEDs from the REPL
 label: Light all the LEDs
-tier: developmental
-difficulty: 2
-group: lights
-icon: rainbow
+topic: gpio
+workshop: false
 needs: [one-led]
 time: 15 min
 touches: []
@@ -89,7 +87,7 @@ with one `np.write()`, then waits. Shorter sleep = faster animation.
 
 While that loop runs, the badge can't do anything else: no buttons, no screen.
 That's fine at the REPL, but an app has to share the processor
-(see [[animate-nonblocking]]).
+(see [[animate-leds]]).
 
 ## Stuck?
 

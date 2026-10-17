@@ -2,10 +2,8 @@
 id: start-fresh
 title: Start fresh (make the badge match the official folder)
 label: Start fresh
-tier: developmental
-difficulty: 5
-group: files
-icon: undo
+topic: basics
+workshop: false
 needs: [backup]
 time: 15 min
 touches: []

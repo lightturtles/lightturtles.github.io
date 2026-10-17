@@ -2,11 +2,9 @@
 id: add-a-library
 title: Add a MicroPython library to the badge
 label: Add a library
-tier: developmental
-difficulty: 5
-group: files
-icon: package
-needs: [backup]
+topic: i2c
+workshop: false
+needs: [i2c-scan]
 time: 15 min
 touches: []
 verified_against: null
@@ -15,11 +13,12 @@ video: null
 
 {% include facts.html %}
 
-**Goal:** Install someone else's code (like a sensor driver) on the badge, and `import` it.
+**Goal:** Skip the datasheet: install a driver for your sensor, `import` it, and get
+readings in real units.
 
 ## You need
 
-- Your badge, connected (see [[repl]])
+- Your sensor, found with [[i2c-scan]]
 - A library: a `.py` file written for **MicroPython**, e.g. a sensor driver from the
   sensor's maker, [micropython-lib](https://github.com/micropython/micropython-lib), or
   a helper at the workshop
@@ -51,9 +50,20 @@ video: null
    dir(sensor_name)
    ```
 
-5. Back it up. It's one of *your* files now (see [[backup]]).
+5. **Use it.** Most drivers take an I2C bus (and sometimes an address) when you
+   make the object. Hand it the firmware's bus:
 
-**✅ Done when** `import` works and `dir()` lists what's inside the library.
+   ```python
+   {{ facts.firmware.badge_import }}
+   s = sensor_name.SENSOR(badge_obj.{{ facts.sao.i2c_attr }})   # the class name is in the library's example
+   dir(s)                 # look for something like temperature, or read()
+   ```
+
+   <!-- TODO: fill in with the real driver's names once the workshop sensor is picked -->
+
+6. Back it up. It's one of *your* files now (see [[backup]]).
+
+**✅ Done when** `import` works, and the library gives you a reading in real units.
 
 ## What just happened
 
@@ -61,6 +71,10 @@ video: null
 Putting libraries in `/{{ facts.firmware.lib_dir }}` keeps them apart from the badge's
 own code. This matters when you update or [[start-fresh]]: anything not in the
 official folder gets treated as yours, and a start-fresh deletes it.
+
+A driver does the work of [[read-register]] and [[real-units]] for you: it knows
+which registers to read and how to turn the bytes into units. Reading its source is
+a good way to learn how, once you're curious.
 
 Libraries written for regular Python usually *won't* work. MicroPython has fewer
 modules and much less memory. Look for "MicroPython" in the README.

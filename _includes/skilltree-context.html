@@ -1,6 +1,6 @@
 {% comment %}
   Given include.tree_url (e.g. "/play/supercon26/"), sets:
-    tree_page  the tree's index page (palette, grid, tiles, facts in its front matter)
+    tree_page  the tree's index page (metro layout and facts in its front matter)
     skills     every page one folder below it (play/supercon26/<id>/index.md)
   A skill's id is its folder name: {{ s.dir | split: "/" | last }}.
 {% endcomment %}

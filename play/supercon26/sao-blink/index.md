@@ -2,10 +2,8 @@
 id: sao-blink
 title: Blink an LED on an SAO GPIO pin
 label: Blink on the SAO
-tier: developmental
-difficulty: 3
-group: sao
-icon: lightbulb
+topic: gpio
+workshop: false
 needs: [sao-pinout, one-led]
 time: 15 min
 touches: []

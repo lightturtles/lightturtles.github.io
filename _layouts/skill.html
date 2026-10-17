@@ -26,9 +26,7 @@ layout: default
     </div>
 
     <div class="post-meta-top">
-      {% if page.tier %}
-      <span class="tag skill-tier" style="--tier: {{ tree_page.palette[page.tier] }}">{{ page.tier }}</span>
-      {% elsif page.topic %}
+      {% if page.topic %}
       {% assign line = tree_page.metro.lines | where: "topic", page.topic | first %}
       <span class="tag skill-tier" style="--tier: {{ line.color }}">{{ line.title | default: page.topic }}</span>
       {% endif %}

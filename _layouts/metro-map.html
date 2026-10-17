@@ -44,7 +44,7 @@ layout: default
 
     <div class="skilltree-view" id="metro-list">
       {% for line in page.metro.lines %}
-      <h2 class="skilltree-tier metro-line-name" style="--tier: {{ line.color }}">{{ line.title }}</h2>
+      <h2 class="skilltree-tier" style="--tier: {{ line.color }}">{{ line.title }}</h2>
       <ul class="skilltree-list">
         {% assign stops = page.metro.stations | where: "topic", line.topic %}
         {% for st in stops %}

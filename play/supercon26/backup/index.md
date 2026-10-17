@@ -1,11 +1,9 @@
 ---
 id: backup
 title: Back up your files from the badge
-label: Back up the badge
-tier: core
-difficulty: 3
-group: files
-icon: save
+label: Back up your badge
+topic: basics
+workshop: true
 needs: [map-firmware]
 time: 15 min
 touches: []

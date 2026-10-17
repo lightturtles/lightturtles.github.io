@@ -1,14 +1,12 @@
 ---
 id: map-firmware
-title: Map the badge's files (what's there, and which ones are yours)
-label: Map the firmware
-tier: core
-difficulty: 2
-group: files
-icon: folder-tree
+title: Find the badge's files (what's there, and which ones are yours)
+label: Find the files
+topic: basics
+workshop: true
 needs: [repl]
 time: 20 min
-touches: [main.py]
+touches: []
 verified_against: null
 video: null
 ---
@@ -48,13 +46,7 @@ are meant for *you* to change.
    os.listdir('/apps')
    ```
 
-4. **Find the start.** Open `main.py` from the badge (double-click it in the bottom pane)
-   and skim it. Don't change anything yet. Look for:
-   - the `import` lines near the top. Each one points at a file or folder you just saw.
-   - a list of apps. That's where the menu comes from.
-   - a loop at the bottom that runs forever. That's what's running when you're *not* at `>>>`.
-
-5. **Fill in this table** for each top-level item. Guess from the names, then open a file
+4. **Fill in this table** for each top-level item. Guess from the names, then open a file
    or two to check.
 
    | Item | What it's for | Should you edit it? |
@@ -69,7 +61,7 @@ are meant for *you* to change.
 
    <!-- TODO(verify): swap in this year's top-level names once the firmware is out -->
 
-6. **Spot the differences.** Is anything on the badge that *isn't* in the folder?
+5. **Spot the differences.** Is anything on the badge that *isn't* in the folder?
    The `{{ facts.firmware.state_dir }}/` folder is the usual one: the badge writes there
    itself (saved settings, keys for messaging), so it's different on every badge.
 
@@ -114,5 +106,5 @@ mpremote fs cat :main.py
 
 ## Have fun!
 
-- Follow one `import` from `main.py` all the way down to a file that talks to the hardware.
+- Open `main.py` and skim it. What does it import? Then follow it properly in [[firmware-diagram]].
 - Which file is the biggest? `mpremote fs tree -h`

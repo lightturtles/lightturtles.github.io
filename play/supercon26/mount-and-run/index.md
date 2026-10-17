@@ -1,13 +1,11 @@
 ---
 id: mount-and-run
-title: Run code from your laptop without copying it (mpremote mount)
-label: Mount and run
-tier: stretch
-difficulty: 7
-group: editing
-icon: link
-needs: [name-badge]
-time: 20 min
+title: Work from your laptop (git, mount, and copy)
+label: Work from your laptop
+topic: workflow
+workshop: false
+needs: [backup]
+time: 30 min
 touches: [main.py]
 verified_against: null
 video: null
@@ -15,67 +13,103 @@ video: null
 
 {% include facts.html %}
 
-**Goal:** Edit files on your laptop in any editor you like, and run them on the badge
-without uploading anything.
+**Goal:** Keep your code on your laptop, in git, edited in whatever editor you like,
+and get it onto the badge in one command, or run it without copying at all.
 
 ## You need
 
-- `mpremote` (see [[repl]]); close Thonny/ViperIDE so the port is free
-- A **copy** of the official folder to play in (don't edit the original, see [[map-firmware]])
+- `mpremote` (see [[repl]]); close Thonny and ViperIDE so the port is free
+- `git` on your laptop, and a [[backup]] of your badge
 
 ## Steps
 
-1. Make your playground:
+1. **Make a project folder that matches the badge.** Clone the badge's repo, so the
+   official files are already in it:
 
    ```bash
-   cp -r {{ facts.firmware.folder }} playground
+   git clone {{ facts.firmware.repo }} my-badge
+   cd my-badge
    ```
 
-2. Mount it and start the badge's program *from the laptop's copy*:
+   (No git? Unzip the official folder somewhere, then `git init` and commit it as-is.)
+
+2. **Bring your work in.** Copy your files from your backup into the matching places
+   under `{{ facts.firmware.folder }}/`, e.g. your app to
+   `{{ facts.firmware.folder }}/{{ facts.firmware.user_app }}`. Then:
 
    ```bash
-   mpremote mount playground + exec "exec(open('main.py').read())"
+   git diff --stat             # exactly what you've changed from the official files
+   git add -A
+   git commit -m "My app, as it was on the badge"
    ```
 
-   The badge starts up as usual (more slowly; see below). The shell shows its output.
+3. **Edit on the laptop.** Open the folder in your editor (VS Code, vim, anything).
+   Make a change to your app and save.
+
+4. **Copy it over:** one file, then a soft reset to load it:
+
+   ```bash
+   mpremote cp {{ facts.firmware.folder }}/{{ facts.firmware.user_app }} :{{ facts.firmware.user_app }} + soft-reset + repl
+   ```
+
+   One line: copy, restart, and watch the output. **Ctrl+]** to leave. `mpremote cp`
+   skips files that haven't changed, so it's quick.
+
+5. **Or don't copy at all: mount.** Run the badge's program from the laptop's files:
+
+   ```bash
+   mpremote mount {{ facts.firmware.folder }} + exec "exec(open('main.py').read())"
+   ```
 
    <!-- TODO(verify): on the real badge; main.py may need `import main; main.main()` instead -->
 
-3. In your laptop editor, change the line from [[name-badge]] in
-   `playground/{{ facts.name_badge.file }}`. Save.
+   The badge starts up (more slowly) using *your laptop's* copies of every file.
+   Change something, **Ctrl+]**, run the same command again, and the change is there.
+   The badge's own files were never touched: press **{{ facts.power.reset_button }}** to prove it.
 
-4. Back in the `mpremote` window, press **Ctrl+]** to quit, then run the same command
-   again (**↑**, **Enter**). The badge starts from the laptop's files again, and your
-   change is there. No upload, no Thonny.
+6. **Commit when it works.** Small commits, each one working:
 
-5. **Ctrl+]** to quit. The badge's own files were never touched. Press
-   **{{ facts.power.reset_button }}** to prove it.
+   ```bash
+   git commit -am "Show temperature in big font"
+   ```
 
-**✅ Done when** a change you saved on your laptop shows up on the badge without copying
-any files.
+**✅ Done when** your app lives in git on your laptop, and a change you saved there shows
+up on the badge with one command.
 
 ## What just happened
 
-`mpremote mount` makes your laptop's folder look like a folder on the badge, called
-`/remote`, and changes into it. When Python opens or imports a file, the read travels
-over USB to your laptop. Files in `/remote` come first, so your playground copy wins
-over the badge's own files.
+**The laptop is now the source of truth,** and the badge is a copy. That flips the
+risk around: a broken or wiped badge costs you nothing, and git remembers every
+working version (`git log`, `git diff`, `git checkout`). Because the repo started as
+the official files, `git diff` is always "what I changed," the same question
+[[badge-diff]] answers by comparing hashes.
 
-The catch is speed: every import crosses the cable, so startup is slow. And files the
-badge *writes* with a relative path land in your playground, not on the badge.
-Use mount while you're iterating, then upload when you're happy (see [[name-badge]]).
+**Copy or mount?**
 
-<!-- TODO(diagram): badge flash `/` and laptop folder mounted at `/remote`; import arrow checking /remote first -->
+| | Copy (`mpremote cp`) | Mount (`mpremote mount`) |
+|---|---|---|
+| Badge's files | updated | untouched |
+| Startup | normal speed | slow: every import crosses the USB cable |
+| Works unplugged | yes | no |
+| Good for | "this works; keep it" | trying many small changes quickly |
+
+`mpremote mount` makes your laptop's folder appear on the badge as `/remote`, and
+changes into it, so `import` finds your laptop's files first. Files the badge *writes*
+with a relative path land on your laptop, too.
+
+<!-- TODO(diagram): laptop repo (git) → cp → badge flash; and laptop folder mounted at /remote, import arrow checking /remote first -->
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| `could not enter raw repl` | Press **Ctrl+C** in another terminal with `mpremote`, or close Thonny. |
-| Badge starts with the *old* code | Did you save in your editor? Did you restart the `mpremote mount` command? (**Ctrl+D** restarts from the badge's *own* `main.py`.) |
-| Very slow, or times out | Normal for big folders. Mount only the folder you're changing, e.g. `mpremote mount playground/apps`. |
-| `OSError` writing a file | Writes to `/remote` go to your laptop. Check the folder isn't read-only. |
+| `could not enter raw repl` | Something else has the port: close Thonny or ViperIDE. |
+| Badge runs the *old* code | Did you save? Did the copy finish? After mount, **Ctrl+D** restarts from the badge's *own* files. |
+| Mount is very slow or times out | Normal for many files. Mount only what you're changing, or copy instead. |
+| `git diff` shows every line changed | Line endings. On Windows: `git config core.autocrlf input`, then re-copy. |
 
 ## Have fun!
 
-Time the startup with and without mount. Which files take longest to load?
+- Make a script (or a `Makefile`) that copies only the files git says have changed.
+- Push your repo to GitHub, and you've shared your app (see [[share-apps]]).
+- Time startup with and without mount. Which files take longest to load?

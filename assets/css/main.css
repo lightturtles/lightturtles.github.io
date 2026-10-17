@@ -815,7 +815,7 @@ a.credential-chip:hover {
 
 .post-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-/* ── Play: skill trees ─────────────────────────────────────────── */
+/* ── Play: skill trees (skill pages and the map's list view) ──── */
 .visually-hidden {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
@@ -834,45 +834,11 @@ a.credential-chip:hover {
   margin-bottom: 1.5rem;
 }
 
-.skilltree-legend {
-  list-style: none;
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  text-transform: lowercase;
-  color: var(--text-muted);
-}
-.skilltree-legend li { display: flex; align-items: center; gap: 0.4rem; }
-.skilltree-swatch {
-  width: 0.9rem; height: 0.9rem;
-  border: 1px solid var(--text);
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-}
-
 .skilltree-reset {
   background: none; border: none; padding: 0;
   font: inherit; color: var(--primary);
   text-decoration: underline; cursor: pointer;
 }
-
-.skilltree-svg { display: block; width: 100%; height: auto; margin: 0 auto; }
-.skilltree-svg text { font-family: var(--font-sans); font-size: 14px; font-weight: 600; }
-.skilltree-tile polygon { stroke: var(--text); stroke-width: 2; transition: filter 0.15s; }
-.skilltree-tile a:hover polygon,
-.skilltree-tile a:focus polygon { filter: brightness(1.12); stroke-width: 3; }
-.skilltree-tile-pending { color: var(--text-dim); }
-.skilltree-tile-pending polygon { stroke: var(--border-hi); stroke-dasharray: 6 4; }
-.skilltree-tile.done polygon { stroke-width: 4; }
-.skilltree-toggle { cursor: pointer; }
-.skilltree-toggle circle { fill: rgba(255, 255, 255, 0.25); stroke-width: 2; }
-.skilltree-toggle text { display: none; font-size: 16px !important; }
-.skilltree-toggle:hover circle,
-.skilltree-toggle:focus circle { fill: rgba(255, 255, 255, 0.5); }
-.skilltree-toggle:focus { outline: none; }
-.skilltree-toggle:focus-visible circle { stroke-width: 3; }
-.skilltree-tile.done .skilltree-toggle text { display: inline; }
 
 .skilltree-tier {
   font-size: 0.8rem;
@@ -885,10 +851,9 @@ a.credential-chip:hover {
 }
 .skilltree-tier::before {
   content: "";
-  width: 1rem; height: 1rem;
+  width: 1.4rem; height: 0.35rem;
+  border-radius: 3px;
   background: var(--tier);
-  border: 1px solid var(--text);
-  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
 }
 .skilltree-list {
   list-style: none;
@@ -986,7 +951,6 @@ a.credential-chip:hover {
 .metro-stop.done .metro-toggle circle { fill: var(--line); }
 .metro-stop.done .metro-toggle text { display: inline; }
 .metro-start.done .metro-toggle text { font-size: 14px; }
-.metro-line-name::before { clip-path: none; height: 0.35rem; width: 1.4rem; border: none; border-radius: 3px; }
 .metro-pending { color: var(--text-muted); flex: 1; }
 .metro-workshop {
   font-family: var(--font-mono);

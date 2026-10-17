@@ -1,100 +1,165 @@
 ---
 id: post-mortem
-title: Post-mortem (after Ctrl+C, inspect an app's state in the REPL)
+title: "Post-mortem: crash or stop a running app, see what survives, inspect its state"
 label: Post-mortem
-tier: developmental
-difficulty: 6
-group: debugging
-icon: magnifier
+topic: debugging
+workshop: false
 needs: [break-and-restore]
-time: 20 min
-touches: [apps/nametag.py]     # TODO: facts.name_badge.file
+time: 30 min
+touches: [main.py, apps/base_app.py, apps/app_menu.py, apps/userA.py]
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-**Goal:** Stop the badge mid-run and look inside a running app: what's in its
-variables *right now*?
+<!-- TODO(verify): crash behavior and BaseApp.all_apps are the 2025 firmware's (BaseApp.run has no try/except) -->
+
+**Goal:** Find out what the badge does when an app hits an error mid-run, then stop the
+world and look inside the app: what were its variables at that moment?
 
 ## You need
 
-- The app file from [[name-badge]], open in Thonny from the badge
+- Your app from [[first-app]] (or the name badge app from [[name-badge]])
 - A [[backup]]
 
 ## Steps
 
-1. **Leave yourself a handle.** Apps are objects that `main.py` creates and keeps to
-   itself, so you can't reach them from `>>>` yet. Find the app's `__init__` method in
-   `{{ facts.name_badge.file }}`, and add these two lines at the end of it (indented
-   to match):
+1. **Crash in the foreground.** In `run_foreground()`, add an error on
+   **{{ facts.buttons.app_2_label }}**:
 
    ```python
-   global me
-   me = self
+           if {{ facts.buttons.app_2 }}:
+               x = 1 / 0
    ```
 
-   <!-- TODO(verify): if this year's firmware keeps its apps somewhere reachable
-        (e.g. a module-level list), use that instead and skip this step -->
+   Save, **Ctrl+D**, open your app, and press **{{ facts.buttons.app_2_label }}**. Then try
+   every button, and watch the shell:
 
-2. Save, press **Ctrl+D**, and open **{{ facts.name_badge.app }}** on the badge. Use it for a
-   moment.
+   ```
+   Task exception wasn't retrieved
+   future: <Task> coro= <generator object 'run' at ...>
+   Traceback (most recent call last):
+     File "apps/base_app.py", line 45, in run
+     File "apps/userA.py", line 31, in run_foreground
+   ZeroDivisionError: divide by zero
+   ```
 
-3. **Stop the world.** Click in the shell and press **Ctrl+C**. Everything freezes
-   exactly as it was.
+   The screen stays on your app and the buttons do nothing. *But* the heartbeat still
+   prints every 60 seconds. The badge isn't frozen: your app is gone, and the menu
+   doesn't know.
 
-4. **Look inside.** The app's module is already loaded; importing it again just hands it
-   to you:
+2. **Crash in the background.** Move the error to `run_background()`, on the third tick:
 
    ```python
-   import {{ facts.name_badge.file | remove: ".py" | replace: "/", "." }} as m
-   m.me                # the app object
-   m.me.__dict__       # every variable it holds, and its value
+           if self.ticks == 3:
+               raise ValueError("bad sensor read")
    ```
 
-5. Pick one value from that list and explain it. Is it what you expected? Change
-   something on the badge, run `m.me.__dict__` again, and spot the difference.
-   (You'll need **Ctrl+D**, then the app, then **Ctrl+C** again.)
+   Save, **Ctrl+D**, and stay on the menu. After the third tick, the traceback prints
+   and the ticks stop. The rest of the badge is fine. Now open your app from the menu.
+   What happens? <!-- TODO(verify): in 2025, nothing happened: its task is gone, so nothing calls run_foreground() -->
 
-6. **More places to look:**
+3. **Stop the world and find your app.** Press **Ctrl+C**. Nothing is cleaned up: every
+   app is still in RAM. Find yours:
 
    ```python
-   import sys
-   sys.modules.keys()   # every module that's loaded
-   import micropython
-   micropython.mem_info()   # how much RAM is in use
+   from apps.base_app import BaseApp
+   [a.name for a in BaseApp.all_apps]
+   me = [a for a in BaseApp.all_apps if a.name == "{{ facts.firmware.user_app_name }}"][0]
    ```
 
-7. Take the two lines out again when you're done, or keep them; they're harmless.
+   <!-- TODO(verify): if this year's firmware doesn't keep a list of apps, add `global me; me = self` to the app's __init__ and use `import apps.userA as m; m.me` instead -->
 
-**✅ Done when** you can read one of the app's variables after Ctrl+C and explain its value.
+4. **Look inside.**
+
+   ```python
+   me.__dict__                              # every variable, and its value
+   me.ticks                                 # was it really 3?
+   me.task                                  # the dead task
+   me.active_foreground, me.active_background
+   ```
+
+   Pick one value and explain it. Is it what you expected at the moment of the crash?
+
+5. **More places to look:**
+
+   ```python
+   import sys, micropython
+   sorted(sys.modules)        # every module that's loaded
+   micropython.mem_info()     # how much RAM is in use
+   ```
+
+6. **Survive it next time.** Wrap the risky part in `try`/`except`, print the error,
+   and carry on:
+
+   ```python
+   import sys   # at the top of the file
+
+       def run_background(self):
+           self.ticks += 1
+           try:
+               if self.ticks == 3:
+                   raise ValueError("bad sensor read")
+           except Exception as e:
+               print(f"[{self.name}] error on tick {self.ticks}, carrying on:")
+               sys.print_exception(e)
+   ```
+
+   Tick 3 prints a traceback, and tick 4 happens anyway.
+
+7. **Keep a crash log** for when no laptop is plugged in. Inside the `except`:
+
+   ```python
+               with open("crash.log", "a") as f:
+                   f.write(f"tick {self.ticks}, t={time.ticks_ms()}\n")   # import time at the top
+                   sys.print_exception(e, f)
+   ```
+
+   Run it unplugged for a minute, then plug in and `print(open("crash.log").read())`.
+
+8. Put your app back the way you want it, and delete `crash.log`
+   (`import os; os.remove("crash.log")`).
+
+**✅ Done when** you can say what happens to the menu and the other apps when your app
+crashes, and you've read one of its variables after the crash and explained its value.
 
 ## What just happened
 
-**Ctrl+C** raises a `KeyboardInterrupt` wherever the program happens to be. The badge's
-main loop dies, but *nothing is cleaned up*: every object stays in RAM until the next
-reset. That's what makes a post-mortem possible.
+An error (**exception**) travels up the chain of calls until something catches it. In
+your app, that chain is short: your method ← `BaseApp.run()` ← the asyncio scheduler.
+`BaseApp.run()` doesn't catch anything, so the exception ends your app's **task**.
+asyncio prints *"Task exception wasn't retrieved"* with the traceback, and keeps
+running everyone else.
 
-`global me` stores the app in a module-level variable, so it outlives the function that
-made it. And because Python loads each module only once, `import` gives you the very
-same module the badge is using.
+That's why the badge *looks* frozen after a foreground crash. Your app is still
+marked as the foreground app, so the menu waits for it to finish, and it never will.
 
-You can't resume after Ctrl+C. The loop that ran the apps is gone. Look all you like,
-then **Ctrl+D** to start over.
+**Ctrl+C** raises a `KeyboardInterrupt` wherever the badge happens to be. The main loop
+dies, but nothing is cleaned up: every object stays in RAM until the next reset.
+That's what makes a post-mortem possible. You can't resume afterwards, though; look all
+you like, then **Ctrl+D** to start over.
 
-<!-- TODO(diagram): main.py's main() holding app objects; `me` as a second arrow from the module to the same object; REPL reaching in through the module -->
+`try`/`except` puts a catcher in your own code, so the exception stops there and your
+task lives on. Catch around the risky part (a sensor read, a web request), not around
+everything, or real bugs get hidden.
+
+Want to look inside *before* it crashes, and then carry on? That's [[bp]].
+
+<!-- TODO(diagram): call chain: asyncio scheduler → BaseApp.run → run_background → your error; the exception's path back up, with "caught here" at try/except vs. "task dies" without it -->
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| `AttributeError: ... has no attribute 'me'` | The app's `__init__` hasn't run. Did you **Ctrl+D** and open the app first? |
-| `SyntaxError` at boot | Check the indentation of the two new lines. See [[break-and-restore]]. |
-| `__dict__` is huge | Look at one value at a time: `m.me.some_name`. |
+| No traceback at all | Scroll up. It printed once, when it happened. |
+| `IndexError` finding your app | Print `[a.name for a in BaseApp.all_apps]` and use the exact name. |
+| The badge crashes at every boot now | Your error is in `__init__` or at the top of the file. See [[recover]]. |
+| `crash.log` is huge | Your error happens every tick. Fix the bug, or only log the first few. |
+| `__dict__` is huge | Look at one value at a time: `me.some_name`. |
 
 ## Have fun!
 
-- Catch a bug in the act: after the badge prints a traceback, it's sitting at `>>>`
-  with everything still in RAM. What were the variables when it crashed?
-- Use `dir(m.me)` to find its *methods* too. Can you call one from `>>>`?
+- Show errors on screen instead of in a file: an "Oops: ZeroDivisionError" label.
+- Which errors can you cause in one line? Which ones kill the task?
+- Use `dir(me)` to find its *methods* too. Can you call one from `>>>`? (See [[drive-app]].)

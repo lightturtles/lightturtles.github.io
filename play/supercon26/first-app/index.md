@@ -2,11 +2,9 @@
 id: first-app
 title: Add your own app from the template; watch it come and go
 label: Your first app
-tier: core
-difficulty: 6
-group: apps
-icon: puzzle-piece
-needs: [asyncio-basics, name-badge]
+topic: write-app
+workshop: false
+needs: [firmware-diagram]
 time: 25 min
 touches: [main.py, apps/base_app.py, apps/template_app.py, apps/app_menu.py, apps/userA.py]
 verified_against: null

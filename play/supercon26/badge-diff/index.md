@@ -2,10 +2,8 @@
 id: badge-diff
 title: Find exactly what you changed (diff the badge against the folder)
 label: What did I change?
-tier: stretch
-difficulty: 6
-group: files
-icon: code-compare
+topic: modify-app
+workshop: false
 needs: [backup]
 time: 15 min
 touches: []

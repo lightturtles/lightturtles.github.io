@@ -121,35 +121,43 @@ From anywhere on the site (e.g. a service card on the landing page):
 (plus `title`, `event`, `subjects`, `date`, `excerpt`). Each entry is a plain
 folder: `play/<name>/index.md`, with its images and files alongside.
 
-A **skill tree** is one folder per skill under the tree's folder:
+A **skill tree** is drawn as a metro map: each topic is a line and each skill
+is a station. It's one folder per skill under the tree's folder:
 
 ```
 play/supercon26/
-  index.md              ← the tree (layout: skill-tree): intro, facts, hex layout
+  index.md              ← the tree (layout: metro-map): intro, facts, map layout
+  skills.yml            ← the topics and skills, in order (edit this)
   repl/
     index.md            ← a skill → /play/supercon26/repl/  (id = folder name)
     thonny.png          ← linked from the page as ![...](thonny.png)
 ```
 
+`skills.yml` lists the topics in order, each with a `title`, a `color` and its
+skills in order. Each skill has an `id`, a `title` and its `needs` (ids), and
+optionally `workshop: true`. A topic's line branches off the station its first
+skill needs; the one skill with no needs is the start.
+
 Skill pages get the `skill` layout automatically. Front matter the site uses:
-`title`, `label` (hex text), `tier` (must match a `palette` key), `difficulty`
-(list order), `needs`, `time`, `video` (YouTube ID). In the body, `[[id]]`
-links to another skill; ids with no page yet show as "coming soon".
+`title`, `label` (short name for links), `topic` (a topic id from
+`skills.yml`), `workshop`, `needs`, `time`, `video` (YouTube ID). In the body,
+`[[id]]` links to another skill; ids with no page yet show as "coming soon".
+A station on the map becomes a link once its folder has an `index.md`.
 
 Badge details that may change live under `facts:` in the tree's `index.md`.
 A skill page that uses them starts with `{% include facts.html %}` right
 after its front matter, then writes `{{ facts.leds.pin }}` etc. Liquid
 doesn't run inside front matter, so keep facts out of titles.
 
-After adding, removing, or re-tiering skills, update the hex layout:
+After changing `skills.yml`, update the map:
 
 ```bash
-python3 _scripts/skilltree_layout.py play/supercon26
+python3 _scripts/metro_layout.py play/supercon26
 ```
 
-It rewrites only the block between the "Skill tree layout" and "end of layout"
-comments in the tree's front matter. Move tiles by editing `tiles:` there;
-reruns keep your edits.
+It rewrites only the block between the "Metro layout" and "end of metro
+layout" comments in the tree's front matter. GitHub Pages can't read
+`skills.yml` itself, which is why the layout is copied into the page.
 
 Progress checkboxes are saved in the visitor's browser only (localStorage).
 

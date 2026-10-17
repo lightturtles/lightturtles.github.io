@@ -2,10 +2,8 @@
 id: lvgl-hello
 title: Put one LVGL label on the screen from your app
 label: Hello, LVGL
-tier: core
-difficulty: 7
-group: display
-icon: font
+topic: display
+workshop: false
 needs: [first-app]
 time: 20 min
 touches: [apps/userA.py, ui/page.py, hardware/display.py, hardware/lvgl_setup.py]
@@ -129,3 +127,5 @@ drawing on someone else's screen, or on a screen that's gone.
   (`{{ facts.name_badge.file }}` lists the fonts the firmware has.)
 - Add a second label with `align(lvgl.ALIGN.TOP_LEFT, 5, 5)`.
 - Try another widget: `lvgl.bar(self.page.content)` with `.set_value(50, 0)`.
+- A magic 8-ball: each button press shows a random answer from a list (`random.choice`). Or roll dice with `random.randint(1, 6)`.
+- "They fight crime!": build "He's a ___. She's a ___. They fight crime!" from your own lists of random words, and show a new one on every press. (For the real website's version, see [[web-data]].)

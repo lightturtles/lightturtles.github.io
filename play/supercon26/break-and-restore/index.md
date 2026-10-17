@@ -1,11 +1,9 @@
 ---
 id: break-and-restore
 title: Break a file on purpose; read the traceback; restore the file
-label: Break it, fix it
-tier: core
-difficulty: 5
-group: debugging
-icon: bug
+label: Read a traceback
+topic: debugging
+workshop: false
 needs: [name-badge]
 time: 20 min
 touches: [apps/nametag.py]     # TODO: facts.name_badge.file

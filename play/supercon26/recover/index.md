@@ -2,10 +2,8 @@
 id: recover
 title: Rescue a badge that crashes at boot
 label: Boot rescue
-tier: developmental
-difficulty: 6
-group: debugging
-icon: life-ring
+topic: debugging
+workshop: false
 needs: [break-and-restore]
 time: 15 min
 touches: [main.py]

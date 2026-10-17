@@ -2,10 +2,8 @@
 id: share-hardware
 title: Two apps fight over the LEDs; fix it by sharing one LED object
 label: Share the LEDs
-tier: developmental
-difficulty: 8
-group: apps
-icon: handshake
+topic: write-app
+workshop: false
 needs: [first-app, all-leds]
 time: 25 min
 touches: [apps/userA.py, apps/userB.py]

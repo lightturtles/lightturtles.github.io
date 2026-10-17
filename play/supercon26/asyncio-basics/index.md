@@ -2,11 +2,9 @@
 id: asyncio-basics
 title: Run two asyncio tasks that take turns, from the REPL
 label: Take turns with asyncio
-tier: core
-difficulty: 5
-group: firmware-internals
-icon: shuffle
-needs: [repl]
+topic: write-app
+workshop: false
+needs: [firmware-diagram]
 time: 15 min
 touches: [apps/base_app.py]
 verified_against: null

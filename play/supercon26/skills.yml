@@ -7,7 +7,8 @@
 #   needs:    real prerequisites only, by id. Most stay inside the topic.
 #   workshop: used by the "Badge Hacking for Beginners" workshop projects.
 #   color:    the topic's line color on the map.
-#   change:   relation to the v1 pages in play/supercon26/ (ids kept where reused).
+#   change:   relation to the v1 (hex tile) pages, which are in git history
+#             before v2 replaced them (ids kept where reused).
 #
 # Retired from v1: live-data (split into read-register and web-data; battery
 # option dropped), app-crash (merged into post-mortem), demo (moves to the
