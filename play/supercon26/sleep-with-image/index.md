@@ -99,6 +99,7 @@ clocks and weather displays run for months.
 | The screen went blank | The display was told to clear on shutdown, or the refresh hadn't finished. Wait longer before step 4. |
 | LEDs stay lit while asleep | Turn them off first (step 2). |
 | Thonny shows errors after sleep | Normal: the USB port vanished. Reconnect (**Stop/Restart**). |
+| The badge goes to sleep as soon as it starts, every time | Your sleep code runs at boot, so USB is never up long enough to stop it. See [[recover]]. |
 
 ## Have fun!
 

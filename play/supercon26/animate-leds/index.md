@@ -100,7 +100,7 @@ A frame can't come faster than your app is called. If `frame_ms` is smaller than
 | `NameError: wheel` | Paste `wheel()` above `class App`, at the left margin. |
 | The animation stutters every so often | Another task took a long turn (often the screen). Normal; see [[on-time]] to measure it. |
 | LEDs stay lit after leaving | Turn them off before `switch_to_background()`. |
-| Rainbow only runs while the app is open | Call `self.animate()` from `run_background()` too, and see [[background-app]]. |
+| Rainbow only runs while the app is open | Call `self.animate()` from `run_background()` too (see [[firmware-diagram]]). |
 
 ## Have fun!
 

@@ -2,10 +2,10 @@
 id: break-and-restore
 title: Break a file on purpose; read the traceback; restore the file
 label: Read a traceback
-topic: debugging
+topic: crashes
 workshop: false
-needs: [name-badge]
-time: 20 min
+needs: [name-badge, explore-badge]
+time: 25 min
 touches: [apps/nametag.py]     # TODO: facts.name_badge.file
 verified_against: null
 video: null
@@ -13,8 +13,8 @@ video: null
 
 {% include facts.html %}
 
-**Goal:** Read an error message well enough to find the exact line that caused it, then
-put the file back the way it was.
+**Goal:** Read an error message well enough to find the exact line that caused it, tell
+the two kinds of crash apart, then put the file back the way it was.
 
 ## You need
 
@@ -23,9 +23,9 @@ put the file back the way it was.
 
 ## Steps
 
-1. **Break it.** In `{{ facts.name_badge.file }}`, find a line ending in `:` (like a
-   `def` or `if`) and delete the colon. Note the line number (bottom of Thonny's
-   window). Save, then press **Ctrl+D** in the shell.
+1. **Break it so it can't load.** In `{{ facts.name_badge.file }}`, find a line ending in
+   `:` (like a `def` or `if`) and delete the colon. Note the line number (bottom of
+   Thonny's window). Save, then press **Ctrl+D** in the shell.
 
 2. **Read the traceback.** The badge stops and the shell prints something like:
 
@@ -43,11 +43,35 @@ put the file back the way it was.
 
    <!-- TODO(screenshot): real traceback from the badge, with the three parts labeled -->
 
-3. Is anything on the badge working? Try the buttons and the menu.
+3. **Look at what's left.** You're at `>>>` already, without pressing **Ctrl+C**:
+   `main.py` crashed, so there was nothing left running. Try the buttons and the menu.
+   Then look around, as in [[explore-badge]]:
 
-4. **Break it differently.** Put the colon back. Now change a variable's name on a line
-   *inside* a function, e.g. `self.font` → `self.fnt`. Save, **Ctrl+D**.
+   ```python
+   dir()
+   ```
+
+   Anything `main.py` made *before* the failed import is still there. Anything after it
+   never happened. You can tell how far start-up got.
+
+4. **Break it so it loads, but fails later.** Put the colon back. Now change a variable's
+   name on a line *inside* a method, e.g. `self.font` → `self.fnt`. Save, **Ctrl+D**.
    Does the badge start this time? Open **{{ facts.name_badge.app }}**. *Now* what happens?
+   This time the shell says:
+
+   ```
+   Task exception wasn't retrieved
+   future: <Task> coro= <generator object 'run' at ...>
+   Traceback (most recent call last):
+     File "apps/base_app.py", line 45, in run
+     File "apps/nametag.py", line 57, in switch_to_foreground
+   AttributeError: 'App' object has no attribute 'fnt'
+   ```
+
+   <!-- TODO(verify): the exact message and line numbers from this year's firmware -->
+
+   Same three parts, read bottom up. But the badge is still running: the heartbeat
+   still prints, other apps still work. Only this app is gone.
 
 5. **Restore the file.** You could undo with **Ctrl+Z**, but practice the real way:
    1. Close the editor tab without saving.
@@ -59,22 +83,44 @@ put the file back the way it was.
 6. **Ctrl+D**. The badge starts normally, and your one-line change from [[name-badge]] is
    gone. Redo it if you like.
 
-**✅ Done when** you've found both broken lines from the traceback alone, and your
-badge runs again.
+**✅ Done when** you've found both broken lines from the traceback alone, can say which
+crash stopped the whole badge and which one didn't, and your badge runs again.
 
 ## What just happened
 
-Python reads a whole file before running any of it. A **SyntaxError** means it couldn't
-even read the file, so `import` failed and took `main.py` down with it: nothing runs.
+There are two kinds of crash, and they look different:
 
-The misspelled name was valid Python, so the file imported fine. The **NameError** (or
-`AttributeError`) only happened when that line actually *ran*, inside the app. Errors
-that only show up at runtime are the ones that hide until a demo.
+| | Crash while loading | Crash while running |
+|---|---|---|
+| Example | `SyntaxError`, a typo in an `import` or at the top of a file | `NameError`, `AttributeError`, `ZeroDivisionError` inside a method |
+| When | at start-up, when `main.py` imports the file | later, when that line actually runs |
+| The badge | stops: you land at `>>>` | keeps running; only the app's task dies |
+| The shell says | `Traceback…` | `Task exception wasn't retrieved`, then `Traceback…` |
+
+Python reads a whole file before running any of it. A **SyntaxError** means it couldn't
+even read the file, so `import` failed and took `main.py` down with it.
+
+The misspelled name was valid Python, so the file imported fine. The **AttributeError**
+only happened when that line *ran*, inside the app's task. asyncio printed it and
+carried on with every other task. Errors that only show up at runtime are the ones that
+hide until a demo. To look inside an app after one of those, see [[post-mortem]].
 
 You restored from the **folder**, not from your [[backup]]. Your backup only holds your
 own files, and when you made it, this file still matched the folder. If you'd broken
 one of *your* files ({{ facts.firmware.user_apps }}), you'd restore it from the backup
 the same way.
+
+### Asking for help
+
+When you're stuck, a helper, Discord or an AI can only help with what you give them.
+Paste, as text (not a photo):
+
+1. **The whole traceback**, from `Traceback` to the last line.
+2. **The code around the line it names**, with line numbers if you can.
+3. **What you changed** just before it broke ([[badge-diff]] tells you exactly).
+4. **Which firmware** you're on: `{{ facts.firmware.version_check }}`.
+
+Most problems get solved at step 1. Often by you, while you're copying it out.
 
 <!-- TODO(diagram): traceback lines mapped to a call stack: main.py at the bottom, nametag.py on top, the error message as the top frame's label -->
 
@@ -85,7 +131,7 @@ the same way.
 | No traceback, just a blank screen | The error went to the shell; scroll up. Or press **Ctrl+C** then **Ctrl+D** to see it again. |
 | Traceback points at a line you didn't touch | Look at the line *before* it. A missing `)` or `:` often gets blamed on the next line. |
 | "Upload to" isn't in the menu | You right-clicked in the bottom pane. Upload starts from the top (laptop) pane. |
-| The badge keeps restarting and you can't get `>>>` | See [[recover]]. |
+| The badge vanishes from USB before you can do anything | See [[recover]]. |
 
 ## Prefer the command line?
 
@@ -102,4 +148,4 @@ what's different before you do (see [[badge-diff]]).
 
 Make a list of every kind of error you can cause on purpose in one line:
 `ZeroDivisionError`, `IndexError`, `KeyError`, `TypeError`, `ImportError`…
-Which ones stop the badge from booting?
+Which ones stop the badge from booting, and which only kill one app?

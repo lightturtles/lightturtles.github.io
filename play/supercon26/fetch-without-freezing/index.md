@@ -114,6 +114,12 @@ writes its result into `self`, and the app checks `self` each call.** It's the s
 as [[pass-data]]: a shared variable for "the latest value," plus a flag so you never
 start two fetches at once.
 
+The task you started isn't the app's own task (that one belongs to `BaseApp`), so
+nothing stops it for you. A fetch ends on its own, which makes that fine here. A task
+that loops forever is different: keep a reference (`self.poller = asyncio.create_task(...)`)
+and call `self.poller.cancel()` when your app stops needing it. Inside the task, a
+`try`/`finally` around the loop runs your clean-up when the cancel arrives.
+
 Two catches:
 
 - **DNS still blocks.** Looking up the host's name happens before the connection, and

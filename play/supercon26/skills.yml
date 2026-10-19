@@ -1,4 +1,4 @@
-# Supercon 2026 skill tree, v2 (topic-based layout). Planning list: 58 skills.
+# Supercon 2026 skill tree, v2 (topic-based layout). Planning list: 60 skills.
 #
 # Skills are grouped by topic; within a topic they're listed roughly in order,
 # with a few side branches. No core/developmental/stretch tiers: distance from
@@ -13,6 +13,10 @@
 # Retired from v1: live-data (split into read-register and web-data; battery
 # option dropped), app-crash (merged into post-mortem), demo (moves to the
 # projects list).
+#
+# Retired from v2: repl-setup (split into explore-badge, mount-and-run and
+# drive-app), background-app (folded into firmware-diagram; the focus timer is
+# a project idea). Parked: bp (its page stays, but it's off the map).
 
 topics:
 
@@ -45,29 +49,29 @@ topics:
         description: "Copy newer system files from the folder without losing yours."
         needs: [backup]
         workshop: true
+      - id: mount-and-run
+        title: Work from your laptop
+        description: "Keep your app on your laptop (and in git); copy it, mount it, or mpremote run it."
+        needs: [backup]
       - id: start-fresh
         title: Start fresh
         description: "Make the badge match the official folder exactly."
         needs: [backup]
+      - id: recover
+        title: Boot rescue
+        description: "Get back in when Ctrl+C can't: deep sleep at boot, a broken boot.py."
+        needs: [start-fresh, resets]
 
   - id: modify-app
     title: "Software: Modify an app"
     color: "#5aa89a"
     group: software
     skills:
-      - id: firmware-diagram
-        title: Diagram the firmware
-        description: "What main.py does; boot → main → menu → apps → hardware."
-        needs: [map-firmware]
       - id: name-badge
         title: Edit the base app
         description: "Change some text → swap an image → show a sensor value (I2C) → change a widget (Display). Each variant links to what it needs."
-        needs: [update-firmware]
+        needs: [firmware-diagram, backup]
         workshop: true
-      - id: resets
-        title: Three kinds of reset
-        description: "Soft vs. hard reset vs. power cycle, and which one picks up your edit."
-        needs: [name-badge]
       - id: badge-diff
         title: What did I change?
         description: "Diff the badge against the folder."
@@ -83,6 +87,10 @@ topics:
     color: "#2f7f73"
     group: software
     skills:
+      - id: firmware-diagram
+        title: How apps run
+        description: "main.py → menu → apps; what start, stop, switch_to_* and run_* do, and the rules every app follows."
+        needs: [map-firmware]
       - id: first-app
         title: Your first app
         description: "From the template: print, read buttons the app way, watch the app come and go."
@@ -111,10 +119,6 @@ topics:
         title: Share the LEDs
         description: "Two apps fight over the LEDs; fix it with one shared object."
         needs: [first-app, all-leds]
-      - id: background-app
-        title: A background-only app
-        description: "An app that keeps working without a screen."
-        needs: [fsm]
       - id: save-settings
         title: Save across reboots
         description: "Persist data with the config module."
@@ -272,50 +276,64 @@ topics:
         description: "Count badges and estimate distance from signal strength."
         needs: [espnow-hello]
 
-  - id: workflow
-    title: "Build & debug: Workflow"
-    color: "#5e9b45"
-    group: build
-    skills:
-      - id: repl-setup
-        title: A faster REPL
-        description: "dev.py for your setup, main.py's leftover globals after Ctrl+C, reload a module without rebooting."
-        needs: [map-firmware]
-      - id: drive-app
-        title: Drive your app by hand
-        description: "Make your app object at >>>, call run_foreground() yourself, inspect self."
-        needs: [first-app, repl-setup]
-      - id: mount-and-run
-        title: Work from your laptop
-        description: "Keep your app on your laptop (and in git); mount or copy it to the badge."
-        needs: [backup]
-
-  - id: debugging
-    title: "Build & debug: Debugging"
+  - id: crashes
+    title: "Debugging: When it crashes"
     color: "#046307"
     group: build
     skills:
       - id: break-and-restore
         title: Read a traceback
-        description: "Break a file on purpose; read the file, line and error; restore it."
-        needs: [name-badge]
+        description: "A crash at import vs. a crash in a task; read the file, line and error; restore the file; ask for help well."
+        needs: [name-badge, explore-badge]
       - id: post-mortem
-        title: Post-mortem
-        description: "Crash or Ctrl+C a running app; see what survives; inspect its state."
-        needs: [break-and-restore]
-      - id: bp
-        title: Pause and poke
-        description: "A bp() breakpoint: what it freezes, and how to see locals."
-        needs: [post-mortem]
+        title: Inspect a crash
+        description: "Keep the exception in a global, find the app that crashed, and read its state from >>>."
+        needs: [break-and-restore, firmware-diagram]
+
+  - id: watch
+    title: "Debugging: Watch it run"
+    color: "#5e9b45"
+    group: build
+    skills:
       - id: better-prints
-        title: Better print debugging
-        description: "Tags, timestamps, printing on change."
+        title: Print and log
+        description: "The logging module, tags and levels, timestamps, and a watch() helper that prints on change."
         needs: [first-app]
       - id: log-and-plot
-        title: Log and plot
-        description: "Save the serial output; plot it with Thonny's Plotter."
+        title: Plot it
+        description: "Save the serial output; plot it with Thonny's Plotter or on your laptop."
         needs: [better-prints]
-      - id: recover
-        title: Boot rescue
-        description: "Recover a badge that crashes at boot."
-        needs: [break-and-restore]
+      - id: log-unplugged
+        title: Logs without a laptop
+        description: "Catch errors and carry on, keep a crash log in a file, show errors on screen."
+        needs: [better-prints]
+
+  - id: advanced
+    title: "Debugging: Advanced tactics"
+    color: "#a8326e"
+    group: build
+    skills:
+      - id: resets
+        title: Resets and start-up
+        description: "Soft vs. hard reset vs. power cycle; boot.py vs. main.py; a blank REPL with nothing running."
+        needs: [first-app]
+      - id: drive-app
+        title: Drive your app by hand
+        description: "From a blank REPL: make your app object, call its methods yourself, inspect self, reload after an edit."
+        needs: [resets]
+      - id: drive-badge
+        title: Drive the whole badge
+        description: "Build the task list by hand, step it, run it for a second, look around."
+        needs: [drive-app, asyncio-basics]
+      - id: simulator
+        title: Run it in the simulator
+        description: "Run your app on your laptop, with a real debugger."
+        needs: [drive-app]
+      - id: unit-tests
+        title: Test your app
+        description: "Automatic checks for your app's logic, run on your laptop."
+        needs: [drive-app]
+      - id: ai-loop
+        title: Let an AI run the tests
+        description: "Give an AI coding agent your tests and the simulator, and let it check its own changes."
+        needs: [unit-tests, simulator]

@@ -2,7 +2,7 @@
 id: mount-and-run
 title: Work from your laptop (git, mount, and copy)
 label: Work from your laptop
-topic: workflow
+topic: setup
 workshop: false
 needs: [backup]
 time: 30 min
@@ -67,7 +67,20 @@ and get it onto the badge in one command, or run it without copying at all.
    Change something, **Ctrl+]**, run the same command again, and the change is there.
    The badge's own files were never touched: press **{{ facts.power.reset_button }}** to prove it.
 
-6. **Commit when it works.** Small commits, each one working:
+6. **Run one script without copying it.** For a quick experiment that isn't part of the
+   app, keep a scratch file on your laptop and run it on the badge as-is:
+
+   ```bash
+   mpremote run scratch.py
+   ```
+
+   The badge runs it and prints the output here; nothing is saved on the badge. It
+   starts from a soft reset with nothing else running (see [[resets]]), so import what
+   you need at the top.
+
+   <!-- TODO(verify): whether mpremote run's soft reset skips main.py on this badge (it should: raw REPL) -->
+
+7. **Commit when it works.** Small commits, each one working:
 
    ```bash
    git commit -am "Show temperature in big font"
@@ -92,6 +105,9 @@ the official files, `git diff` is always "what I changed," the same question
 | Startup | normal speed | slow: every import crosses the USB cable |
 | Works unplugged | yes | no |
 | Good for | "this works; keep it" | trying many small changes quickly |
+
+`mpremote run` is a third option for a single script: the file is sent over and run,
+but never stored on the badge.
 
 `mpremote mount` makes your laptop's folder appear on the badge as `/remote`, and
 changes into it, so `import` finds your laptop's files first. Files the badge *writes*

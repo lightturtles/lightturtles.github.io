@@ -1,11 +1,11 @@
 ---
 id: recover
-title: Rescue a badge that crashes at boot
+title: Rescue a badge you can't get into
 label: Boot rescue
-topic: debugging
+topic: setup
 workshop: false
-needs: [break-and-restore]
-time: 15 min
+needs: [start-fresh, resets]
+time: 20 min
 touches: [main.py]
 verified_against: null
 video: null
@@ -13,81 +13,100 @@ video: null
 
 {% include facts.html %}
 
-**Goal:** Get back to `>>>` on a badge whose program crashes or freezes as soon as it
-starts, then stop it from happening again.
+**Goal:** Get back to `>>>` on a badge that drops off USB before you can press
+**Ctrl+C**, then stop it from happening again.
 
 ## You need
 
-- Your badge, connected (see [[repl]])
+- Your badge, connected (see [[repl]]), and charged: you'll need the battery
+- `mpremote` (see [[mount-and-run]])
 - A [[backup]]
+
+## First: is this the right lesson?
+
+Most broken badges don't need rescuing. If the badge prints a traceback and stops, or
+freezes but answers **Ctrl+C**, you can already get in: see [[break-and-restore]] and
+[[hog-the-cpu]]. This lesson is for when the badge **disappears from USB** before you
+can type anything:
+
+- code that goes into **deep sleep** at start-up (easy to do by accident in
+  [[sleep-with-image]])
+- code that calls `machine.reset()` at start-up, so the badge restarts over and over
+- a `boot.py` that turns off or reconfigures USB
 
 ## Steps
 
-1. **Make a badge that hangs at boot** (so you can practice the rescue). In
-   `{{ facts.firmware.user_app }}`, add this as the very first line and save:
+1. **Make a badge that sleeps at boot** (so you can practice the rescue). In
+   `{{ facts.firmware.user_app }}`, add these as the very first lines and save:
 
    ```python
-   while True: pass
+   import machine, time
+   time.sleep(3)                 # your window to get in
+   machine.deepsleep(15_000)     # sleep 15 s, then start over
    ```
 
-   Press **{{ facts.power.reset_button }}**. The badge never reaches its menu.
+   Press **{{ facts.power.reset_button }}**. The badge starts, goes to sleep, the USB port
+   vanishes, and 15 seconds later it all happens again. Thonny can't keep up.
 
-2. **Interrupt it.** Click in the shell and press **Ctrl+C**. You should get a traceback
-   pointing at your line, then `>>>`. (In Thonny, the **Stop** button does the same.)
+2. **Catch it in the window.** Close Thonny. In a terminal, run a command over and over
+   until one gets through:
 
-3. **Take `main.py` out of the way.** While the badge is stopped, rename it so it won't
-   run at the next boot:
-
-   ```python
-   import os
-   os.rename('main.py', 'main_off.py')
+   ```bash
+   until mpremote exec "import os; os.rename('main.py', 'main_off.py')"; do sleep 0.2; done
    ```
 
-   Press **{{ facts.power.reset_button }}**. The badge boots straight to `>>>`, with no menu
-   and no apps, and you have all the time you want.
+   Each try fails until the port comes back. Then `mpremote` connects, interrupts the
+   badge, and renames `main.py` before your sleep line runs again.
 
-4. **Fix the real problem.** Remove the line from step 1 (or restore the file, see
-   [[break-and-restore]]).
+   <!-- TODO(verify): on Windows, use a PowerShell loop; and whether mpremote reconnects fast enough inside a 3 s window -->
+
+3. **Check it worked.** Press **{{ facts.power.reset_button }}**. The badge boots straight to
+   `>>>`, with no menu and no apps, and you have all the time you want. (It's the same
+   blank badge you met in [[resets]], but this time it stays that way.)
+
+4. **Fix the real problem.** Remove the lines from step 1 (or put the file back from
+   your backup or the folder, as in [[break-and-restore]]).
 
 5. **Put `main.py` back** and restart:
 
-   ```python
-   os.rename('main_off.py', 'main.py')
+   ```bash
+   mpremote exec "import os; os.rename('main_off.py', 'main.py')" + reset
    ```
 
-**✅ Done when** you've rescued the badge from a boot-time hang without help.
+**✅ Done when** you've rescued a badge that sleeps at boot, without help.
 
 ## What just happened
 
-At power-up, MicroPython runs `boot.py`, then `main.py`, then (only if `main.py` ever
-finishes) gives you `>>>`. The badge's `main.py` never finishes on purpose. That's
-what keeps the menu and apps running. So if something it imports hangs or crashes in a
-loop, you never get the prompt on your own.
+At every reset, MicroPython runs `boot.py`, then `main.py` (see [[resets]]). If
+something in that chain turns off USB (by sleeping, resetting, or reconfiguring it),
+there's never a moment when your laptop is connected *and* the badge is listening.
+**Ctrl+C** can't help, because nothing hears it.
 
-**Ctrl+C** stops whatever's running, so it gets you in *if* the badge stays connected
-long enough to hear it. Renaming `main.py` makes sure there's nothing to stop.
-{% if facts.firmware.safe_mode %}
-This badge also has a **safe mode**: {{ facts.firmware.safe_mode }}. It skips the apps
-for you.
+The rescue is to **make that moment**, or find a longer one:
+
+- **Race it.** Most start-up code takes a moment before it does the damage. A loop that
+  retries `mpremote` the instant the port appears will usually win.
+- **Wake it.** A sleeping badge can be woken by its wake button
+  ({{ facts.sleep.wake_label }}), or the reset button, which restarts the race.
+{% if facts.firmware.safe_mode %}- **Safe mode.** This badge has one: {{ facts.firmware.safe_mode }}. It skips the apps for you.
 {% endif %}
+Renaming `main.py` turns a race you have to win every time into one you only have to
+win once.
 
-<!-- TODO(diagram): power on → boot.py → main.py (loops forever) → >>> (never reached); Ctrl+C arrow jumping to >>> -->
+If none of that works, the files can always be wiped and replaced from the official
+folder (see [[start-fresh]]), as long as the badge can be reached at all. Your
+[[backup]] gets your work back.
+
+<!-- TODO(diagram): power on → boot.py → main.py → deep sleep → (15 s) → power on…; the short window before sleep where mpremote gets in -->
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| Ctrl+C does nothing | Click in the shell first. Press it several times, quickly, right after pressing **{{ facts.power.reset_button }}**. |
-| The port keeps vanishing and coming back | The badge is hard-resetting over and over (a crash, or a `machine.reset()` in code). Spam **Ctrl+C** as the port reappears. `mpremote` reconnects quickest. |
-| `>>>` appears but Thonny can't list files | Click **Stop** once more. |
+| `mpremote` never gets through | Make the window longer: hold the badge in reset, release it, and start the loop at once. Or use the wake button. |
+| `could not enter raw repl` | It got the port but not the prompt. Keep the loop running; the next try usually works. |
+| The port never appears at all | Plug into a different USB port or cable; try {{ facts.power.reset_button }} while plugged in. |
 | Nothing works, ever | Ask a helper. They can reflash MicroPython, and your [[backup]] gets your work back. |
-
-## Prefer the command line?
-
-```bash
-mpremote exec "import os; os.rename('main.py', 'main_off.py')"
-mpremote reset
-```
 
 ## Have fun!
 

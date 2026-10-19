@@ -4,7 +4,7 @@ title: Edit the name badge app (text, image, sensor, widget)
 label: Edit the base app
 topic: modify-app
 workshop: true
-needs: [update-firmware]
+needs: [firmware-diagram, backup]
 time: 20–40 min
 touches: [apps/nametag.py]     # TODO: facts.name_badge.file
 verified_against: null

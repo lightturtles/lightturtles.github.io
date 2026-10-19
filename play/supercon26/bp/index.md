@@ -2,7 +2,7 @@
 id: bp
 title: "Pause and poke: a bp() breakpoint for the badge"
 label: Pause and poke
-topic: debugging
+topic: crashes
 workshop: false
 needs: [post-mortem]
 time: 20 min

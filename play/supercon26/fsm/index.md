@@ -121,7 +121,8 @@ you need next call goes somewhere that lasts:
 1. **Return quickly.** A few milliseconds per call. Measure it (see [[on-time]]).
 2. **Never wait inside a call.** No `time.sleep()`, no `while` waiting for a button or a
    network reply. Make it a state instead.
-3. **Keep state in `self`**, not in locals.
+3. **Keep state in `self`**, not in locals. That's also what you'll be able to see
+   after a crash: MicroPython throws locals away with the error (see [[post-mortem]]).
 4. **Every state handles "leave."** If one state ignores the home button, users get stuck.
 
 Counting calls is a rough clock: if the badge is busy, calls come late, and your

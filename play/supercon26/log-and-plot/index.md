@@ -1,8 +1,8 @@
 ---
 id: log-and-plot
 title: Save the badge's output and plot it (Thonny's Plotter, CSV)
-label: Log and plot
-topic: debugging
+label: Plot it
+topic: watch
 workshop: false
 needs: [better-prints]
 time: 25 min
@@ -96,6 +96,7 @@ before and after a fix, today and tomorrow, your badge and a friend's.
 |---|---|
 | The Plotter is empty | Your lines need numbers. Lines with only words are ignored. |
 | Lines jump to zero | Something printed a line with different names. Print only your data while plotting. |
+| Log lines from [[better-prints]] get plotted too | Their timestamps are numbers. Raise the log level (`logging.WARNING`) while you plot. |
 | `--capture` isn't recognized | Update mpremote: `pipx upgrade mpremote`. Or copy the shell's text from Thonny. |
 | The spreadsheet puts everything in one column | Check the separator: it should be a comma, with no spaces. |
 
@@ -106,4 +107,4 @@ before and after a fix, today and tomorrow, your badge and a friend's.
 - Log the gap between your app's calls (see [[on-time]]) while you use the badge. What
   makes the spikes?
 - Log on the badge itself, to a file, while it's unplugged, then copy the file over
-  (see [[save-settings]] for why not to write too often).
+  (see [[log-unplugged]]).

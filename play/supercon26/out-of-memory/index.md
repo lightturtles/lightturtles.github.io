@@ -124,4 +124,4 @@ fails. Big buffers are best made once, early (in `__init__`), and reused.
 - Find the biggest single `bytearray` you can make. Is it the same as `mem_free()`?
 - How much RAM does importing a module cost? Measure before and after `import`.
 - `micropython.mem_info(1)` draws a map of the heap. Can you spot the fragments?
-- A literary clock: each minute, show a quote from a book that mentions the current time, read from a big file one line at a time so the whole file never has to fit in RAM. Set the clock with [[ntp-time]], update from [[background-app]], and sleep overnight with [[sleep-with-image]].
+- A literary clock: each minute, show a quote from a book that mentions the current time, read from a big file one line at a time so the whole file never has to fit in RAM. Set the clock with [[ntp-time]], update from `run_background()` (see [[firmware-diagram]]), and sleep overnight with [[sleep-with-image]].

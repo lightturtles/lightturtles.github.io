@@ -109,6 +109,8 @@ Two rules follow from this:
 2. **Only the foreground app draws on the screen.** Your app gets the screen in
    `switch_to_foreground()` and gives it up when it goes to the background.
 
+The full list of rules is in [[firmware-diagram]].
+
 ### Who gets to use the rest of the hardware?
 
 Everything except the screen is **shared on the honor system**. Any app, in the

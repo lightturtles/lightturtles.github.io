@@ -78,7 +78,40 @@ video: null
 
    Spot a few you know (`time`, `machine`, `network`) and a few you don't.
 
-8. Press **Ctrl+D** to get the badge back.
+8. **What did the badge leave behind?** `dir()` with nothing in the brackets lists the
+   names at `>>>` itself:
+
+   ```python
+   dir()
+   ```
+
+   Besides `badge_obj` (which you imported), there are names you never made. They're
+   `main.py`'s: `main.py` and the REPL share one set of global names, so anything it
+   made at the top level of the file is still there after **Ctrl+C**. Things it made
+   *inside a function* (like `async def main()`) are gone.
+
+   <!-- TODO(verify): which useful objects this year's main.py leaves at the top level -->
+
+9. **Every module that's loaded.** The rest of what the badge set up is inside modules:
+
+   ```python
+   import sys
+   sorted(sys.modules)
+   ```
+
+   A module is only loaded once, so importing one again hands you the very same module,
+   with everything the badge put in it. That's why step 1 worked.
+
+10. **Paste a block.** Typing a `for` loop line by line works, but pasting one often
+    gets its indentation mangled. Press **Ctrl+E** (paste mode), paste, then **Ctrl+D**:
+
+    ```python
+    for name in dir(badge_obj):
+        if not name.startswith("_"):
+            print(name, type(getattr(badge_obj, name)))
+    ```
+
+11. Press **Ctrl+D** at an empty `>>>` to get the badge back.
 
 **✅ Done when** you can name the attribute for the display, the LEDs (if there is one)
 and the SAO I2C bus, and say which file defines them.
@@ -99,6 +132,10 @@ itself (written in C, like `machine`), plus any files on `sys.path`. Some names 
 up there but not in `os.listdir('/')`. They're part of the **firmware image**, not the
 filesystem.
 
+**Ctrl+C** stops the badge's program but doesn't clean anything up: every object it
+made stays in RAM until the next reset. That's what lets you look around now, and it's
+what lets you look inside an app after it crashes (see [[post-mortem]]).
+
 <!-- TODO(diagram): badge_obj in the middle, arrows to display / LEDs / I2C / buttons; "apps: self.badge" and "REPL: badge_obj" both pointing at it -->
 
 ## Stuck?
@@ -109,6 +146,8 @@ filesystem.
 | `NameError: badge_obj` | You skipped the import. Every new `>>>` session needs it again after a reset. |
 | Tab does nothing | Some terminals handle Tab differently. Try ViperIDE or `mpremote`. |
 | Output scrolls off the top | Scroll up, or print one per line: `for n in dir(badge_obj): print(n)` |
+| `dir()` shows almost nothing | `main.py` keeps everything inside functions. Use `sys.modules` (step 9) instead. |
+| Paste mode shows `===` lines | That's paste mode. Finish with **Ctrl+D**, or **Ctrl+C** to cancel. |
 
 ## Have fun!
 

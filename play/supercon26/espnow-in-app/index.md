@@ -102,6 +102,12 @@ Three parts, each doing one job:
 at all while it waits. The inbox is a queue (see [[pass-data]]): messages pile up while
 nobody's looking, and nothing is lost unless more than 10 arrive.
 
+`listen()` is a task of your own, separate from the one `BaseApp` runs for your app.
+It starts in `__init__` and never ends, which is what you want here: mail keeps
+arriving whatever app is open. If you ever want it to stop, keep a reference
+(`self.listener = asyncio.create_task(self.listen())`) and call
+`self.listener.cancel()`.
+
 Sending is quick, so it's safe to do straight from `run_foreground()`. The `False` at
 the end means "don't wait for the radio to confirm." For broadcasts there's no
 confirmation anyway.
