@@ -2,7 +2,7 @@
 id: explore-badge
 title: Explore the badge object with dir(), help() and Tab
 label: Explore the badge object
-topic: basics
+topic: setup
 workshop: false
 needs: [repl]
 time: 15 min

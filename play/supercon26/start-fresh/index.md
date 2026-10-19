@@ -2,7 +2,7 @@
 id: start-fresh
 title: Start fresh (make the badge match the official folder)
 label: Start fresh
-topic: basics
+topic: setup
 workshop: false
 needs: [backup]
 time: 15 min

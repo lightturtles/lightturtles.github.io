@@ -2,7 +2,7 @@
 id: update-firmware
 title: Update the badge's firmware without losing your files
 label: Update the firmware
-topic: basics
+topic: setup
 workshop: true
 needs: [backup]
 time: 20 min

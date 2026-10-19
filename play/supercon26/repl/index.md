@@ -2,7 +2,7 @@
 id: repl
 title: Connect over USB-C; reach the REPL; run one line
 label: Connect to the REPL
-topic: basics
+topic: setup
 workshop: true
 needs: []
 time: 10 min

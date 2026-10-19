@@ -16,10 +16,10 @@
 
 topics:
 
-  - id: basics
-    title: Basics / Connecting
+  - id: setup
+    title: "Setup & Recovery"
     color: "#4a4a48"
-    group: basics
+    group: setup
     skills:
       - id: repl
         title: Connect to the REPL

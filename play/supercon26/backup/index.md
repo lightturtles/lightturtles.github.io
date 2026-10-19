@@ -2,7 +2,7 @@
 id: backup
 title: Back up your files from the badge
 label: Back up your badge
-topic: basics
+topic: setup
 workshop: true
 needs: [map-firmware]
 time: 15 min

@@ -141,7 +141,7 @@ metro:
   width: 1780
   height: 875
   lines:
-    - {"topic": "basics", "title": "Basics / Connecting", "color": "#4a4a48", "d": "M130,70 H780"}
+    - {"topic": "setup", "title": "Setup & Recovery", "color": "#4a4a48", "d": "M130,70 H780"}
     - {"topic": "modify-app", "title": "Software: Modify an app", "color": "#5aa89a", "d": "M278,70 V110 L323,155 H910"}
     - {"topic": "write-app", "title": "Software: Write your own app", "color": "#2f7f73", "d": "M390,155 V280 L435,325 H1690"}
     - {"topic": "gpio", "title": "Hardware: GPIO", "color": "#c4622d", "d": "M139,70 V620 L184,665 H910"}
@@ -152,12 +152,12 @@ metro:
     - {"topic": "workflow", "title": "Build & debug: Workflow", "color": "#5e9b45", "d": "M260,70 V535 L305,580 H650"}
     - {"topic": "debugging", "title": "Build & debug: Debugging", "color": "#046307", "d": "M520,155 V195 L565,240 H1300"}
   stations:
-    - {"id": "repl", "topic": "basics", "x": 130, "y": 70, "label": ["Connect to the", "REPL"], "workshop": true, "start": true}
-    - {"id": "map-firmware", "topic": "basics", "x": 260, "y": 70, "label": ["Find the files"], "workshop": true}
-    - {"id": "explore-badge", "topic": "basics", "x": 390, "y": 70, "label": ["Explore the", "badge object"]}
-    - {"id": "backup", "topic": "basics", "x": 520, "y": 70, "label": ["Back up your", "badge"], "workshop": true}
-    - {"id": "update-firmware", "topic": "basics", "x": 650, "y": 70, "label": ["Update the", "firmware"], "workshop": true}
-    - {"id": "start-fresh", "topic": "basics", "x": 780, "y": 70, "label": ["Start fresh"]}
+    - {"id": "repl", "topic": "setup", "x": 130, "y": 70, "label": ["Connect to the", "REPL"], "workshop": true, "start": true}
+    - {"id": "map-firmware", "topic": "setup", "x": 260, "y": 70, "label": ["Find the files"], "workshop": true}
+    - {"id": "explore-badge", "topic": "setup", "x": 390, "y": 70, "label": ["Explore the", "badge object"]}
+    - {"id": "backup", "topic": "setup", "x": 520, "y": 70, "label": ["Back up your", "badge"], "workshop": true}
+    - {"id": "update-firmware", "topic": "setup", "x": 650, "y": 70, "label": ["Update the", "firmware"], "workshop": true}
+    - {"id": "start-fresh", "topic": "setup", "x": 780, "y": 70, "label": ["Start fresh"]}
     - {"id": "firmware-diagram", "topic": "modify-app", "x": 390, "y": 155, "label": ["Diagram the", "firmware"]}
     - {"id": "name-badge", "topic": "modify-app", "x": 520, "y": 155, "label": ["Edit the base", "app"], "also": ["update-firmware"], "workshop": true}
     - {"id": "resets", "topic": "modify-app", "x": 650, "y": 155, "label": ["Three kinds of", "reset"]}

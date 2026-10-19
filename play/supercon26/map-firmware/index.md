@@ -2,7 +2,7 @@
 id: map-firmware
 title: Find the badge's files (what's there, and which ones are yours)
 label: Find the files
-topic: basics
+topic: setup
 workshop: true
 needs: [repl]
 time: 20 min
