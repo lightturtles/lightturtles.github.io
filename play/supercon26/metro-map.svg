@@ -1,0 +1,182 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1780 1020" width="1780" height="1020">
+<rect width="100%" height="100%" fill="#f8f7f3"/>
+<path d="M130,70 H1040" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M130,70 H1040" fill="none" stroke="#4a4a48" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M390,155 V450 L435,495 H780" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M390,155 V450 L435,495 H780" fill="none" stroke="#5aa89a" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M269,70 V110 L314,155 H1560" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M269,70 V110 L314,155 H1560" fill="none" stroke="#2f7f73" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M139,70 V705 L184,750 H910" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M139,70 V705 L184,750 H910" fill="none" stroke="#c4622d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M260,70 V620 L305,665 H910" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M260,70 V620 L305,665 H910" fill="none" stroke="#8f4a1f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M538,155 V195 L583,240 H1690" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M538,155 V195 L583,240 H1690" fill="none" stroke="#c9902f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M130,70 V790 L175,835 H650" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M130,70 V790 L175,835 H650" fill="none" stroke="#3b5b92" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M260,835 V875 L305,920 H780" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M260,835 V875 L305,920 H780" fill="none" stroke="#7a5ea8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M520,495 V535 L565,580 H780" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M520,495 V535 L565,580 H780" fill="none" stroke="#046307" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M529,155 V280 L574,325 H910" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M529,155 V280 L574,325 H910" fill="none" stroke="#5e9b45" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M520,155 V365 L565,410 H1300" fill="none" stroke="#f8f7f3" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M520,155 V365 L565,410 H1300" fill="none" stroke="#a8326e" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="12.5" font-weight="600" fill="#1e1e1e"><tspan x="130" y="38">Connect to the</tspan><tspan x="130" y="51">REPL</tspan></text>
+<text x="109" y="74" text-anchor="end" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="12" font-weight="600" letter-spacing="0.96" fill="#c8102e">START HERE</text>
+<circle cx="130" cy="70" r="16" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="130" cy="70" r="11" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="260" y="54">Find the files</tspan></text>
+<circle cx="260" cy="70" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="260" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="41">Explore the</tspan><tspan x="390" y="54">badge object</tspan></text>
+<circle cx="390" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="41">Back up your</tspan><tspan x="520" y="54">badge</tspan></text>
+<circle cx="520" cy="70" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="520" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="41">Update the</tspan><tspan x="650" y="54">firmware</tspan></text>
+<circle cx="650" cy="70" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="650" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="41">Work from your</tspan><tspan x="780" y="54">laptop</tspan></text>
+<circle cx="780" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="54">Start fresh</tspan></text>
+<circle cx="910" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1040" y="54">Boot rescue</tspan></text>
+<circle cx="1040" cy="70" r="8" fill="#f8f7f3" stroke="#4a4a48" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="466">Edit the base</tspan><tspan x="520" y="479">app</tspan></text>
+<circle cx="520" cy="495" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="520" cy="495" r="8" fill="#f8f7f3" stroke="#5aa89a" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="466">What did I</tspan><tspan x="650" y="479">change?</tspan></text>
+<circle cx="650" cy="495" r="8" fill="#f8f7f3" stroke="#5aa89a" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="466">Share and</tspan><tspan x="780" y="479">install apps</tspan></text>
+<circle cx="780" cy="495" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="780" cy="495" r="8" fill="#f8f7f3" stroke="#5aa89a" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="139">How apps run</tspan></text>
+<circle cx="390" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="139">Your first app</tspan></text>
+<circle cx="520" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="126">Take turns with</tspan><tspan x="650" y="139">asyncio</tspan></text>
+<circle cx="650" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="126">Preventing</tspan><tspan x="780" y="139">freezes</tspan></text>
+<circle cx="780" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="126">Break work into</tspan><tspan x="910" y="139">states</tspan></text>
+<circle cx="910" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1040" y="126">Doing things on</tspan><tspan x="1040" y="139">time</tspan></text>
+<circle cx="1040" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1170" y="126">Passing data</tspan><tspan x="1170" y="139">between tasks</tspan></text>
+<circle cx="1170" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1300" y="139">Share the LEDs</tspan></text>
+<circle cx="1300" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1430" y="126">Save across</tspan><tspan x="1430" y="139">reboots</tspan></text>
+<circle cx="1430" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1560" y="126">Running out of</tspan><tspan x="1560" y="139">memory</tspan></text>
+<circle cx="1560" cy="155" r="8" fill="#f8f7f3" stroke="#2f7f73" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="260" y="734">Light one LED</tspan></text>
+<circle cx="260" cy="750" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="260" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="734">Read a button</tspan></text>
+<circle cx="390" cy="750" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="390" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="721">Light all the</tspan><tspan x="520" y="734">LEDs</tspan></text>
+<circle cx="520" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="721">Animate without</tspan><tspan x="650" y="734">blocking</tspan></text>
+<circle cx="650" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="721">Polling vs.</tspan><tspan x="780" y="734">interrupts</tspan></text>
+<circle cx="780" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="734">Blink on the SAO</tspan></text>
+<circle cx="910" cy="750" r="8" fill="#f8f7f3" stroke="#c4622d" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="623">SAO pinout, and</tspan><tspan x="390" y="636">connect your</tspan><tspan x="390" y="649">sensor</tspan></text>
+<circle cx="390" cy="665" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="390" cy="665" r="8" fill="#f8f7f3" stroke="#8f4a1f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="636">Scan for I2C</tspan><tspan x="520" y="649">devices</tspan></text>
+<circle cx="520" cy="665" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="520" cy="665" r="8" fill="#f8f7f3" stroke="#8f4a1f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="649">Read a register</tspan></text>
+<circle cx="650" cy="665" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="650" cy="665" r="8" fill="#f8f7f3" stroke="#8f4a1f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="636">Raw bytes to</tspan><tspan x="780" y="649">real units</tspan></text>
+<circle cx="780" cy="665" r="13" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<circle cx="780" cy="665" r="8" fill="#f8f7f3" stroke="#8f4a1f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="649">Add a library</tspan></text>
+<circle cx="910" cy="665" r="8" fill="#f8f7f3" stroke="#8f4a1f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="224">Hello, LVGL</tspan></text>
+<circle cx="650" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="224">Layout and fonts</tspan></text>
+<circle cx="780" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="198">Draw pixels,</tspan><tspan x="910" y="211">shapes and</tspan><tspan x="910" y="224">charts</tspan></text>
+<circle cx="910" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1040" y="211">Images on a</tspan><tspan x="1040" y="224">3-color panel</tspan></text>
+<circle cx="1040" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1170" y="211">Use red on</tspan><tspan x="1170" y="224">purpose</tspan></text>
+<circle cx="1170" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1300" y="211">Why e-ink is</tspan><tspan x="1300" y="224">slow</tspan></text>
+<circle cx="1300" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1430" y="211">Update the</tspan><tspan x="1430" y="224">screen well</tspan></text>
+<circle cx="1430" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1560" y="224">Show a QR code</tspan></text>
+<circle cx="1560" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1690" y="211">Sleep with your</tspan><tspan x="1690" y="224">image showing</tspan></text>
+<circle cx="1690" cy="240" r="8" fill="#f8f7f3" stroke="#c9902f" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="260" y="819">Join WiFi</tspan></text>
+<circle cx="260" cy="835" r="8" fill="#f8f7f3" stroke="#3b5b92" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="806">Fetch data from</tspan><tspan x="390" y="819">the web</tspan></text>
+<circle cx="390" cy="835" r="8" fill="#f8f7f3" stroke="#3b5b92" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="806">Fetch without</tspan><tspan x="520" y="819">freezing</tspan></text>
+<circle cx="520" cy="835" r="8" fill="#f8f7f3" stroke="#3b5b92" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="819">Set the clock</tspan></text>
+<circle cx="650" cy="835" r="8" fill="#f8f7f3" stroke="#3b5b92" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="390" y="891">Badge-to-badge</tspan><tspan x="390" y="904">hello</tspan></text>
+<circle cx="390" cy="920" r="8" fill="#f8f7f3" stroke="#7a5ea8" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="520" y="891">Messages in your</tspan><tspan x="520" y="904">app</tspan></text>
+<circle cx="520" cy="920" r="8" fill="#f8f7f3" stroke="#7a5ea8" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="904">Design a message</tspan></text>
+<circle cx="650" cy="920" r="8" fill="#f8f7f3" stroke="#7a5ea8" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="904">Who's nearby?</tspan></text>
+<circle cx="780" cy="920" r="8" fill="#f8f7f3" stroke="#7a5ea8" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="564">Read a traceback</tspan></text>
+<circle cx="650" cy="580" r="8" fill="#f8f7f3" stroke="#046307" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="564">Inspect a crash</tspan></text>
+<circle cx="780" cy="580" r="8" fill="#f8f7f3" stroke="#046307" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="309">Print and log</tspan></text>
+<circle cx="650" cy="325" r="8" fill="#f8f7f3" stroke="#5e9b45" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="309">Plot it</tspan></text>
+<circle cx="780" cy="325" r="8" fill="#f8f7f3" stroke="#5e9b45" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="296">Logs without a</tspan><tspan x="910" y="309">laptop</tspan></text>
+<circle cx="910" cy="325" r="8" fill="#f8f7f3" stroke="#5e9b45" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="650" y="381">Resets and</tspan><tspan x="650" y="394">start-up</tspan></text>
+<circle cx="650" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="780" y="381">Drive your app</tspan><tspan x="780" y="394">by hand</tspan></text>
+<circle cx="780" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="910" y="381">Drive the whole</tspan><tspan x="910" y="394">badge</tspan></text>
+<circle cx="910" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1040" y="381">Run it in the</tspan><tspan x="1040" y="394">simulator</tspan></text>
+<circle cx="1040" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1170" y="394">Test your app</tspan></text>
+<circle cx="1170" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<text text-anchor="middle" font-family="'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="11.5" fill="#1e1e1e"><tspan x="1300" y="381">Let an AI run</tspan><tspan x="1300" y="394">the tests</tspan></text>
+<circle cx="1300" cy="410" r="8" fill="#f8f7f3" stroke="#a8326e" stroke-width="3.5"/>
+<rect x="70" y="965" width="22" height="6" rx="3" fill="#4a4a48"/>
+<text x="102" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Setup &amp; Recovery</text>
+<rect x="245.2" y="965" width="22" height="6" rx="3" fill="#5aa89a"/>
+<text x="277.2" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Software: Modify an app</text>
+<rect x="470.79999999999995" y="965" width="22" height="6" rx="3" fill="#2f7f73"/>
+<text x="502.79999999999995" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Software: Write your own app</text>
+<rect x="732.4" y="965" width="22" height="6" rx="3" fill="#c4622d"/>
+<text x="764.4" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Hardware: GPIO</text>
+<rect x="893.2" y="965" width="22" height="6" rx="3" fill="#8f4a1f"/>
+<text x="925.2" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Hardware: I2C</text>
+<rect x="1046.8000000000002" y="965" width="22" height="6" rx="3" fill="#c9902f"/>
+<text x="1078.8000000000002" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Hardware: Display (e-ink + LVGL)</text>
+<rect x="1337.2000000000003" y="965" width="22" height="6" rx="3" fill="#3b5b92"/>
+<text x="1369.2000000000003" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Hardware: WiFi</text>
+<rect x="1498.0000000000002" y="965" width="22" height="6" rx="3" fill="#7a5ea8"/>
+<text x="1530.0000000000002" y="972" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Hardware: ESP-NOW</text>
+<rect x="70" y="991" width="22" height="6" rx="3" fill="#046307"/>
+<text x="102" y="998" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Debugging: When it crashes</text>
+<rect x="317.20000000000005" y="991" width="22" height="6" rx="3" fill="#5e9b45"/>
+<text x="349.20000000000005" y="998" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Debugging: Watch it run</text>
+<rect x="542.8000000000001" y="991" width="22" height="6" rx="3" fill="#a8326e"/>
+<text x="574.8000000000001" y="998" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Debugging: Advanced tactics</text>
+<circle cx="808.2" cy="994" r="6" fill="none" stroke="#c8102e" stroke-width="2.5"/>
+<text x="829.2" y="998" font-family="'IBM Plex Mono', 'Courier New', monospace" font-size="13" fill="#1e1e1e">Workshop skill</text>
+</svg>
