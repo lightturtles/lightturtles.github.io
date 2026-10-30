@@ -46,10 +46,10 @@ defaults:
       layout: "skill"
   # Unlisted (preview) pages: reachable by direct URL, but left off the Play
   # page and marked noindex for search engines. Delete this block to publish.
-  - scope:
-      path: "play/supercon26"
-    values:
-      unlisted: true
+  #- scope:
+  #    path: "play/supercon26"
+  #  values:
+  #    unlisted: true
 
 exclude:
   - README.md
