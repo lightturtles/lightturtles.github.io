@@ -6,7 +6,8 @@ topic: i2c
 workshop: true
 needs: [sao-pinout]
 time: 10 min
-touches: []
+touches:
+  - lib/sao.py#i2c              # the firmware's SAO bus: I2C(0, scl=18, sda=17, freq=400_000)
 verified_against: null
 video: null
 ---
@@ -22,11 +23,10 @@ video: null
 
 ## Steps
 
-1. Press **Ctrl+C**, then grab the SAO bus the firmware already set up:
+1. Press **Ctrl+C**, then grab the SAO bus the firmware sets up:
 
    ```python
    {{ facts.firmware.badge_import }}
-   i2c = badge_obj.{{ facts.sao.i2c_attr }}
    ```
 
    Using the firmware's bus (instead of making your own) means your code and the
@@ -41,17 +41,24 @@ video: null
    You get a list of numbers, one per chip that answered. An empty list `[]` means
    nobody did.
 
-3. **Take it away.** Switch the badge off, unplug the sensor, switch it back on,
-   **Ctrl+C**, and redo steps 1–2. Which number vanished? That one is your sensor.
-   Put it back the same way.
-
-4. Show the answers in hex. That's how datasheets write them:
+3. Show the answers in hex. That's how datasheets write them:
 
    ```python
    [hex(a) for a in i2c.scan()]
    ```
 
-5. Look the address up. Some common ones:
+4. **Take it away.** Switch the badge off, unplug the sensor, switch it back on,
+   **Ctrl+C**, and redo steps 1–3. Which number vanished? That one is your sensor.
+   Put it back the same way.
+
+5. Look the address up. The workshop's sensors:
+
+   | Address | Sensor | Measures |
+   |---|---|---|
+   {% for s in facts.sensors %}| `{{ s[1].address }}` | {{ s[1].name }} | {{ s[1].what }} |
+   {% endfor %}
+
+   And some other common ones:
 
    | Address | Usually |
    |---|---|
@@ -60,8 +67,7 @@ video: null
    | `0x68` | Real-time clock, or a motion sensor |
    | `0x76`, `0x77` | Temperature/pressure sensor (BME280, BMP280) |
 
-**✅ Done when** a scan finds your sensor, and you know its address
-(the workshop's {{ facts.sensor.name }} should be at `{{ facts.sensor.address }}`).
+**✅ Done when** a scan finds your sensor, and you know its address.
 
 ## What just happened
 
@@ -81,19 +87,17 @@ Knowing the address is step one. To *talk* to the chip, you need its datasheet (
 | Still `[]` with something plugged in | Reseat it, and check the key or the wires (see [[sao-pinout]]). Not every SAO has I2C; some only use GPIO. |
 | `OSError: [Errno 116] ETIMEDOUT` | SDA and SCL may be swapped, or there's no pull-up resistor on the bus. Ask a helper. |
 | Every address answers | SDA or SCL is shorted to ground. Unplug and check the wiring. |
-| `AttributeError` on `badge_obj.{{ facts.sao.i2c_attr }}` | This firmware names it differently. Try `dir(badge_obj)` (see [[explore-badge]]), or make your own bus, below. |
+| LIS3DH shows up at `0x18`, not `0x19` | Its address jumper is closed. That's fine; use `0x18` from now on. |
 | `ImportError` on the first line | Make your own bus instead, below. |
 
 **No firmware bus?** Make your own on the SAO pins:
 
 ```python
 from machine import I2C, Pin
-i2c = I2C({{ facts.sao.i2c_id }}, scl=Pin({{ facts.sao.scl }}), sda=Pin({{ facts.sao.sda }}))
+i2c = I2C({{ facts.sao.i2c_id }}, scl=Pin({{ facts.sao.scl }}), sda=Pin({{ facts.sao.sda }}), freq=400_000)
 ```
-
-<!-- TODO(verify): the firmware's SAO bus attribute name (2025: badge.sao_i2c) -->
 
 ## Have fun!
 
-- Swap add-ons with a neighbor and scan theirs.
+- Borrow a neighbor's sensor and plug both in (chain them with a Qwiic cable). Does the scan find both?
 - Read the first bytes of an SAO's EEPROM: `i2c.readfrom_mem(0x50, 0, 32)`. Anything readable?

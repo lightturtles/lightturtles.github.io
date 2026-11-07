@@ -61,16 +61,22 @@ POLICY = {
     "yours-edited": (SAVE,   KEEP,      OVERWRITE),  # you changed it; FOLDER didn't
     "conflict":     (SAVE,   ASK,       OVERWRITE),  # you changed it, and so did FOLDER
     "different":    (SAVE,   ASK,       OVERWRITE),  # differs from FOLDER; no BASE to say who changed it
-    "state":        (SAVE,   KEEP,      KEEP),       # in a STATE_DIRS folder: data the badge made itself
+    "state":        (SAVE,   KEEP,      KEEP),       # data the badge made itself (see STATE_DIRS, STATE_FILES)
 }
 COMMANDS = ("backup", "update", "restore")
 
 # What ASK turns into with --yes.
 SAFE_CHOICE = {"backup": SAVE, "update": KEEP, "restore": KEEP}
 
-# Folders the badge writes to on its own (keys, saved settings). Files here
-# are "state" unless they match FOLDER exactly.
+# Folders the badge writes to on its own (saved settings, lists of apps). A file
+# here that FOLDER doesn't have (and BASE didn't either) is "state": the badge
+# made it. A file here that came in FOLDER (a picture, the schedule) is compared
+# like any system file, so updates to it still reach the badge.
 STATE_DIRS = ["data/"]
+
+# Files that come in FOLDER, but that the badge then rewrites itself. Always
+# "state" (unless they're missing from the badge).
+STATE_FILES = ["data/panel_config.json"]   # main.py counts start-ups in it
 
 # Never compared or copied, on either side. Matched against each part of a path.
 IGNORE = ["__pycache__", "*.pyc", ".DS_Store", "Thumbs.db", ".git", ".badgetool.json"]
@@ -112,8 +118,11 @@ def ignored(path):
     return any(fnmatch.fnmatch(part, pat) for part in PurePosixPath(path).parts for pat in IGNORE)
 
 
-def is_state(path):
-    return any(path.startswith(d) for d in STATE_DIRS)
+def is_state(path, in_folder, in_base):
+    """Did the badge make this file (rather than it coming from a FOLDER)?"""
+    if path in STATE_FILES:
+        return True
+    return any(path.startswith(d) for d in STATE_DIRS) and not in_folder and not in_base
 
 
 def hash_folder(folder):
@@ -132,9 +141,9 @@ def classify(path, badge, folder, base):
         return "missing"
     if b == f:
         return "unchanged"
-    if is_state(path):
-        return "state"
     o = base.get(path) if base is not None else None
+    if is_state(path, f is not None, o is not None):
+        return "state"
     if f is None:  # only on the badge
         if o is None:
             return "yours-new"

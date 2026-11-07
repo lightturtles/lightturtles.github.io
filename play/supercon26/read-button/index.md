@@ -6,7 +6,8 @@ topic: gpio
 workshop: true
 needs: [repl]
 time: 10 min
-touches: []
+touches:
+  - lib/button.py               # USER_A_PIN, Button (Signal with invert=True), scan() every 1 ms
 verified_against: null
 video: null
 ---
@@ -64,7 +65,21 @@ the pin to ground, which wins over the weak pull-up, so it reads `0`.
 Pressed = 0 seems backwards at first, but it's very common.
 
 Your loop checks the button ten times a second. That's called **polling**.
-If you tap the button quickly, the loop might miss it. [[interrupts]] fixes that.
+If you tap the button quickly, the loop might miss it. [[interrupts]] is one fix.
+The badge's own program uses the other: it polls all five buttons every
+millisecond (`scan()` in `lib/button.py`).
+
+The firmware sets up this same pin in `lib/button.py`, and flips the answer so that
+pressed reads `1`:
+
+```python
+from lib.button import UserA
+UserA.pin.value()        # 1 while held, 0 when not
+```
+
+Apps use `UserA.pressed()` instead. It's True once per press, but only while the
+badge's program is running, because that's what does the polling. After **Ctrl+C**
+it never changes.
 
 <!-- TODO(diagram): 3.3 V → pull-up resistor → pin → button → GND, with "not pressed: 1" and "pressed: 0" -->
 
@@ -79,15 +94,16 @@ If you tap the button quickly, the loop might miss it. [[interrupts]] fixes that
 
 ## Have fun!
 
-Combine this with [[one-led]]: make an LED light only while the button is held.
+- Combine this with [[one-led]]: make an LED light only while the button is held.
 
-```python
-while True:
-    np[0] = (0, 32, 0) if btn.value() == 0 else (0, 0, 0)
-    np.write()
-    time.sleep(0.02)
-```
+  ```python
+  while True:
+      np[0] = (0, 32, 0) if btn.value() == 0 else (0, 0, 0)
+      np.write()
+      time.sleep(0.02)
+  ```
 
-Can you find the pins for the other buttons? (Hint: `{{ facts.firmware.pins_file }}`, or [[explore-badge]].)
-
-Make each press step LED 0 to the next color in a list: red, green, blue, off. If one press skips several colors, wait for the button to be released before you check again.
+- Find the pins for the other buttons. (Hint: `lib/button.py`, or [[explore-badge]].)
+  The two **Menu** buttons' labels are swapped on the board. Can you tell from the code?
+- Make each press step LED 0 to the next color in a list: red, green, blue, off. If one
+  press skips several colors, wait for the button to be released before you check again.

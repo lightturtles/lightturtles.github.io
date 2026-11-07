@@ -6,7 +6,8 @@ topic: gpio
 workshop: true
 needs: [repl]
 time: 10 min
-touches: []
+touches:
+  - lib/led_bar.py              # WS2812_PIN, NUM_LEDS, LedBar (the firmware's own wrapper)
 verified_against: null
 video: null
 ---
@@ -69,13 +70,25 @@ and have them all change at once.
 
 LEDs are numbered from **0**, so the last one is `np[{{ facts.leds.count }} - 1]`.
 
+The badge's own program does exactly this. `lib/led_bar.py` makes the same
+`NeoPixel` object and wraps it in `leds`, which every app uses:
+
+```python
+from lib.led_bar import leds
+leds[0] = (0, 32, 0)
+leds.write()
+leds.fill((0, 1, 1))     # fill() sends it straight away; no write() needed
+```
+
+Notice how dim the firmware's own colors are: `(0, 1, 1)` is the cyan you see while an
+app draws. These LEDs are bright.
+
 <!-- TODO(diagram): GPIO pin → LED 0 → LED 1 → … with the color list in RAM above, and np.write() as the arrow that sends it -->
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| `ImportError: no module named 'neopixel'` | Run `help('modules')` and look for it; tell a helper your firmware version. |
 | `IndexError` | You asked for an LED that doesn't exist. Use `0` to `{{ facts.leds.count }} - 1`. |
 | Nothing lights | Did you call `np.write()`? |
 | The LED lights, then changes on its own | The badge's program is still running. Press **Ctrl+C** and try again. |
@@ -83,8 +96,10 @@ LEDs are numbered from **0**, so the last one is `np[{{ facts.leds.count }} - 1]
 
 ## Have fun!
 
-Make LED 0 your favorite color. Find the dimmest value you can still see. Is
-`(1, 0, 0)` visible in a dark room?
+- Make LED 0 your favorite color.
+- Find the dimmest value you can still see. Is `(1, 0, 0)` visible in a dark room?
+- Light the LEDs in binary: `from lib.led_bar import bitmask_to_leds`, then
+  `leds.set(bitmask_to_leds(42))` and `leds.write()`.
 
 Keep the numbers small. `(255, 255, 255)` on every LED draws a lot of current
 and is uncomfortably bright.

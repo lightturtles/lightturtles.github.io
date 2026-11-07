@@ -4,7 +4,7 @@ title: Draw pixels, shapes and charts (LVGL chart and canvas)
 label: Draw pixels, shapes and charts
 topic: display
 workshop: false
-needs: [lvgl-hello]
+needs: [first-app]
 time: 30 min
 touches: [apps/userA.py]
 verified_against: null

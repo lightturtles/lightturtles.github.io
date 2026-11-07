@@ -6,7 +6,10 @@ topic: setup
 workshop: true
 needs: [repl]
 time: 20 min
-touches: []
+touches:
+  - main.py                     # what "the file that starts everything" imports
+  - lib/app_switcher.py#AppSwitcher.__init__   # finds apps/*.py; writes data/user_apps.py and data/app_list
+  - lib/json_configs.py         # data/panel_config.json (the start-up counter)
 verified_against: null
 video: null
 ---
@@ -23,19 +26,29 @@ are meant for *you* to change.
 
 ## Steps
 
-1. **Get the official files.** Go to <{{ facts.firmware.repo }}>, click **Code → Download
-   ZIP**, and unzip it somewhere you'll find again. Inside is a folder called
-   `{{ facts.firmware.folder }}/`. It holds *exactly* the files that belong on the badge.
-   From here on, "**the folder**" means that folder.
+1. **Get the official files.** Clone the badge's repo somewhere you'll find again:
 
-   <!-- TODO(verify): if there are releases, link the one that matches the badges as shipped -->
+   ```bash
+   git clone {{ facts.firmware.repo }}
+   ```
+
+   Expect updates during the conference. With a clone, getting them is one command
+   (`git pull`, see [[update-firmware]]).
+
+   No `git`? Go to <{{ facts.firmware.repo }}>, click **Code → Download ZIP**, and unzip
+   it. You'll have to download a fresh ZIP for every update.
+
+   Inside is a folder called `{{ facts.firmware.folder }}/`. It holds *exactly* the files
+   that belong on the badge. From here on, "**the folder**" means that folder.
 
 2. **Show both side by side.** In Thonny, open **View → Files**. The top pane is your
-   laptop: browse to the folder. The bottom pane is the badge (**MicroPython device**).
+   laptop: browse to `{{ facts.firmware.folder }}/`. The bottom pane is the badge
+   (**MicroPython device**).
 
    <!-- TODO(screenshot): Thonny Files view, laptop folder on top, badge below, same names highlighted -->
 
-   They should look nearly the same. That's not a coincidence: whoever built the badge
+   The badge should look nearly the same as `{{ facts.firmware.folder }}/`. That's not
+   a coincidence: whoever built the badge
    copied that folder onto it.
 
 3. **Do the same from the REPL:**
@@ -44,6 +57,8 @@ are meant for *you* to change.
    import os
    os.listdir('/')
    os.listdir('/apps')
+   os.listdir('/lib')
+   os.listdir('/data')
    ```
 
 4. **Fill in this table** for each top-level item. Guess from the names, then open a file
@@ -54,20 +69,24 @@ are meant for *you* to change.
    | `boot.py` | | |
    | `main.py` | | |
    | `apps/` | | |
-   | `hardware/` | | |
-   | `ui/` | | |
    | `{{ facts.firmware.lib_dir }}/` | | |
    | `{{ facts.firmware.state_dir }}/` | | |
 
-   <!-- TODO(verify): swap in this year's top-level names once the firmware is out -->
+5. **Spot the differences.** Is anything on the badge that *isn't* in the folder, or
+   different from it? Look in `{{ facts.firmware.state_dir }}/`. Most of it (pictures, the
+   schedule) came in the folder, but the badge also writes a few files there itself:
 
-5. **Spot the differences.** Is anything on the badge that *isn't* in the folder?
-   The `{{ facts.firmware.state_dir }}/` folder is the usual one: the badge writes there
-   itself (saved settings, keys for messaging), so it's different on every badge.
+   | File | What the badge keeps in it |
+   |---|---|
+   | `panel_config.json` | How many times it has started up (see [[use-badge]]) |
+   | `user_apps.py` | The list of apps it found in `apps/`, rewritten at every start-up |
+   | `app_list` | The apps' names, in menu order (a small database, not text) |
 
-**✅ Done when** you can point to: the file that starts everything, where the apps live,
-the files meant for you to edit ({{ facts.firmware.user_apps }}), and the folder the badge
-writes its own data to.
+   Open `panel_config.json`. How many times has your badge started?
+
+**✅ Done when** you can point to: the file that starts everything, where the apps live
+(and where *your* apps will go), the firmware's own building blocks, and the files the
+badge writes itself.
 
 ## What just happened
 
@@ -75,15 +94,19 @@ The files on your badge come in three kinds:
 
 | Kind | Examples | Where else it exists |
 |---|---|---|
-| **System files** | `main.py`, `hardware/`, `ui/` | In the folder. Mess one up and you can always get it back. |
-| **Your files** | {{ facts.firmware.user_apps }}, anything you add | **Only on your badge**, until you back it up. |
-| **Badge data** | `{{ facts.firmware.state_dir }}/` | Only on your badge. The badge made it. |
+| **System files** | `boot.py`, `main.py`, `{{ facts.firmware.lib_dir }}/`, the apps that came in `apps/`, the pictures and schedule in `{{ facts.firmware.state_dir }}/` | In the folder. Mess one up and you can always get it back. |
+| **Your files** | New apps you put in `apps/`, anything else you add | Thonny and ViperIDE can edit files right on the badge. Anything you write that way is **only on your badge** until you back it up. (Write on your laptop and copy it over, and your laptop has a copy too. See [[mount-and-run]].) |
+| **Badge data** | `{{ facts.firmware.state_dir }}/panel_config.json`, `user_apps.py`, `app_list` | Only on your badge. The badge wrote them. |
+
+The apps are plain Python files, and the badge finds them on its own: at every start-up
+it lists `apps/`, loads each file it finds, and builds the menu from them. That's why
+there's no list of apps to edit anywhere.
 
 Everything in the rest of this round ([[backup]], [[update-firmware]], [[start-fresh]])
 is just "compare the badge to the folder, then copy one way or the other." Which way
 depends on which kind of file it is.
 
-<!-- TODO(diagram): block diagram: boot.py → main.py → menu → apps (user apps highlighted); hardware/ and ui/ underneath; data/ off to the side -->
+<!-- TODO(diagram): block diagram: boot.py → main.py → app switcher (menu) → apps/*.py (your apps highlighted); lib/ (buttons, LEDs, e-ink, SAO) underneath; data/ off to the side, with the three badge-written files marked -->
 
 ## Stuck?
 
@@ -102,9 +125,13 @@ depends on which kind of file it is.
 ```bash
 mpremote fs tree      # everything on the badge
 mpremote fs cat :main.py
+mpremote fs cat :data/panel_config.json
 ```
 
 ## Have fun!
 
-- Open `main.py` and skim it. What does it import? Then follow it properly in [[firmware-diagram]].
+- Open `main.py` and skim it. What does it import? Find the line that counts start-ups,
+  and the one that checks for 42. Then follow it properly in [[firmware-diagram]].
+- Put a copy of `apps/template.py` in `apps/` under a new name, press **Ctrl+D**, and
+  open `data/user_apps.py` again. What changed? (Then delete your copy.)
 - Which file is the biggest? `mpremote fs tree -h`

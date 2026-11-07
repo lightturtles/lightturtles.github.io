@@ -6,7 +6,8 @@ topic: modify-app
 workshop: false
 needs: [backup]
 time: 15 min
-touches: []
+touches:
+  - apps/nametag.py             # the example diff quotes lines 49–55
 verified_against: null
 video: null
 ---
@@ -43,16 +44,21 @@ the changed lines in one of them.
    ```diff
    --- folder/{{ facts.name_badge.file }}
    +++ badge/{{ facts.name_badge.file }}
-   @@ -40,7 +40,7 @@
-            self.username = ...
-   -        self.font = lvgl.{{ facts.name_badge.find }}
-   +        self.font = lvgl.{{ facts.name_badge.replace }}
-            self.all_fonts = {
+   @@ -49,7 +49,7 @@
+                plate.set_style_pad_all(8, 0)
+
+                hello = lvgl.label(plate)
+   -            {{ facts.name_badge.find }}
+   +            {{ facts.name_badge.replace }}
+                hello.set_style_text_color(_BLACK, 0)
+                hello.set_style_text_font(_FONT, 0)
    ```
 
    - `-` lines are the folder's version, `+` lines are the badge's.
-   - `@@ -40,7 +40,7 @@` means "starting at line 40, 7 lines shown" on each side.
+   - `@@ -49,7 +49,7 @@` means "starting at line 49, 7 lines shown" on each side.
    - Unmarked lines are context, so you can find the spot.
+
+   <!-- TODO(verify): badgetool's real output for this change (context width, header lines) -->
 
 **✅ Done when** you can point to the exact line you changed, without opening the file.
 
@@ -65,12 +71,16 @@ Only for a line-by-line diff does it copy the one file over.
 
 This is also how it decides what's "yours" and what's a system file. The same idea is
 built into Git, backup tools, and `mpremote cp` itself (which skips unchanged files).
+The badge's repo has a script that does the first step too:
+`python scripts/update.py ls`, run from the repo's `firmware/` folder, marks every file
+that differs. It doesn't show the changed lines.
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
 | Every file is "different" | The folder is a different release from what's on the badge. |
+| `data/user_apps.py`, `data/app_list` or `data/panel_config.json` show up | Normal: the badge rewrites those itself ("state"). |
 | "has no main.py" | Point it at the folder that *contains* `main.py`, not the one above it. |
 | `mpremote failed` | Close Thonny or ViperIDE (only one program can use the port), then try again. |
 

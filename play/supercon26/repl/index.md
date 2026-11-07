@@ -4,9 +4,10 @@ title: Connect over USB-C; reach the REPL; run one line
 label: Connect to the REPL
 topic: setup
 workshop: true
-needs: []
+needs: [use-badge]
 time: 10 min
-touches: []                     # firmware files this page depends on
+touches:                        # firmware files this page depends on
+  - main.py#main                # Ctrl+C stops it; Ctrl+D re-runs it; the 60 s heartbeat print
 verified_against: null          # firmware commit last checked on a real badge
 video: null
 ---
@@ -57,9 +58,11 @@ video: null
    import os; os.uname()
    ```
 
-   You should see `sysname='esp32'`. An error means you're talking to your
-   laptop's Python, not the badge (see *Stuck?*). Write down the `version=`
-   part. It's the first thing anyone will ask if you need help.
+   You should see `sysname='esp32'` and, at the end, `machine='Billboard Badge …'`.
+   An error means you're talking to your laptop's Python, not the badge (see
+   *Stuck?*). Write down the `release=` and `version=` parts (this year's badges
+   say `release='{{ facts.firmware.micropython }}'`). They're the first thing
+   anyone will ask if you need help.
 
 <!-- TODO(screenshot): Shell pane showing both commands and their output -->
 
@@ -71,8 +74,15 @@ The badge's chip ({{ facts.badge.mcu }}) runs **MicroPython**, a small Python
 interpreter. The `>>>` prompt is its **REPL** (Read, Evaluate, Print, Loop). Your
 laptop is just a keyboard and screen for it, and the code runs *on the badge*.
 
-Pressing **Ctrl+C** stopped the badge's own program, so the screen and buttons may
-freeze. Press **Ctrl+D** at an empty `>>>` to soft-reset and get the menu back.
+Before you pressed **Ctrl+C**, the badge was busy running its own program, `main.py`
+(the one that runs the menu and the apps). That's why you may have seen lines like
+`Main 60s heartbeat --^v--^v--` and a block of memory numbers scroll past: `main.py`
+prints them once a minute to show it's still alive.
+
+**Ctrl+C** stopped `main.py`, and with it everything it was doing: the menu, the
+buttons and the LEDs. The screen keeps its last picture (it's e-ink). Press **Ctrl+D**
+at an empty `>>>` to soft-reset: `main.py` starts again and the menu comes back. (That
+counts as a start-up. See [[use-badge]].)
 
 <!-- TODO(diagram): laptop ⇄ USB cable ⇄ badge chip running MicroPython; keystrokes go in, printed text comes out -->
 
@@ -86,6 +96,7 @@ freeze. Press **Ctrl+D** at an empty `>>>` to soft-reset and get the menu back.
 | `os.uname()` gives an error | Thonny is using your laptop's Python. Redo step 2 and pick **{{ facts.thonny.interpreter }}**. |
 | "Port busy" / "could not open" | Only one program can use the badge at a time. Close the other app or browser tab (Arduino IDE and 3D-printer software are common culprits). |
 | Connected, but no `>>>` | Click in the shell pane and press **Ctrl+C**, then **Enter**. |
+| `Main 60s heartbeat` and memory numbers keep appearing | That's the badge's own program saying it's alive. Press **Ctrl+C** to stop it and get `>>>`. |
 | Thonny: "Device is busy or does not respond" | Click **Stop** (or press **Ctrl+F2**), then **Ctrl+C** in the shell. |
 | Says `raw REPL; CTRL-B to exit`, or typing does nothing | Press **Ctrl+B**. |
 | Work laptop won't allow it | IT policies often block USB devices. Pair up with a neighbor. |
@@ -107,11 +118,15 @@ Exit with **Ctrl+]**. You'll use `mpremote` again in [[backup]].
 
 ## Have fun!
 
-It's like learning Python for the first time! Make an insult generator, or compute the first 50 numbers in the Fibonacci sequence.
+It's like learning Python for the first time! Try:
+
+- an insult generator
+- the first 50 numbers in the Fibonacci sequence
 
 ## Troubleshooting by OS
 
-### Linux
+<details markdown="1">
+<summary><strong>Linux</strong></summary>
 
 - **"Permission denied":** add yourself to the serial group, then log out
   and back in (sometimes a reboot is needed):
@@ -123,25 +138,34 @@ It's like learning Python for the first time! Make an insult generator, or compu
   sandboxed. Run `sudo snap connect chromium:raw-usb`, or use Google Chrome.
   Snap/Flatpak versions of Thonny have similar trouble; the version from
   [thonny.org](https://thonny.org) doesn't.
-  <!-- TODO: keep only if facts.usb.bridge is CH340 -->
-- **Port appears, then vanishes (CH340 chips, Ubuntu 22.04+):** the Braille
-  display service grabbed it. `sudo apt remove brltty`.
+- **Which port?** The badge uses the chip's own USB, so it shows up as `/dev/ttyACM0`
+  (not `ttyUSB…`).
 
-### macOS
+</details>
+
+<details markdown="1">
+<summary><strong>macOS</strong></summary>
 
 - **Badge never shows up:** you may have dismissed the "Allow accessory to
   connect?" prompt. Go to **System Settings → Privacy & Security → Allow
   accessories to connect**.
 - **Picking a port:** choose `/dev/cu.usbmodem…`, not `/dev/tty.…`.
 
-### Windows
+</details>
 
-- **Which COM port?** Open **Device Manager → Ports (COM & LPT)**.
-<!-- TODO: keep only if facts.usb.bridge is not native -->
-- **Yellow triangle or "Unknown device":** install the
-  {{ facts.usb.bridge }} driver.
+<details markdown="1">
+<summary><strong>Windows</strong></summary>
 
-### Browsers (ViperIDE)
+- **Which COM port?** Open **Device Manager → Ports (COM & LPT)**. The badge
+  appears as **USB Serial Device (COM…)**. No driver to install on Windows 10 or 11.
+  <!-- TODO(verify): the exact name Windows shows -->
+
+</details>
+
+<details markdown="1">
+<summary><strong>Browsers (ViperIDE)</strong></summary>
 
 - Works in Chrome and Edge. **Brave** has it switched off by default.
   **Firefox** and **Safari** can't do it at all; use Thonny instead.
+
+</details>

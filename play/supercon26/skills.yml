@@ -25,10 +25,15 @@ topics:
     color: "#4a4a48"
     group: setup
     skills:
+      - id: use-badge
+        title: Use your badge
+        description: "Start here: the buttons, the menu, the stock apps, and the 42nd start-up."
+        needs: []
+        workshop: true
       - id: repl
         title: Connect to the REPL
         description: "Connect over USB-C, reach >>>, run one line."
-        needs: []
+        needs: [use-badge]
         workshop: true
       - id: map-firmware
         title: Find the files
@@ -175,26 +180,34 @@ topics:
         description: "Find what's on the bus and at which address."
         needs: [sao-pinout]
         workshop: true
-      - id: read-register
-        title: Read a register
-        description: "readfrom_mem at the REPL; raw bytes."
-        needs: [i2c-scan]
-        workshop: true
-      - id: real-units
-        title: Raw bytes to real units
-        description: "Use the datasheet to turn bytes into °C."
-        needs: [read-register]
-        workshop: true
       - id: add-a-library
         title: Add a library
-        description: "Skip the datasheet: drop a driver into lib/."
+        description: "Put your sensor's driver in lib/ and import it."
         needs: [i2c-scan]
+        workshop: true
+      - id: use-a-library
+        title: Use a library
+        description: "Make the sensor object, ask for a reading in real units. One section per workshop sensor."
+        needs: [add-a-library]
+        workshop: true
+      - id: read-register
+        title: Read a register
+        description: "What the driver does inside: registers and commands at the REPL; raw bytes."
+        needs: [use-a-library]
+      - id: real-units
+        title: Raw bytes to real units
+        description: "Use the datasheet to turn bytes into °C, lux, g or a slider position."
+        needs: [read-register]
 
   - id: display
     title: "Hardware: Display (e-ink + LVGL)"
     color: "#c9902f"
     group: hardware
     skills:
+      - id: draw-pixels
+        title: Draw pixels, shapes and charts
+        description: "Draw straight into the e-ink framebuffers (no LVGL): graphs, game boards, generated art."
+        needs: [first-app]
       - id: lvgl-hello
         title: Hello, LVGL
         description: "One label on the screen from your app."
@@ -202,10 +215,6 @@ topics:
       - id: app-screen
         title: Layout and fonts
         description: "Containers, alignment, fonts; build a real screen."
-        needs: [lvgl-hello]
-      - id: draw-pixels
-        title: Draw pixels, shapes and charts
-        description: "An LVGL canvas or chart (or a framebuffer): graphs, game boards, generated art."
         needs: [lvgl-hello]
       - id: eink-images
         title: Images on a 3-color panel

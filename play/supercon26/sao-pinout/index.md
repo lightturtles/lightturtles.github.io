@@ -6,91 +6,94 @@ topic: i2c
 workshop: true
 needs: [map-firmware]
 time: 15 min
-touches: [hardware/board.py]   # TODO: facts.firmware.pins_file
+touches:
+  - lib/sao.py                  # SAO_I2C_SDA/SCL, SAOn_GPIOn, the shared i2c bus
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-**Goal:** For the badge's SAO connector, know what each of the six pins does, which end
+**Goal:** For the badge's SAO connectors, know what each of the six pins does, which end
 is pin 1, and which ESP32 GPIO it's wired to. You'll need this for anything you plug in.
 
 ## You need
 
 - Your badge (no laptop needed for steps 1–2)
 - The official folder (see [[map-firmware]])
-- The workshop's {{ facts.sensor.name }} sensor (or any I2C sensor), plus four
-  female-to-female jumper wires if it isn't on an SAO board
+- One of the workshop's sensors: {% for s in facts.sensors %}{{ s[1].name }} ({{ s[1].what }}){% unless forloop.last %}, {% endunless %}{% endfor %}
+- {{ facts.sao.connector }}
+  <!-- TODO: the sensors are Qwiic / STEMMA QT boards. Say what attendees use to reach an SAO header. -->
 
 ## Steps
 
-1. **Find the connector(s).** An **SAO** ("Shitty Add-On") header is a 2×3 block of pins
-   or a socket. The badge has {{ facts.sao.count }}. Look for a notch or a mark on the
-   board's silkscreen: that's the key, so add-ons only fit one way.
+1. **Find the connectors.** An **SAO** ("Shitty Add-On") header is a 2×3 block of pins
+   or a socket. The badge has {{ facts.sao.count }}. Many badges mark which way round an
+   add-on goes with a notch or a key; this one doesn't, so you'll go by the top of the badge.
 
-   <!-- TODO(photo): close-up of the SAO header with pin 1 and the key marked -->
+   <!-- TODO(photo): close-up of an SAO header with pin 1 marked -->
 
-2. **Label the pins.** Every SAO follows the same standard:
+2. **Label the pins.** Every SAO follows the same standard. On this badge, with the
+   badge the right way up:
 
    ```
-          key / notch
-       ┌───────┬───────┐
-       │ 3V3   │ GND   │   1  2
-       │ SDA   │ SCL   │   3  4
-       │ GPIO1 │ GPIO2 │   5  6
-       └───────┴───────┘
+              top of badge
+       ┌───────┬───────┬───────┐
+       │ 3V3   │ SDA   │ GPIO1 │   1  3  5
+       │ GND   │ SCL   │ GPIO2 │   2  4  6
+       └───────┴───────┴───────┘
    ```
 
-   <!-- TODO(verify): orientation vs. the real silkscreen; redraw as an SVG over a photo -->
-
-3. **Find the GPIO numbers in the firmware.** Open `{{ facts.firmware.pins_file }}` from
-   the badge or the folder, and search for `SAO`. You should find four pins with names.
-   Check from the REPL:
+3. **Find the GPIO numbers in the firmware.** Open `{{ facts.sao.pins_file }}` from the
+   badge or the folder. Every SAO pin is named near the top. Check from the REPL:
 
    ```python
-   import {{ facts.firmware.pins_file | remove: ".py" | replace: "/", "." }} as pins
-   [n for n in dir(pins) if 'SAO' in n]
+   import lib.sao as sao
+   [n for n in dir(sao) if n.startswith('SAO')]
+   sao.SAO_I2C_SDA, sao.SAO_I2C_SCL
    ```
 
 4. **Confirm on the schematic** (if you like). The firmware says what the code *thinks*;
-   the schematic says what's actually wired.
-
-   <!-- TODO: link to the schematic PDF -->
+   the schematic says what's actually wired. It's in the repo under
+   `hardware/billboard_pcb/` (`sao.kicad_sch`; open it in [KiCad](https://www.kicad.org)),
+   and the repo's `README.md` lists the pins too.
 
 5. **Fill in your table:**
 
-   | SAO pin | Signal | ESP32 GPIO |
-   |---|---|---|
-   | 1 | 3V3 | (power) |
-   | 2 | GND | (ground) |
-   | 3 | SDA | {{ facts.sao.sda }} |
-   | 4 | SCL | {{ facts.sao.scl }} |
-   | 5 | GPIO1 | {{ facts.sao.gpio1 }} |
-   | 6 | GPIO2 | {{ facts.sao.gpio2 }} |
+   | SAO pin | Signal | SAO1 | SAO2 | SAO3 |
+   |---|---|---|---|---|
+   | 1 | 3V3 | (power) | (power) | (power) |
+   | 2 | GND | (ground) | (ground) | (ground) |
+   | 3 | SDA | {{ facts.sao.sda }} | {{ facts.sao.sda }} | {{ facts.sao.sda }} |
+   | 4 | SCL | {{ facts.sao.scl }} | {{ facts.sao.scl }} | {{ facts.sao.scl }} |
+   | 5 | GPIO1 | 2 | 4 | 7 |
+   | 6 | GPIO2 | 42 | 5 | 6 |
 
-   Cover the right column before you start. Did you get the same numbers?
+   Cover the right-hand columns before you start. Did you get the same numbers?
+   Notice that SDA and SCL are the same on all three: they're one shared bus.
 
-6. **Connect your sensor.** Unplug the badge from USB and switch it off first.
-   - **On an SAO board:** line its key up with the badge's key and push it on.
-   - **On a breakout board:** run four jumper wires, matching the names:
+6. **Connect your sensor.** Switch the badge off first.
+   - **On an SAO board:** find its pin 1 (3V3), line it up with the badge's pin 1
+     (top left in the diagram), and push it on. There's no key to stop it going on
+     backwards, so check twice.
+   - **With wires:** match the names:
 
-     | SAO pin | Sensor pin (often labeled) |
-     |---|---|
-     | 1 (3V3) | VCC, VIN or 3V3 |
-     | 2 (GND) | GND |
-     | 3 (SDA) | SDA or SDI |
-     | 4 (SCL) | SCL or SCK |
+     | SAO pin | Sensor pin (often labeled) | Qwiic / STEMMA QT wire color |
+     |---|---|---|
+     | 1 (3V3) | VCC, VIN or 3V3 | red |
+     | 2 (GND) | GND | black |
+     | 3 (SDA) | SDA or SDI | blue |
+     | 4 (SCL) | SCL or SCK | yellow |
 
-     Check the sensor runs on 3.3 V (most do; a "5 V only" board may not answer).
+   Any of the three SAO headers works for I2C.
 
-   <!-- TODO(photo): the workshop sensor plugged in, and a breakout wired with jumpers -->
+   <!-- TODO(photo): a workshop sensor connected to an SAO header -->
 
-   Power the badge back on. Nothing will look different yet. [[i2c-scan]] checks the
+   Switch the badge back on. Nothing will look different yet. [[i2c-scan]] checks the
    badge can see it.
 
 **✅ Done when** you can point to SAO pin 1 on the badge, name the GPIO behind
-GPIO1, GPIO2, SDA, and SCL, and your sensor is connected the right way round.
+SDA, SCL, and one SAO's GPIO1 and GPIO2, and your sensor is connected the right way round.
 
 ## What just happened
 
@@ -99,22 +102,23 @@ is data, SCL is clock) for talking to smart chips, and two plain **GPIO** pins y
 switch on and off or read. Because every badge uses the same layout, add-ons work on
 any badge, if you know which of *this* chip's pins are behind them.
 
-The firmware names its pins in one place so nobody has to remember numbers. That file is
-the fastest way to find any pin on the badge, not just these.
+This badge has three headers on one I2C bus, so up to three add-ons (or more, chained
+with Qwiic cables) can share it, as long as each chip has a different address. The
+workshop's four sensors all do.
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| Can't find `SAO` in the pins file | Try searching for `I2C` or the numbers in the table. Names change between years. |
+| Can't find the SAO names | They're in `{{ facts.sao.pins_file }}`, not `lib/board.py`. Search for `SAO`. |
 | Firmware and schematic disagree | Believe the schematic, and tell the badge team! |
-| An add-on gets hot when plugged in | **Unplug it now.** It's in backwards (3V3 and GND swapped). |
+| An add-on gets hot when plugged in | **Switch off and unplug it now.** It's in backwards (3V3 and GND swapped). |
 | The sensor's pins don't say SDA/SCL | SPI-only boards say MOSI/MISO/CS; those won't work on I2C. Some boards do both; check its docs. |
 
 **Careful:** never connect pin 1 (3V3) straight to pin 2 (GND). That's a short circuit.
 
 ## Have fun!
 
-- Which other GPIOs does `{{ facts.firmware.pins_file }}` name? Which are free?
+- Which GPIOs are completely free? (Hint: `lib/board.py` names two test points.)
 - Try [[i2c-scan]] (I2C) next, or [[sao-blink]] (GPIO).
 - Find your sensor's chip on its board. Can you read the part number? Search for its datasheet.

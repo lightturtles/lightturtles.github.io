@@ -6,7 +6,9 @@ topic: setup
 workshop: true
 needs: [map-firmware]
 time: 15 min
-touches: []
+touches:
+  - lib/json_configs.py         # data/panel_config.json: the one badge-written file worth keeping
+  - lib/app_switcher.py#AppSwitcher.__init__   # rewrites data/user_apps.py and data/app_list every start-up
 verified_against: null
 video: null
 ---
@@ -30,9 +32,14 @@ can't lose it.
 
 3. In the bottom (badge) pane, select the files that are **yours**. Hold **Ctrl**
    (**Cmd** on a Mac) to pick several:
-   - {{ facts.firmware.user_apps }}
-   - the whole `{{ facts.firmware.state_dir }}/` folder
-   - anything you've added since you got the badge (e.g. a library in `{{ facts.firmware.lib_dir }}/`)
+   - any app in `apps/` that isn't in the folder's `apps/`
+   - any file you've edited (none yet, but after [[name-badge]], `{{ facts.name_badge.file }}`)
+   - `{{ facts.firmware.state_dir }}/panel_config.json`
+   - anything else you've added since you got the badge (e.g. a library in `{{ facts.firmware.lib_dir }}/`)
+
+   You can skip the rest of `{{ facts.firmware.state_dir }}/`. The pictures and the
+   schedule came in the folder, and the badge rewrites `user_apps.py` and `app_list`
+   every time it starts.
 
 4. Right-click → **Download to …**. The files appear in the top pane.
 
@@ -52,11 +59,10 @@ That shortcut only works if you know which files are yours. Edit a system file (
 will, in [[name-badge]]) and it becomes yours too. Rule of thumb: **back up
 before you change anything, and back up anything you changed.**
 
-Keep your backup to yourself. `{{ facts.firmware.state_dir }}/` may hold your badge's
-private key (what proves a message came from *your* badge).
-<!-- TODO(verify): last year's /data held rsa_private.der; confirm for this year -->
+There's nothing secret on this year's badge, so your backup is safe to share. That
+will change if you save a WiFi password in one of your apps.
 
-<!-- TODO(diagram): badge files split into "same as the folder" (grey, skip) and "only here" (highlighted, arrow to laptop backup folder) -->
+<!-- TODO(diagram): badge files split into "same as the folder" (grey, skip), "rebuilt at start-up" (grey, skip) and "only here" (highlighted, arrow to laptop backup folder) -->
 
 ## Stuck?
 
@@ -88,7 +94,11 @@ It needs `mpremote` (see [[repl]]). `badgetool.py` sorts every file into one of 
 kinds ("yours-new", "yours-edited", "state", …). The table near the top of the script
 decides what each command does with each kind. Read it; you can change it.
 
+The badge's repo has a similar script, `{{ facts.firmware.update_script }}`. Its `pull`
+copies *everything* into one `badge-backup/` folder (like the `mpremote` line above),
+and `ls` lists which files differ, without saying whose they are.
+
 ## Have fun!
 
 - Back up a friend's badge (with permission!) and compare: which files differ between two badges?
-- Open something from `{{ facts.firmware.state_dir }}/` on your laptop. Can you tell what it's for?
+- Open `user_apps.py` from your backup. Delete it from the badge, press **Ctrl+D**, and look again. Is it back?
