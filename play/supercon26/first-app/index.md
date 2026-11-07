@@ -6,140 +6,139 @@ topic: write-app
 workshop: false
 needs: [firmware-diagram]
 time: 25 min
-touches: [main.py, apps/base_app.py, apps/template_app.py, apps/app_menu.py, apps/userA.py]
+touches:
+  - apps/template.py#TemplateApp      # on the switcher's deny list, so copy it to a new file
+  - apps/base_app.py#BaseApp          # name, sleep_ms, launched; arun() calls run()
+  - lib/app_switcher.py#AppSwitcher   # finds every BaseApp subclass in /apps at start-up
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): app API below is the 2025 firmware's (apps/base_app.py, apps/template_app.py) -->
-
-**Goal:** Put your own app on the badge's menu, and see exactly when the badge runs
-each part of it.
+**Goal:** Put your own app on the badge's menu, and see exactly when the badge runs it.
 
 ## You need
 
-- A [[backup]] (you're about to replace `{{ facts.firmware.user_app }}`)
 - Thonny, connected to the badge (see [[repl]])
 
 ## Steps
 
 1. **Look at the template.** Open `{{ facts.firmware.template_app }}` on the badge. Read the
-   comments; they say when each method is called. Don't edit it.
+   comments; they say when `run()` is called and what `self.launched` means. Don't edit
+   it: the badge skips any file called `template.py`, so it never shows up in the menu.
 
-2. **Replace `{{ facts.firmware.user_app }}`** with this. It's the template, with a
-   `print` in every method so you can watch it work:
+2. **Make `{{ facts.firmware.user_app }}`.** In Thonny, **File → New**, paste this, then
+   **File → Save as… → MicroPython device**, open the `apps` folder, and name it
+   `my_app.py`. It's the template, trimmed, with a `print` in each part so you can watch
+   it work:
 
    ```python
    """My first app."""
 
    from apps.base_app import BaseApp
+   from lib.button import UserA
 
 
-   class App(BaseApp):
-
-       def __init__(self, name, badge):
-           super().__init__(name, badge)
-           self.background_sleep_ms = 5000   # run_background() every 5 s
-           self.ticks = 0
+   class MyApp(BaseApp):
+       def __init__(self):
+           super().__init__("{{ facts.firmware.user_app_name }}")
+           self.sleep_ms = 100   # run() about 10 times a second
+           self.calls = 0
            print(f"[{self.name}] created")
 
-       def switch_to_foreground(self):
-           super().switch_to_foreground()
-           print(f"[{self.name}] -> FOREGROUND")
-
-       def switch_to_background(self):
-           super().switch_to_background()
-           print(f"[{self.name}] -> background")
-
-       def run_foreground(self):
+       def run(self):
+           if self.launched:
+               print(f"[{self.name}] launched")
+               self.calls = 0
+           self.calls += 1
+           if self.calls % 50 == 0:
+               print(f"[{self.name}] run() has been called {self.calls} times")
            if {{ facts.buttons.app_1 }}:
-               print(f"[{self.name}] button {{ facts.buttons.app_1_label }} pressed")
-           if {{ facts.buttons.home }}:   # the "go home" button
-               self.badge.display.clear()
-               self.switch_to_background()   # the menu notices and comes back
-
-       def run_background(self):
-           self.ticks += 1
-           print(f"[{self.name}] background tick {self.ticks}")
+               print(f"[{self.name}] {{ facts.buttons.app_1_label }} pressed")
    ```
 
-   Keep the class name `App`: that's what `main.py` looks for.
+   The class can have any name, as long as it inherits from `BaseApp` (the one in
+   `apps/base_app.py`). The badge finds it by itself.
 
-3. **Save and restart.** Save the file to the badge, then press **Ctrl+D** in the
-   shell. Watch the start-up messages: you should see `[{{ facts.firmware.user_app_name }}] created`, then a
-   `background tick` every 5 seconds.
+3. **Restart.** Press **Ctrl+D** in the shell. Watch the start-up messages: you should
+   see `[{{ facts.firmware.user_app_name }}] created`, then `Added app: {{ facts.firmware.user_app_name }}`. Then nothing
+   from your app: it isn't open, so it doesn't run.
 
-4. **Open your app** from the badge's menu (**{{ facts.firmware.user_app_menu }}**). The shell prints `-> FOREGROUND`, and the ticks stop.
+4. **Open your app** from the badge's menu: press **Menu +** or **Menu −** until the
+   shell says `Selected app …: {{ facts.firmware.user_app_name }}`, then press **{{ facts.buttons.app_1_label }}**. The shell prints
+   `Switching to {{ facts.firmware.user_app_name }}`, then `[{{ facts.firmware.user_app_name }}] launched`. Every five seconds or so after
+   that, it prints how many times `run()` has been called.
 
-5. **Press **{{ facts.buttons.app_1_label }}**.** It prints `button {{ facts.buttons.app_1_label }} pressed`.
+5. **Press {{ facts.buttons.app_1_label }}.** It prints `{{ facts.buttons.app_1_label }} pressed`.
 
-6. **Go home** with **{{ facts.buttons.home_label }}**. It prints `-> background`, the menu comes
-   back, and the ticks start again.
+6. **Go back to the menu** with **{{ facts.buttons.home_label }}**. The shell prints
+   `Activated app switching`, and your app's messages stop. Open it again: `launched`
+   again, and the count starts over.
 
-7. **Change it.** Make the tick every 2 seconds, and change one message. Save,
-   **Ctrl+D**, and check that it changed.
+7. **Change it.** Make `run()` twice as fast (`self.sleep_ms = 50`), and change one
+   message. Save, **Ctrl+D**, and check that it changed. Is the count message twice as
+   often now?
 
-<!-- TODO(screenshot): shell output with created / ticks / FOREGROUND / button / background in order -->
+<!-- TODO(screenshot): shell output with created / Added app / Switching to / launched / count / pressed / Activated app switching, in order -->
 
 **✅ Done when** your app is on the menu and you can predict the next line it will print
 before you press anything.
 
 ## What just happened
 
-`main.py` imports `{{ facts.firmware.user_app }}`, makes an `App`, and calls its
-`start()`. That gives your app its own asyncio task, the `run()` loop in
-`apps/base_app.py` (see [[asyncio-basics]]). Your app is now always in exactly one of
-two states:
+At start-up, `lib/app_switcher.py` imports every file in `apps/` and makes one object
+of every class that inherits from `BaseApp`. That's when your `__init__` ran, once.
 
-| State | What the badge calls | How often |
+After that, your app is in one of two places:
+
+| Where | What the badge calls | How often |
 |---|---|---|
-| **Background** | `run_background()` | every `background_sleep_ms` |
-| **Foreground** | `run_foreground()` | every `foreground_sleep_ms` |
+| **The menu** (closed) | nothing | never |
+| **Open** | `run()` | every `self.sleep_ms`, plus however long everything else takes |
 
-`switch_to_foreground()` and `switch_to_background()` run once, on the way in and the
-way out. The menu calls the first one; you call the second one when the user wants
-to leave.
+On the first `run()` after you open the app, `self.launched` is `True`. That's where an
+app draws its screen. When you press **{{ facts.buttons.home_label }}**, the switcher simply stops calling
+`run()`. Your app isn't told.
 
 Two rules follow from this:
 
-1. **Never loop or wait inside these methods.** Do one small thing and return. The
-   badge calls you again soon. Keep anything you need for next time in `self.`.
-2. **Only the foreground app draws on the screen.** Your app gets the screen in
-   `switch_to_foreground()` and gives it up when it goes to the background.
+1. **Never loop or wait inside `run()`.** Do one small thing and return. The badge calls
+   you again soon. Keep anything you need for next time in `self.`.
+2. **Read the buttons every call.** `{{ facts.buttons.app_1 }}` is `True` once per press,
+   but only if you ask *before the button is let go*. A tap shorter than `sleep_ms`
+   can slip by unseen.
 
 The full list of rules is in [[firmware-diagram]].
 
 ### Who gets to use the rest of the hardware?
 
-Everything except the screen is **shared on the honor system**. Any app, in the
-foreground or background, can light the LEDs, use the SAO pins or the I2C bus, or turn
-on WiFi. Nothing stops two apps from doing it at once. If you plan to use one of these
-from the background, see [[share-hardware]].
-
-<!-- TODO(diagram): app state machine: created → background ⇄ foreground, with which method runs in each state and on each arrow -->
+Only one app is open at a time, so apps rarely collide. But the firmware itself uses
+the LEDs: the menu draws on them, and opening an app turns them all off. If your app
+starts a task of its own that keeps running from the menu, see [[share-hardware]].
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| App isn't on the menu | Did you keep the class name `App`? Is the file named exactly `{{ facts.firmware.user_app }}`? |
-| `SyntaxError` or `ImportError` at boot | Read the traceback. See [[break-and-restore]]. |
+| App isn't on the menu | Is the file *on the badge*, in `apps/`, ending in `.py`, and not starting with `_`? Does the class say `(BaseApp)`? |
+| `Failed to load app module` at start-up | Your `__init__` raised an error; the traceback is printed just below. It must take no arguments besides `self`. |
+| `SyntaxError` or `ImportError` at start-up, and no menu | A mistake that stops the file importing stops the whole badge. Read the traceback. See [[break-and-restore]]. |
 | No `created` line | Scroll up; it's early in the start-up messages. Or you saved to your laptop, not the badge. |
-| Badge froze after your change | You probably have a loop or a `time.sleep()` in one of the methods. See [[hog-the-cpu]]. |
-| **{{ facts.buttons.home_label }}** doesn't go home | Is your `if` for it inside `run_foreground()`? Check the indentation. |
+| A quick tap of **{{ facts.buttons.app_1_label }}** prints nothing | The press ended before `run()` looked. Press a little longer, or make `sleep_ms` smaller. |
+| Badge froze after your change | You probably have a loop or a `time.sleep()` in `run()`. See [[hog-the-cpu]]. |
 
 ## Prefer the command line?
 
 ```bash
-mpremote cp myapp.py :{{ facts.firmware.user_app }}
+mpremote cp my_app.py :{{ facts.firmware.user_app }}
 mpremote reset
 mpremote          # watch the output
 ```
 
 ## Have fun!
 
-- Count button presses in `self.presses` and print the total each tick.
-- Print `time.ticks_ms()` in each tick. Is it exactly `background_sleep_ms` apart? Why not?
-- Make a second app in another slot ({{ facts.firmware.user_apps }}). Do their ticks interleave?
+- Count button presses in `self.presses` and print the total with the call count.
+- Print `time.ticks_ms()` in each call. Is it exactly `sleep_ms` apart? Why not?
+- Make a second app in another file. Open one, then the other. Does the first one
+  keep counting while the second is open?

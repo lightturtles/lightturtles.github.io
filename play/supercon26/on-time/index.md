@@ -6,7 +6,9 @@ topic: write-app
 workshop: false
 needs: [fsm]
 time: 25 min
-touches: [apps/userA.py, apps/base_app.py]
+touches:
+  - apps/base_app.py#BaseApp.arun   # sleep_ms between calls
+  - lib/epd.py#EPaperDisplay.run    # the refresh that makes calls late
 verified_against: null
 video: null
 ---
@@ -52,8 +54,8 @@ how much of the processor your app is using.
                if time.ticks_diff(now, self.last) >= 250:     # every 250 ms
                    self.last = now
                    on = self.count % 2 == 0
-                   self.np[0] = (32, 32, 0) if on else (0, 0, 0)
-                   self.np.write()
+                   leds[0] = (32, 32, 0) if on else (0, 0, 0)
+                   leds.write()
                    self.count += 1
                    if self.count == 10:
                        self.state, self.until = COOLDOWN, time.ticks_add(now, 3000)
@@ -67,17 +69,17 @@ how much of the processor your app is using.
                    self.state = IDLE
    ```
 
-   Change `foreground_sleep_ms` to 50, then 300. The flash timing barely changes now.
+   Change `self.sleep_ms` to 50, then 300. The flash timing barely changes now.
    (Before, it would have.)
 
 5. **Event-driven: "when X happens."** `IDLE` is already event-driven: it does nothing
    until the button. Most of an app's time should be spent in states like that.
 
 6. **Measure your budget.** How long does one call take, and how often do you get one?
-   Add at the top and bottom of `run_foreground()`:
+   Add at the top and bottom of `run()`:
 
    ```python
-       def run_foreground(self):
+       def run(self):
            t0 = time.ticks_us()
            gap = time.ticks_diff(t0, getattr(self, "t_prev", t0))
            self.t_prev = t0
@@ -87,10 +89,11 @@ how much of the processor your app is using.
                print(f"call took {took} us, {gap} us since the last one")
    ```
 
-   It only prints when something's slow. Press buttons, open the menu, change the
-   screen. What makes the gap grow?
+   It only prints when something's slow. Press buttons, go to the menu and back. What
+   makes the gap grow? (The first call after you come back from the menu always has
+   a big gap: a closed app isn't called at all.)
 
-**✅ Done when** your flashes keep the same rhythm whatever `foreground_sleep_ms` is,
+**✅ Done when** your flashes keep the same rhythm whatever `self.sleep_ms` is,
 and you know how long your app's calls take.
 
 ## What just happened
@@ -108,10 +111,10 @@ after a while (about 12 days on the ESP32-S3), so it fits in a fast integer. Pla
 subtraction gives nonsense across the wrap. `ticks_diff()` and `ticks_add()` do the
 arithmetic the wrap-safe way.
 
-**Your time budget.** Your app gets a call roughly every `foreground_sleep_ms`, but
+**Your time budget.** Your app gets a call roughly every `self.sleep_ms`, but
 only if everyone else returns on time. Every task on the badge shares the same
-processor (see [[asyncio-basics]]). If yours takes 5 ms and LVGL's redraw takes 50 ms,
-your next call comes late. Timestamps make your app *correct* when calls are late;
+processor (see [[asyncio-basics]]). If yours takes 5 ms and the screen task spends
+a second preparing a picture for the e-ink, your next call comes a second late. Timestamps make your app *correct* when calls are late;
 measuring tells you *how* late, and whether it's your fault.
 
 `ticks_us()` is the same clock in microseconds, for measuring short things.

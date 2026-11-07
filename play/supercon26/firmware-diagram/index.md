@@ -6,16 +6,18 @@ topic: write-app
 workshop: false
 needs: [map-firmware]
 time: 30 min
-touches: [main.py, hardware/badge.py, apps/base_app.py, apps/app_menu.py]
+touches:
+  - main.py#main                      # creates the four firmware tasks, then the 60 s heartbeat
+  - lib/app_switcher.py#AppSwitcher   # finds the apps at import; arun() is the menu and runs the open app
+  - apps/base_app.py#BaseApp.arun     # calls run(), catches its exceptions, sleeps sleep_ms
+  - apps/template.py
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): file, class and method names below are from the 2025 firmware -->
-
-**Goal:** Sketch how the badge's apps fit together (what `main.py` makes, what runs at
+**Goal:** Sketch how the badge's apps fit together (what `main.py` starts, what runs at
 the same time, how an app reaches the hardware), then follow one app through its life
 and learn the rules every app has to follow.
 
@@ -29,54 +31,61 @@ and learn the rules every app has to follow.
 1. **Start at `main.py`.** It's what runs when the badge starts up. (Something runs
    before it; that's in [[resets]].) Skim it before you draw anything. Don't change it.
    Look for:
-   - the `import` lines near the top. Each one points at a file or folder from [[map-firmware]].
-   - a list of apps. That's where the menu comes from.
-   - a loop at the bottom that runs forever. That's what's running whenever you're *not*
-     at `>>>`, and why **Ctrl+C** is needed to get there.
+   - the `import` lines near the top. Each `from lib.… import …` points at a file in `lib/`.
+   - `async def main()`, and the `while True` loop at its bottom. That loop runs
+     forever (it prints `Main 60s heartbeat` and a memory report once a minute), and
+     it's why **Ctrl+C** is needed to get to `>>>`.
 
-2. **Find what `main.py` creates.** Scroll to `async def main()`. Every line that looks
-   like `Something(...)` makes an object. Draw a box for each one under `main.py`, with
-   an arrow labeled *creates*:
-   - `Badge(...)`: one object that holds all the hardware
-   - the apps: `nametag.App(...)`, `userA.App(...)` … `userD.App(...)`, and the others
-   - the menus: `app_menu.AppMenu(...)`
+2. **Find what gets made at import.** Each `lib/` module makes its piece of hardware the
+   moment it's imported, as a module-level object. Draw a box for each one under
+   `main.py`, with an arrow labeled *imports*:
+   - `switcher` (`lib/app_switcher.py`, the last line): the menu, and the list of apps
+   - `display` (`lib/epd.py`): the e-ink screen, and LVGL
+   - `leds` (`lib/led_bar.py`): the row of {{ facts.leds.count }} LEDs
+   - `UserA`, `UserB`, `MenuPlus`, `MenuMinus`, `Boot` (`lib/button.py`)
 
-3. **Find what runs at the same time.** In the same function, look for `.start()` and
-   `aio.run(...)`. Open `apps/base_app.py` and find `start()`: it calls
-   `aio.create_task(self.run())`. That means **every app gets its own task**. Draw a
-   dashed outline around everything that runs as a task:
-   - each app (its `run()` loop)
-   - the `Badge` object (open `hardware/badge.py`; it creates a task too: what does it do?)
-   - LVGL's screen updater (`hardware/lvgl_setup.py`, `lvgl_task_handler`)
-   - `main()` itself: its `while True` loop prints a heartbeat every 60 seconds
+3. **Find where the apps come from.** Open `lib/app_switcher.py` and read
+   `AppSwitcher.__init__`. It lists every `.py` file in `/apps`, imports them all, and
+   makes **one object of every class that inherits from `BaseApp`**. (It skips
+   `base_app` and `template`.) Draw a box for each app the switcher makes: Workshops,
+   Sat Talks, Sun Talks (all three are in `apps/schedule.py`), Gallery and Nametag.
 
-4. **Find the hardware.** In `hardware/badge.py`, look at `__init__`. Each `self.x = ...`
-   is one piece of hardware the apps can reach as `self.badge.x`. Add a row of boxes
-   along the bottom of your page: {{ facts.badge.devices }}. Draw *uses* arrows from `Badge` to each.
+4. **Find what runs at the same time.** Back in `main()`, find the four
+   `aio.create_task(...)` lines. Each one starts a **task** (see [[asyncio-basics]]).
+   Draw a dashed outline around each:
+   - `button_scan()`: reads all five buttons, every millisecond
+   - `display.run()`: waits for an app to ask for a refresh, then sends the picture to the e-ink
+   - `leds.update()`: plays LED animations, if anyone set one
+   - `switcher.arun()`: the menu, *and* the open app
+   - and `main()` itself, with its heartbeat
 
-5. **Find how an app reaches the hardware.** Open `{{ facts.firmware.user_app }}` or
-   `{{ facts.name_badge.file }}`. Search for `self.badge.`. Each hit is an arrow from that
-   app, through `Badge`, to a hardware box.
+   Notice what's *not* there: the apps don't get tasks of their own.
 
-6. **Follow one app through its life.** Back in `apps/base_app.py`, find each method
-   below and write down who calls it and when. Fill in the table under "What just
-   happened" as you go.
-   - `__init__`: called by `main.py`, once
-   - `start()` and `stop()` <!-- TODO(verify): does this year's BaseApp have stop()? -->
-   - `switch_to_foreground()` and `switch_to_background()`: search `apps/app_menu.py` for
-     who calls them
-   - `run()`: the loop from step 3. Which of the next two does it call, and when?
-   - `run_foreground()` and `run_background()`: what decides how often each one runs?
+5. **Follow the switcher's loop.** Read `AppSwitcher.arun()`. It's in one of two modes:
+   - **Selecting** (the menu): it shows your place on the LEDs, moves on **Menu +/−**,
+     and opens the selected app on **User A** or **User B**. It sets that app's
+     `launched = True`.
+   - **Running an app**: each time round, it checks **Menu +/−** (to go back to the
+     menu), then does `await self.apps[self.active_idx].arun()`, then sets `launched`
+     back to `False`.
 
-7. **Mark what's yours.** Shade the boxes for files you're meant to edit
+   So **only the open app runs**. Every other app is just an object, waiting.
+
+6. **Follow one app through its life.** Open `apps/base_app.py` and `{{ facts.firmware.template_app }}`.
+   Fill in the table under "What just happened" as you go: who calls each method,
+   and when?
+
+7. **Find how an app reaches the hardware.** Open `{{ facts.name_badge.file }}`. Look at its
+   `import` lines: `from lib.epd import display`, `from lib.led_bar import leds`, and
+   so on. Each is an arrow from the app straight to a hardware box. There's no object in
+   between: an app imports what it needs.
+
+8. **Mark what's yours.** Shade the boxes for files you're meant to edit
    ({{ facts.firmware.user_apps }}). Everything else, you *can* edit, but [[backup]] first.
-
-8. Compare with the reference diagram below. Anything you missed? Anything you found
-   that it doesn't show?
 
 **✅ Done when** you can point at your drawing and answer: which code decides what's on
 the screen? How does your app reach the LEDs? How many tasks take turns on the
-processor? And which of your app's methods runs while another app is open?
+processor? And what runs while you're looking at the menu?
 
 ## What just happened
 
@@ -86,61 +95,68 @@ The firmware is built in layers:
 |---|---|---|
 | Start-up | Runs once, when the badge starts | `boot.py`, `main.py` |
 | Scheduler | Takes turns between tasks | `asyncio` (built into MicroPython) |
-| Apps | Menus, name tag, *your* apps | `apps/` |
-| Hardware objects | One Python object per device | `hardware/` |
+| Apps | The menu's apps, *your* apps | `apps/` |
+| Hardware modules | One module per device, each with ready-made objects | `lib/` |
 | MicroPython + drivers | Talk to the chip's pins | Built into the firmware (C) |
 
-Each app only talks *down* the stack, through `self.badge`. Apps don't call each other
-directly. The dashed outline matters most: one processor, many tasks, taking turns
-(see [[asyncio-basics]]).
+Each app talks *down* the stack, by importing from `lib/`. Apps don't call each other.
+The dashed outlines matter most: one processor, five tasks, taking turns (see
+[[asyncio-basics]]). Your app runs *inside* one of them, the switcher's.
 
 ### The life of an app
 
-| Method | Called by | When |
+| What | Called by | When |
 |---|---|---|
-| `__init__` | `main.py` | once, at start-up |
-| `start()` | `main.py` | once; creates the app's task, which runs `run()` |
-| `switch_to_foreground()` | the menu | once, when you open the app; it gets the screen |
-| `run_foreground()` | `run()` | over and over, every `foreground_sleep_ms`, while the app is open |
-| `switch_to_background()` | your app | once, when the user wants to leave; it gives up the screen |
-| `run_background()` | `run()` | over and over, every `background_sleep_ms`, *whichever app is open* |
-| `stop()` | <!-- TODO(verify) --> | <!-- TODO(verify) --> |
+| `__init__(self)` | `AppSwitcher.__init__` | once, at start-up, when `main.py` imports `lib.app_switcher`. It gets no arguments. |
+| `self.launched = True` | the switcher | when you open the app from the menu |
+| `arun()` | the switcher's loop | over and over, while the app is open. It calls `run()`, then sleeps `self.sleep_ms` (100 ms unless you change it). |
+| `run()` | `arun()` | each time round. On the first call after you open the app, `self.launched` is `True`; after that, `False`. |
+| *(leaving)* | nobody | When you press **{{ facts.buttons.home_label }}**, the switcher just stops calling your app. No method of yours runs. |
 
-So your app is always in one of two states: **foreground** (on screen) or
-**background**. You'll watch that happen in [[first-app]].
+So `run()` is where your app does everything. Use `if self.launched:` for "just
+opened: draw the screen", and the rest of `run()` for "still open: check the buttons."
 
-### An app that lives in the background
+One more thing `arun()` does: it wraps `run()` in `try`/`except`. If your `run()`
+raises an error, the traceback is printed, and `run()` is called again 100 ms later.
+A broken app prints the same error over and over instead of crashing the badge.
 
-`run_background()` runs whatever app is on screen, so an app can do all its work there
-and use the foreground as little more than an on/off switch: a timer that counts down
-on the LEDs while you use other apps, a logger that reads a sensor every minute, a
-listener for messages from other badges. Its `run_foreground()` can be as short as
-"toggle on or off, then `switch_to_background()`."
+### Work that keeps going after you leave
 
-<!-- TODO(verify): is it OK to call switch_to_background() on the first foreground call, before the screen is drawn? -->
+Only the open app runs, so an app that should keep working from the menu (a timer that
+counts down on the LEDs, a logger that reads a sensor every minute, a listener for
+messages from other badges) starts **its own task** the first time it's opened:
 
-The background has a few rules of its own: no screen (show status with the LEDs
-instead), the slowest `background_sleep_ms` that works, and timestamps instead of
-counting calls, because background calls come less regularly (see [[on-time]]).
+```python
+import asyncio
+
+    def run(self):
+        if self.launched and self.task is None:   # self.task = None in __init__
+            self.task = asyncio.create_task(self.keep_going())
+```
+
+That task keeps running whatever's open, until the badge restarts. It follows the
+same rules as everything else (below), plus: no screen, and the slowest period that
+works. The LEDs are tricky too: the menu redraws all of them every 10 ms while it's
+showing (see [[share-hardware]]).
 
 ### The rules every app follows
 
-1. **Return quickly.** `run_foreground()` and `run_background()` do one small thing and
-   return. A few milliseconds per call (see [[on-time]]).
+1. **Return quickly.** `run()` does one small thing and returns. A few milliseconds per
+   call (see [[on-time]]).
 2. **Never wait inside a call.** No `time.sleep()`, no `while` loop waiting for a button
    or a network reply. Every other task is frozen until you return (see [[hog-the-cpu]]).
 3. **Keep what you need for next time in `self`.** Locals vanish when you return (see [[fsm]]).
-4. **Don't ask to be called too often.** Every call costs every other app a little time.
-   Pick the slowest `foreground_sleep_ms` and `background_sleep_ms` that work.
-   <!-- TODO(verify): the firmware's default periods, and whether there's a minimum -->
-5. **Only the foreground app draws on the screen.**
+4. **Don't ask to be called too often.** Every call costs every other task a little time.
+   Pick the slowest `self.sleep_ms` that works. (Too slow and you'll miss short button
+   taps: a press only counts if `run()` checks it before the button is let go.)
+5. **Only the open app draws on the screen.**
 6. **Share the rest.** LEDs, SAO pins and the I2C bus are shared on the honor system
    (see [[share-hardware]]).
-7. **Always let the user leave.** Whatever your app is doing, the home button
-   ({{ facts.buttons.home_label }}) calls `switch_to_background()`.
+7. **Let the user leave.** The switcher handles **{{ facts.buttons.home_label }}** for you, but only between
+   calls to your app. If `run()` never returns, nobody can leave.
 
-<!-- TODO(diagram): reference block diagram. Top: main.py. Middle (dashed "tasks"): menus, nametag, userA–D, usb_debug, Badge task, LVGL task, main heartbeat. Bottom: display, buttons, LEDs, SAO I2C, radio. Arrows: creates / runs / uses. -->
-<!-- TODO(diagram): app state machine: created → background ⇄ foreground, with which method runs in each state and on each arrow -->
+<!-- TODO(diagram): reference block diagram. Top: main.py. Middle (dashed "tasks"): button_scan, display.run, leds.update, switcher.arun (containing the open app's arun → run), main heartbeat. Left: the app objects (Workshops, Sat Talks, Sun Talks, Gallery, Nametag, yours). Bottom: display, buttons, LEDs, SAO I2C. Arrows: imports / creates / runs / uses. -->
+<!-- TODO(diagram): app life: created → (menu: idle) → opened (launched=True, first run) → open (run every sleep_ms) → back to menu (no call) -->
 
 ## Stuck?
 
@@ -149,13 +165,15 @@ counting calls, because background calls come less regularly (see [[on-time]]).
 | Lost in a long file | Search for `import`, `def ` and `class ` first; skip everything else. |
 | Can't tell what an object is | Find its `import` line at the top of the file. That's the file it comes from. |
 | Too many boxes | Leave out the apps you don't care about. One app box plus "…and more" is fine. |
-| Can't find who calls a method | Search every file in `apps/` for its name. The menu calls most of them. |
+| Can't find who calls a method | Search every file in `lib/` and `apps/` for its name. The switcher calls most of them. |
+| Two `base_app.py` files | `apps/base_app.py` and `lib/base_app.py` are nearly the same. The switcher uses the one in `apps/`, so your app should too. |
 
 ## Have fun!
 
-- From the REPL, after **Ctrl+C**: `from apps.base_app import BaseApp`, then
-  `[a.name for a in BaseApp.all_apps]`. Does it match your drawing?
-- Add the network code (`net/`, if there is one) to your diagram. Which task reads the radio?
-- A focus timer that lives in the background: 25 minutes of work, with one more LED lit
+- From the REPL, after **Ctrl+C**: `from lib.app_switcher import switcher`, then
+  `[a.name for a in switcher.apps]`. Does it match your drawing? Which one is open?
+  Try `switcher.active_idx` and `switcher.selecting_mode`.
+- Open `/data/user_apps.py` on the badge. Who wrote it, and when?
+- A focus timer that keeps running from the menu: 25 minutes of work, with one more LED lit
   green as each part passes, then 5 minutes of break in blue. Opening the app starts or
-  stops it, then goes straight home (see [[fsm]], [[on-time]] and [[all-leds]]).
+  stops its task (see [[fsm]], [[on-time]] and [[all-leds]]).

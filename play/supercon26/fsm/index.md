@@ -6,7 +6,9 @@ topic: write-app
 workshop: false
 needs: [hog-the-cpu, asyncio-basics]
 time: 30 min
-touches: [apps/userA.py, apps/base_app.py]
+touches:
+  - apps/base_app.py#BaseApp.arun   # calls run() every sleep_ms
+  - lib/led_bar.py#leds             # the firmware's shared LED object
 verified_against: null
 video: null
 ---
@@ -19,7 +21,7 @@ step per call, so your app never freezes the badge.
 ## You need
 
 - Your app from [[first-app]], and the sliced counter from [[hog-the-cpu]]
-- The LED setup from [[one-led]] (we'll use the first LED)
+- The firmware's `leds` object from [[one-led]] (we'll use the first LED)
 
 ## Steps
 
@@ -49,23 +51,29 @@ step per call, so your app never freezes the badge.
 
    <!-- TODO(diagram): three circles IDLE → FLASHING → COOLDOWN → IDLE, with the arrows labeled as in the table -->
 
-3. **Write it as one step per call.** In `{{ facts.firmware.user_app }}`:
+3. **Write it as one step per call.** Replace `{{ facts.firmware.user_app }}` with:
 
    ```python
-   from machine import Pin
-   import neopixel
+   """Doorbell: an app written as a state machine."""
+
+   from apps.base_app import BaseApp
+   from lib.button import UserA
+   from lib.led_bar import leds
 
    IDLE, FLASHING, COOLDOWN = 0, 1, 2
 
-   class App(BaseApp):
-       def __init__(self, name, badge):
-           super().__init__(name, badge)
-           self.foreground_sleep_ms = 100        # one call every 0.1 s, roughly
-           self.np = neopixel.NeoPixel(Pin({{ facts.leds.pin }}), {{ facts.leds.count }})
+
+   class MyApp(BaseApp):
+       def __init__(self):
+           super().__init__("{{ facts.firmware.user_app_name }}")
+           self.sleep_ms = 100        # one call every 0.1 s, roughly
            self.state = IDLE
            self.count = 0
 
-       def run_foreground(self):
+       def run(self):
+           if self.launched:          # just opened: start in IDLE
+               self.state = IDLE
+
            if self.state == IDLE:
                if {{ facts.buttons.app_1 }}:
                    print("ding dong")
@@ -73,8 +81,8 @@ step per call, so your app never freezes the badge.
 
            elif self.state == FLASHING:
                on = self.count % 2 == 0
-               self.np[0] = (32, 32, 0) if on else (0, 0, 0)
-               self.np.write()
+               leds[0] = (32, 32, 0) if on else (0, 0, 0)
+               leds.write()
                self.count += 1
                if self.count == 10:
                    self.state, self.count = COOLDOWN, 0
@@ -83,22 +91,17 @@ step per call, so your app never freezes the badge.
                self.count += 1
                if self.count == 20:
                    self.state = IDLE
-
-           if {{ facts.buttons.home }}:           # works in every state
-               self.np[0] = (0, 0, 0); self.np.write()
-               self.switch_to_background()
    ```
 
-   <!-- TODO(verify): foreground_sleep_ms is the 2025 name for the foreground period -->
-
-4. Save, **Ctrl+D**, open your app, press **{{ facts.buttons.app_1_label }}**. Try going home
-   in the middle of the flashing. It works, because no state ever waits.
+4. Save, **Ctrl+D**, open your app, press **{{ facts.buttons.app_1_label }}**. Try going back to
+   the menu with **{{ facts.buttons.home_label }}** in the middle of the flashing. It works, because no
+   state ever waits.
 
 5. **Add a state.** Make a long press different from a short one, or add a `PAUSED`
    state on **{{ facts.buttons.app_2_label }}**. Draw it in your table *first*, then code it.
 
-**✅ Done when** your app has at least three states, you can draw them, and the home
-button works in every one.
+**✅ Done when** your app has at least three states, you can draw them, and
+**{{ facts.buttons.home_label }}** gets you back to the menu from every one.
 
 ## What just happened
 
@@ -123,7 +126,8 @@ you need next call goes somewhere that lasts:
    network reply. Make it a state instead.
 3. **Keep state in `self`**, not in locals. That's also what you'll be able to see
    after a crash: MicroPython throws locals away with the error (see [[post-mortem]]).
-4. **Every state handles "leave."** If one state ignores the home button, users get stuck.
+4. **Every state returns.** The switcher only checks **{{ facts.buttons.home_label }}** between calls, so a
+   state that waits is a state nobody can leave.
 
 Counting calls is a rough clock: if the badge is busy, calls come late, and your
 flashes stretch. [[on-time]] fixes that with real timestamps.
@@ -135,7 +139,7 @@ flashes stretch. [[on-time]] fixes that with real timestamps.
 | Nothing happens on the button | Is the `if` inside the `IDLE` branch? Check the indentation. |
 | It flashes forever | The count check never matches: you reset `count` in the wrong place, or used `>` where you needed `==` (or the other way round). |
 | `NameError: IDLE` | The state names must be at the top of the file, outside the class. |
-| The LED stays on after going home | Turn it off before `switch_to_background()`. |
+| The LED stops mid-flash when you leave | That's expected: a closed app isn't called, and the menu takes over the LEDs. The `if self.launched:` line starts it fresh next time. |
 
 ## Have fun!
 

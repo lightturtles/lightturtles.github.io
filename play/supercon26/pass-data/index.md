@@ -6,7 +6,7 @@ topic: write-app
 workshop: false
 needs: [fsm]
 time: 30 min
-touches: [apps/userA.py]
+touches: []
 verified_against: null
 video: null
 ---
@@ -115,9 +115,10 @@ to reach for: a plain variable, an `Event`, a `ThreadSafeFlag`, or a queue.
 
    You'll use this for real in [[interrupts]].
 
-6. **In an app.** Your app's methods aren't `async`, so they can't `await`. They don't
-   need to: `run_foreground()` checks the queue each call (`while q: ...`), and the
-   task on the other end does the `await`ing. That's the shape of [[espnow-in-app]].
+6. **In an app.** Your app's `run()` isn't `async`, so it can't `await`. It doesn't
+   need to: `run()` checks the queue each call (`while q: ...`), and the task on the
+   other end (one your app started, see [[firmware-diagram]]) does the `await`ing.
+   That's the shape of [[espnow-in-app]].
 
 7. Press **Ctrl+D** to get the badge back.
 
