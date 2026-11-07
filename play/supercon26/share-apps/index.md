@@ -28,21 +28,19 @@ so someone else can do the same.
 
 ### Install an app
 
+Installing an app is the same move as [[add-a-library]], into a different folder:
+`apps/` instead of `{{ facts.firmware.lib_dir }}/`.
+
 1. **Read it first.** Open the file on your laptop and skim it. It's code that will run
    on your badge, so check the top for a comment that says what it does and what it
-   needs (a sensor? WiFi? a library in `{{ facts.firmware.lib_dir }}/`?).
+   needs (a sensor? WiFi? a library in `{{ facts.firmware.lib_dir }}/`?). Look for
+   `self.name = "…"` too: that's what the menu will call it.
 
-2. **Find its name.** Look for `self.name = "…"`. That's what the menu will call it. And
-   check the file has a class with `(BaseApp)` after its name: that's what makes the
-   badge treat it as an app.
+2. **Copy it into `apps/`**, the same way you copied your library into
+   `{{ facts.firmware.lib_dir }}/`. Give the file a name of its own, all lower-case, and
+   not one that's already there (uploading over `nametag.py` would replace your name badge).
 
-3. **Copy it into `apps/`.** In Thonny's bottom (badge) pane, open `apps/`. In the top
-   pane, right-click the file → **Upload to /apps**.
-
-   Give the file a name of its own, all lower-case, and not one that's already there
-   (uploading over `nametag.py` would replace your name badge).
-
-4. **Restart:** click in the shell and press **Ctrl+D**. Watch the shell as the badge starts:
+3. **Restart:** click in the shell and press **Ctrl+D**. Watch the shell as the badge starts:
 
    ```
    Found app mods: ['gallery', 'nametag', 'schedule', 'template', 'weather']
@@ -50,10 +48,15 @@ so someone else can do the same.
    Added app: Weather
    ```
 
-5. **Find it on the menu** (see [[use-badge]]) and start it. The menu order may have
+4. **Find it on the menu** (see [[use-badge]]) and start it. The menu order may have
    changed: the badge doesn't sort its apps.
 
 ### Share yours
+
+5. **Give it its own name.** Sharing the name badge you made in [[sensor-badge]]? It's
+   still called `nametag.py` and "Nametag", so on someone else's badge it would replace
+   theirs. Save a copy under a new file name (say `ada_badge.py`), and change
+   `self.name = "Nametag"` in it to something new.
 
 6. **Make it one file.** Everything your app needs should be in its `.py` file, or
    in a library that's easy to find. Put a short comment at the very top:

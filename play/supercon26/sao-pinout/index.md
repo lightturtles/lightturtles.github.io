@@ -23,7 +23,6 @@ is pin 1, and which ESP32 GPIO it's wired to. You'll need this for anything you 
 - The official folder (see [[map-firmware]])
 - One of the workshop's sensors: {% for s in facts.sensors %}{{ s[1].name }} ({{ s[1].what }}){% unless forloop.last %}, {% endunless %}{% endfor %}
 - {{ facts.sao.connector }}
-  <!-- TODO: the sensors are Qwiic / STEMMA QT boards. Say what attendees use to reach an SAO header. -->
 
 ## Steps
 
@@ -76,16 +75,22 @@ is pin 1, and which ESP32 GPIO it's wired to. You'll need this for anything you 
    - **On an SAO board:** find its pin 1 (3V3), line it up with the badge's pin 1
      (top left in the diagram), and push it on. There's no key to stop it going on
      backwards, so check twice.
-   - **With wires:** match the names:
+   - **A workshop sensor:** plug the cable's small white plug into either socket on the
+     sensor board (it only fits one way). Then push the four sockets at the other end onto
+     one SAO header's pins, matching the colors:
 
-     | SAO pin | Sensor pin (often labeled) | Qwiic / STEMMA QT wire color |
-     |---|---|---|
-     | 1 (3V3) | VCC, VIN or 3V3 | red |
-     | 2 (GND) | GND | black |
-     | 3 (SDA) | SDA or SDI | blue |
-     | 4 (SCL) | SCL or SCK | yellow |
+     | SAO pin | Signal | Cable wire | Sensor pin (on other boards, often labeled) |
+     |---|---|---|---|
+     | 1 | 3V3 | red | VCC, VIN or 3V3 |
+     | 2 | GND | black | GND |
+     | 3 | SDA | blue | SDA or SDI |
+     | 4 | SCL | yellow | SCL or SCK |
+
+     Pins 5 and 6 stay empty.
 
    Any of the three SAO headers works for I2C.
+
+   <!-- TODO(photo): the cable's four sockets on an SAO header, colors visible -->
 
    <!-- TODO(photo): a workshop sensor connected to an SAO header -->
 

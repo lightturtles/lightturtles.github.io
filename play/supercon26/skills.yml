@@ -74,16 +74,21 @@ topics:
     skills:
       - id: name-badge
         title: Edit the base app
-        description: "Change some text → swap an image → show a sensor value (I2C) → change a widget (Display). Each variant links to what it needs."
-        needs: [firmware-diagram, backup]
+        description: "One line of code: put your name on the name badge (or swap its picture)."
+        needs: [backup]
         workshop: true
       - id: badge-diff
         title: What did I change?
         description: "Diff the badge against the folder."
         needs: [backup]
+      - id: sensor-badge
+        title: Your sensor on your badge
+        description: "Put your sensor's reading under your name, and keep it fresh without flashing the e-ink."
+        needs: [name-badge, use-a-library]
+        workshop: true
       - id: share-apps
         title: Share and install apps
-        description: "Install someone else's app (copy the file, register it in the menu); share yours with a README or a PR."
+        description: "Install someone else's app (copy it into apps/, restart); share yours with a header comment, a gist or a PR."
         needs: [update-firmware]
         workshop: true
 
