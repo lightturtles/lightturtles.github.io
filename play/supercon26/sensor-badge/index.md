@@ -62,12 +62,10 @@ class: {% for s in facts.sensors %}`{{ s[1].driver }}.{{ s[1].class }}`{% unless
                text = self.sensor.text()
                if text != self.shown:              # only touch the e-ink if it changed
                    self.shown = text
-                   leds.fill((0, 1, 1))
                    self.world.set_text(text)
                    self.plate.invalidate()         # redraw just the name plate
                    lvgl.refr_now(display.lv_display)
                    display.update()
-                   leds.fill((0, 1, 0))
    ```
 
    <!-- TODO(verify) on a real badge: the plate redraw after set_text (no stray pixels when the text gets shorter) -->
@@ -92,7 +90,8 @@ local variables are gone as soon as `run()` returns.
 
 It also follows the **e-ink rule**: read as often as you like, but only touch the screen
 when what it shows has changed. Every `display.update()` redraws the whole panel, which
-takes seconds and makes it flash. That's why it checks once a minute, and only redraws
+takes about half a minute and makes it flash. (The first LED blinks red while it does;
+that's the display code saying "wait".) That's why it checks once a minute, and only redraws
 when the text is different. `text()` rounds the reading, so tiny wobbles don't count as
 a change.
 
@@ -105,6 +104,7 @@ picture behind it is left alone. [[eink-updates]] has more on updating the scree
 |---|---|
 | `ImportError: no module named 'aht20'` | Your sensor's library isn't in `/lib` (see [[add-a-library]]). |
 | `OSError: [Errno 19] ENODEV` | The sensor didn't answer. Check it with [[i2c-scan]]. |
+| `SyntaxError` in `lib/sao.py` | Your badge still has the firmware it came with, and MicroPython can't read that `lib/sao.py`. Do [[update-firmware]] (or upload just the new `lib/sao.py`). |
 | The badge stops at `>>>` after **Ctrl+D** | Usually indenting: the `elif` must line up with `if self.launched:`. Read the traceback (see [[break-and-restore]]). |
 | `Nametag hit an exception ... no attribute 'last_read'` | The `elif` ran before the first draw finished. Check step 2 went in *inside* `if self.launched:`. |
 | The reading never changes | Wait a full minute. Then check: is the text actually different? (`self.sensor.text()` at the REPL) |

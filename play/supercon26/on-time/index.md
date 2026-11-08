@@ -114,7 +114,8 @@ arithmetic the wrap-safe way.
 **Your time budget.** Your app gets a call roughly every `self.sleep_ms`, but
 only if everyone else returns on time. Every task on the badge shares the same
 processor (see [[asyncio-basics]]). If yours takes 5 ms and the screen task spends
-a second preparing a picture for the e-ink, your next call comes a second late. Timestamps make your app *correct* when calls are late;
+a quarter of a second sending a picture to the e-ink, your next call comes a quarter
+of a second late. Timestamps make your app *correct* when calls are late;
 measuring tells you *how* late, and whether it's your fault.
 
 `ticks_us()` is the same clock in microseconds, for measuring short things.

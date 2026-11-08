@@ -72,9 +72,9 @@ you'll ever use. If it doesn't work, it's probably not you. Try a phone hotspot.
 | Your network isn't in the scan | It's 5 GHz-only, or too far away. Use a 2.4 GHz network or hotspot. |
 | `isconnected()` stays `False` | Check the password (it's case-sensitive). Wait 10 seconds and check again. |
 | `OSError: Wifi Internal Error` | Run `wlan.active(False)`, then `wlan.active(True)`, and connect again. |
-| Badge's own radio features stop working | The firmware may use the radio too. **Ctrl+D** to give it back. |
 
-<!-- TODO(verify): does this year's firmware use the ESP32's radio (ESP-NOW, etc.)? Note any conflicts. -->
+The stock firmware doesn't use the radio at all, so nothing else on the badge is
+competing with you for it.
 
 ## Have fun!
 

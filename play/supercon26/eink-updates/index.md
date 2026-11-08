@@ -6,85 +6,90 @@ topic: display
 workshop: false
 needs: [eink-refresh, on-time]
 time: 30 min
-touches: [apps/userA.py, hardware/display.py, hardware/lvgl_setup.py]
+touches:
+  - lib/epd.py#EPaperDisplay.is_done_updating   # False while a refresh is running
+  - lib/epd.py#EPaperDisplay.run                # an update() asked for mid-refresh is dropped
+  - lib/led_bar.py#leds
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): how to force a full refresh, and whether partial refresh is on by default -->
-
 **Goal:** Make an app whose screen changes as little as possible while still showing
 what matters, with the LEDs covering anything that needs to be fast.
 
 ## You need
 
-- Your app with a label that shows a changing value (from [[lvgl-hello]] or [[app-screen]])
+- Your app from [[lvgl-hello]] (a label, and a `show()` method that does `refr_now` and `update`)
 - Your refresh time from [[eink-refresh]], and the timing patterns from [[on-time]]
 
 ## Steps
 
-1. **Count your refreshes.** Wrap every `set_text()` in a helper that counts, and only
-   changes the label when the text is different:
+1. **Count your refreshes.** Add a method that changes the label and refreshes, but
+   only when the text is different. In `__init__`, add `self.shown = None` and
+   `self.refreshes = 0`, and add `import time` at the top. Then:
 
    ```python
-       def show(self, label, text):
-           if label.get_text() != text:
-               label.set_text(text)
-               self.refreshes = getattr(self, "refreshes", 0) + 1
-               print(f"[{self.name}] refresh #{self.refreshes}: {text}")
+       def show_text(self, text):
+           if text == self.shown:
+               return                                  # nothing new
+           self.shown = text
+           self.label.set_text(text)
+           self.show()
+           self.refreshes += 1
+           print(f"[{self.name}] refresh #{self.refreshes}: {text}")
    ```
 
-   Use `self.show(self.label, ...)` everywhere you called `set_text()`.
-
-2. **Decide how fresh it needs to be.** Show the seconds since start, every call:
+2. **Decide how fresh it needs to be.** Show the seconds since start, every call. At the
+   end of `run()`:
 
    ```python
-           self.show(self.label, str(time.ticks_ms() // 1000))
+           self.show_text(str(time.ticks_ms() // 1000))
    ```
 
-   Count the refreshes in a minute. Now show *minutes* instead (`// 60_000`). Same app,
-   60 times fewer refreshes. Pick the coarsest unit that's still useful.
+   Open your app and watch the shell. A refresh every second can't work: each one takes
+   longer than that, and the ones asked for mid-refresh are dropped. Now show *minutes*
+   instead (`// 60_000`). Same app, 60 times fewer refreshes. Pick the coarsest unit
+   that's still useful.
 
-3. **Set a speed limit.** Even with real changes, don't refresh more often than the
-   panel can keep up with. Hold changes back until enough time has passed. Add
-   `self.last_refresh = None` to `switch_to_foreground()`, then:
+3. **Set a speed limit, and wait for the panel.** Even with real changes, don't refresh
+   more often than you need. Add `self.last_refresh = time.ticks_ms()` to `__init__`,
+   and two checks to `show_text()`, after the first one:
 
    ```python
-       def show(self, label, text):
-           now = time.ticks_ms()
-           self.pending = (label, text)
-           if self.last_refresh is not None and time.ticks_diff(now, self.last_refresh) < 5000:
-               return                      # too soon; keep the newest text for later
-           label, text = self.pending
-           if label.get_text() != text:
-               label.set_text(text)
-               self.last_refresh = now
+           if not display.is_done_updating():
+               return                                  # the panel is busy; try next call
+           if time.ticks_diff(time.ticks_ms(), self.last_refresh) < 60_000:
+               return                                  # too soon; try next call
    ```
 
-   Now call `self.show()` with the same arguments every call, so the newest text goes
-   up once the 5 seconds are over.
+   and `self.last_refresh = time.ticks_ms()` right after `self.show()`. Because
+   `run()` calls `show_text()` every time with the newest text, the newest text goes
+   up as soon as the panel is free and a minute has passed. Nothing gets lost. (The
+   panel alone takes over half a minute per refresh, so `is_done_updating()` is doing
+   most of the limiting.)
 
-4. **Change several things in one go.** If two labels change, set both in the same
-   call. LVGL redraws both together, in one refresh, instead of two.
+4. **Change several things in one go.** If two labels change, set both, then call
+   `show()` once. One refresh instead of two.
 
 5. **Fast feedback on the LEDs.** A button press should feel instant, and the e-ink
-   can't do instant. Flash an LED the moment you press, and let the screen catch up
-   (with `self.np` set up in `__init__`, as in [[animate-leds]]):
+   can't do instant. Flash an LED the moment you press, and let the screen catch up.
+   Add `from lib.led_bar import leds` at the top, `self.flash_until = None` and
+   `self.count = 0` in `__init__`, and this in `run()`. (It uses the *last* LED: the
+   first one belongs to the display, below.)
 
    ```python
            if {{ facts.buttons.app_1 }}:
-               self.np[0] = (0, 16, 0); self.np.write()
+               leds[{{ facts.leds.count }} - 1] = (0, 16, 0)
+               leds.write()
                self.flash_until = time.ticks_add(time.ticks_ms(), 150)
                self.count += 1
-           if getattr(self, "flash_until", None) and time.ticks_diff(time.ticks_ms(), self.flash_until) >= 0:
-               self.np[0] = (0, 0, 0); self.np.write()
+           if self.flash_until is not None and time.ticks_diff(time.ticks_ms(), self.flash_until) >= 0:
+               leds[{{ facts.leds.count }} - 1] = (0, 0, 0)
+               leds.write()
                self.flash_until = None
    ```
-
-6. **Clean up the ghosts.** After many partial refreshes, do one full refresh, say
-   every 10 updates or every 10 minutes. <!-- TODO(verify): the call for a full refresh -->
 
 **✅ Done when** your app refreshes no more than once every few seconds, never shows a
 stale value for long, and answers every button press instantly with an LED.
@@ -99,12 +104,19 @@ update and still be useful?"
 |---|---|
 | Coarser units, more rounding | small changes don't change the text |
 | A speed limit | bursts of changes become one refresh |
+| Wait until the panel is free | nothing is asked for mid-refresh, so nothing is dropped |
 | Batch changes | two labels, one refresh |
 | Only on change | no refresh when nothing's new |
 
-**Full vs. partial refresh.** A partial refresh is faster and flashes less, but leaves
-ghosts. A full refresh is slow and flashy, but clean. Mostly partial, with an
-occasional full one, gets the best of both.
+**Why wait for the panel?** The display task copies the framebuffers when a refresh
+starts, and forgets any `update()` that arrives before it ends. Ask too soon and the
+screen keeps showing the old value, with nothing to tell you. `display.is_done_updating()`
+is how you know it's safe to ask.
+
+The display code adds one more trick, on the first LED: blue while LVGL draws or a PNG
+loads, blinking red while the panel refreshes, then green for a moment when it's done.
+People know to wait. (It also turns all the LEDs off at the start and end of each
+refresh, so an LED your app lit may go dark then.)
 
 **Divide the work.** LEDs change in microseconds, and the e-ink in seconds. Use the LEDs
 for "something happened just now" (a press, a message, a warning), and the screen
@@ -114,10 +126,10 @@ for "here's how things are" (a reading, a name, a status).
 
 | Symptom | Fix |
 |---|---|
-| The screen never updates | Is `self.last_refresh = None` in `switch_to_foreground()`? Is `self.last_refresh = now` inside the `if` that changes the label? |
-| The last change never appears | You only call `show()` when something changes. Call it every time, so a pending change gets shown later. |
-| `get_text` doesn't exist | Keep your own copy of what's shown in `self.shown` instead (as in [[name-badge]]). |
+| The screen never updates | Is `self.last_refresh = time.ticks_ms()` inside `show_text()`, *after* the checks? Is `show_text()` called every time? |
+| The last change never appears | You only call `show_text()` when something changes. Call it every time, so a held-back change gets shown later. |
 | The LED flash sticks on | `flash_until` never gets cleared. Check the second `if`. |
+| The LED flash comes late | A refresh was being sent to the panel when you pressed, and that part holds up the whole badge (see [[eink-refresh]]). |
 
 ## Have fun!
 

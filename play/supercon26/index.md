@@ -75,7 +75,8 @@ facts:
   # badge's filesystem exactly.
   firmware:
     micropython: 1.24.1        # REPL: os.uname() release; build "v1.20.0-2527.g44aa2b153.dirty on 2026-11-04" (LVGL fork). Decides which modules exist (no machine.I2CTarget)
-    snapshot: 6ba6dd8          # upstream commit the lessons are checked against ("Add firmware", 2026-11-06); matches the files copied off a badge
+    snapshot: 6ba6dd8          # the version attendee badges ship with ("Add firmware", 2026-11-06); matches the files copied off a badge. update-firmware diffs from it
+    latest: 52c2ee8            # upstream main on 2026-11-07; lessons after update-firmware were checked against it (fixed lib/sao.py, faster epd.py that drives LED 0, never_epd.png)
     repo: https://github.com/Hack-a-Day/2026-Billboard_Badge
     folder: firmware/badge     # folder in the repo that mirrors the badge
     zip_folder: 2026-Billboard_Badge-main   # top folder inside GitHub's "Download ZIP"
@@ -186,12 +187,12 @@ facts:
     firmware_uses: false       # fw: no espnow/network code in the stock files. REPL: espnow and aioespnow are in the build
 
   clock:
-    utc_offset_h: -7           # Pasadena: PDT (UTC−7) until 2 a.m. Sunday Nov 1, 2026, then PST (UTC−8)
+    utc_offset_h: -8           # Pasadena: PST (UTC−8) since 2 a.m. Sunday Nov 1, 2026, so all through Supercon
     ntp_host: pool.ntp.org
 
   sleep:
-    wake_label: TBD            # fw: RTC-capable buttons are Boot (0), Menu + (15), User B (16). DECISION: pick one
-    wake_pin: TBD
+    wake_label: User B         # fw: RTC-capable buttons are Boot (0), Menu + (15), User B (16). sleep-with-image lists all three; this is its example
+    wake_pin: 16
 
 # The map is generated from skills.yml; to change it, edit that file and run
 #   python3 _scripts/metro_layout.py play/supercon26
@@ -217,7 +218,7 @@ metro:
     - {"id": "use-badge", "topic": "setup", "x": 130, "y": 70, "label": ["Use your badge"], "workshop": true, "start": true}
     - {"id": "repl", "topic": "setup", "x": 260, "y": 70, "label": ["Connect to the", "REPL"], "workshop": true}
     - {"id": "map-firmware", "topic": "setup", "x": 390, "y": 70, "label": ["Find the files"], "workshop": true}
-    - {"id": "explore-badge", "topic": "setup", "x": 520, "y": 70, "label": ["Explore the", "badge object"]}
+    - {"id": "explore-badge", "topic": "setup", "x": 520, "y": 70, "label": ["Explore the", "badge"]}
     - {"id": "backup", "topic": "setup", "x": 650, "y": 70, "label": ["Back up your", "badge"], "workshop": true}
     - {"id": "update-firmware", "topic": "setup", "x": 780, "y": 70, "label": ["Update the", "firmware"], "workshop": true}
     - {"id": "mount-and-run", "topic": "setup", "x": 910, "y": 70, "label": ["Work from your", "laptop"]}

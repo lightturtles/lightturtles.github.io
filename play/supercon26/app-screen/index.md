@@ -6,17 +6,16 @@ topic: display
 workshop: false
 needs: [lvgl-hello]
 time: 30 min
-touches: [apps/userA.py, ui/page.py, ui/styles.py]
+touches:
+  - apps/schedule.py#ScheduleApp._build   # the firmware's own full-screen LVGL layout
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): Page helper and LVGL calls below are from the 2025 firmware (LVGL 9 names) -->
-
 **Goal:** Go from one label to a screen you'd be proud of: a header, a row of values
-laid out neatly, button labels, and fonts that fit.
+laid out neatly, button hints, and fonts that fit.
 
 ## You need
 
@@ -24,41 +23,39 @@ laid out neatly, button labels, and fonts that fit.
 
 ## Steps
 
-1. **The standard frame.** The firmware's `Page` helper stacks three areas, top to
-   bottom. Replace your `switch_to_foreground()`:
+1. **A frame for the whole screen.** Make the screen itself a column: header at the
+   top, the values in the middle, button hints at the bottom. Replace your `build()`:
 
    ```python
-       def switch_to_foreground(self):
-           super().switch_to_foreground()
-           self.page = Page()
-           self.page.create_infobar(["My App", "v1"])                 # header: left, right
-           self.page.create_content()                                 # the middle
-           self.page.create_menubar(["+1", "Reset", "", "", "Home"])  # one label per button
-           self.build(self.page.content)
-           self.page.replace_screen()
-   ```
+       def build(self):
+           scr = lvgl.obj()
+           scr.set_flex_flow(lvgl.FLEX_FLOW.COLUMN)          # top to bottom
+           scr.set_flex_align(lvgl.FLEX_ALIGN.SPACE_BETWEEN,
+                              lvgl.FLEX_ALIGN.CENTER, lvgl.FLEX_ALIGN.CENTER)
 
-   The order matters: header, then content, then the button bar.
+           header = lvgl.label(scr)
+           header.set_text("{{ facts.firmware.user_app_name }}")
+           header.set_style_text_font(lvgl.font_montserrat_36, 0)
 
-2. **A container for a row.** Make a plain object to hold things side by side, and let
-   LVGL arrange them:
-
-   ```python
-       def build(self, parent):
-           row = lvgl.obj(parent)
+           row = lvgl.obj(scr)                               # a box to hold the three boxes
            row.set_size(lvgl.pct(100), lvgl.SIZE_CONTENT)
            row.set_flex_flow(lvgl.FLEX_FLOW.ROW)
            row.set_flex_align(lvgl.FLEX_ALIGN.SPACE_EVENLY,
                               lvgl.FLEX_ALIGN.CENTER, lvgl.FLEX_ALIGN.CENTER)
-           row.align(lvgl.ALIGN.CENTER, 0, 0)
-
            self.boxes = []
            for title in ("Presses", "Seconds", "Mode"):
                self.boxes.append(self.make_box(row, title))
+
+           footer = lvgl.label(scr)
+           footer.set_text("A: +1      B: reset      Menu: leave")
+           footer.set_style_text_font(lvgl.font_montserrat_24, 0)
+           self.screen = scr
    ```
 
-3. **A box with a title and a big number.** Each one is a container too, stacking its
-   two labels in a column:
+   The order you create them in is the order they stack in.
+
+2. **A box with a title and a big number.** Each box is a container too, stacking its
+   two labels in a column. Add this method:
 
    ```python
        def make_box(self, parent, title):
@@ -70,43 +67,43 @@ laid out neatly, button labels, and fonts that fit.
 
            name = lvgl.label(box)
            name.set_text(title)
-           name.set_style_text_font(lvgl.font_montserrat_14, 0)
+           name.set_style_text_font(lvgl.font_montserrat_24, 0)
 
            value = lvgl.label(box)
            value.set_text("0")
-           value.set_style_text_font(lvgl.font_montserrat_28, 0)
+           value.set_style_text_font(lvgl.font_montserrat_48, 0)
            return value          # the label you'll change later
    ```
 
-4. **Which fonts are there?** Only the fonts compiled into the firmware exist. At `>>>`:
+3. **Which fonts are there?** Only the fonts compiled into the firmware exist. At `>>>`:
 
    ```python
    import lvgl
-   [f for f in dir(lvgl) if f.startswith("font_")]
+   [f for f in dir(lvgl) if f.startswith("font_montserrat")]
    ```
 
    Swap sizes in `make_box` and see how much fits.
 
-5. **Fill it in.** Let **{{ facts.buttons.app_1_label }}** count, and show it:
+4. **Fill it in.** Change the button code at the end of `run()`, so
+   **{{ facts.buttons.app_1_label }}** counts and **{{ facts.buttons.app_2_label }}** resets (and add `UserB` to the
+   `from lib.button import` line):
 
    ```python
-       def run_foreground(self):
            if {{ facts.buttons.app_1 }}:
-               self.presses = getattr(self, "presses", 0) + 1
+               self.presses += 1
                self.boxes[0].set_text(str(self.presses))
-           if {{ facts.buttons.home }}:
-               self.badge.display.clear()
-               self.switch_to_background()
+               self.show()
+           if {{ facts.buttons.app_2 }}:
+               self.presses = 0
+               self.boxes[0].set_text("0")
+               self.show()
    ```
 
-   And let go of it all in `switch_to_background()`: `self.page = None`,
-   `self.boxes = []`.
-
-6. Save, **Ctrl+D**, and open your app.
+5. Save, **Ctrl+D**, and open your app.
 
 <!-- TODO(photo): the finished three-box screen -->
 
-**✅ Done when** your screen has a header, three neatly spaced boxes, button labels at
+**✅ Done when** your screen has a header, three neatly spaced boxes, button hints at
 the bottom, and **{{ facts.buttons.app_1_label }}** changes one of the numbers.
 
 ## What just happened
@@ -129,20 +126,20 @@ enough for what's inside." The screen is {{ facts.display.width }} × {{ facts.d
 pixels, so fewer, bigger things read better from across a room than many small ones.
 
 **Fonts are images of letters,** stored in flash at fixed sizes. That's why you can only
-pick from the list in step 4, and why a bigger font costs more flash.
+pick from the list in step 3, and why a bigger font costs more flash.
 
 ## Stuck?
 
 | Symptom | Fix |
 |---|---|
-| `AttributeError: ... font_montserrat_28` | Not compiled in. Pick one from step 4's list. |
+| `AttributeError: ... font_montserrat_28` | Not compiled in. Pick one from step 3's list. |
 | Boxes overlap or pile up in a corner | The row needs `set_flex_flow`, and must be the boxes' parent. |
-| Boxes have borders and shadows you don't want | That's the default style. `box.set_style_border_width(0, 0)` removes the border. |
-| Menu labels don't line up with the buttons | Count the entries: one per button, `""` for unused ones. |
+| Boxes have borders you don't want, or grey ones vanish | That's the default style, and the e-ink turns light grey into white and dark grey into black. `box.set_style_border_width(0, 0)` removes a border; `set_style_border_color(lvgl.color_hex(0x000000), 0)` makes it black. |
+| The header and footer crowd the boxes | `SPACE_BETWEEN` pushes the first and last children to the edges. Try `SPACE_EVENLY` on the screen too. |
 
 ## Have fun!
 
-- Put an image in one of the boxes (see [[eink-images]]).
+- Leave a gap in the layout and draw a picture into it with `display.draw_png()` after `refr_now()` (see [[eink-images]]).
 - Make one value {{ facts.display.third_color }} (see [[use-red]]).
 - Turn the boxes into a column instead: one word changes.
-- Show your sensor reading in the first box (see [[real-units]]).
+- Show your sensor reading in the first box (see [[use-a-library]]), and the seconds since start in the second (see [[on-time]]).

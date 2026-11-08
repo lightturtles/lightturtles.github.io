@@ -52,7 +52,7 @@ from a traceback, and fix it so the badge stays responsive.
 
    ```
    Traceback (most recent call last):
-     File "main.py", line 69, in <module>
+     File "main.py", line 76, in <module>
      File "asyncio/core.py", line 1, in run
      ...
      File "lib/app_switcher.py", line 110, in arun
@@ -86,8 +86,9 @@ from a traceback, and fix it so the badge stays responsive.
    ```
 
 6. Save, **Ctrl+D**, and try again. Now the other buttons work while it counts. It
-   takes longer, though: 200 slices, with a `sleep_ms` nap after each one. Can you go
-   back to the menu mid-count? What happens to the count when you open the app again?
+   takes longer, though: 200 slices, with a `sleep_ms` nap after each one, about half
+   a minute in all (the frozen version took about 4 seconds). Can you go back to the menu
+   mid-count? What happens to the count when you open the app again?
 
 7. **Measure a slice.** How long does one call hold the processor? Wrap the slice:
 
@@ -100,7 +101,8 @@ from a traceback, and fix it so the badge stays responsive.
                print("slice took", time.ticks_diff(time.ticks_ms(), t0), "ms")
    ```
 
-   Aim for a few milliseconds. Change `10_000` and watch the number change.
+   Aim for a few milliseconds. On the badge, 10,000 takes about 25 ms: too long. Try
+   `2_000`, and watch the number change.
 
 **✅ Done when** you've found the frozen line from the Ctrl+C traceback alone, and your
 count runs without freezing the badge.

@@ -43,16 +43,16 @@ passes, not code that only looks right.
    ## Check every change
    - Tests: PYTHONPATH={{ facts.firmware.folder }}/{{ facts.firmware.lib_dir }} python tests/test_timer_logic.py
      All must pass. Add a test for any logic you add or fix.
-   - Simulator: python sim.py {{ facts.firmware.user_app }}     (TODO: real command)
+   - Simulator: firmware/sim/badge-sim   (opens a window; Ctrl+C to stop. Read its terminal output for tracebacks.)
 
    ## Rules for app code (it runs on a microcontroller, cooperatively scheduled)
-   - run_foreground()/run_background() must return quickly: no time.sleep, no waiting loops.
+   - run() must return quickly: no time.sleep, no waiting loops.
    - Keep state in self, not in locals.
    - Decisions go in plain functions in timer_logic.py (no hardware imports), so they can be tested.
    - MicroPython, not CPython: no typing, dataclasses or f-string = specifiers.
    ```
 
-   <!-- TODO(simulator): real command, and whether it can run headless for an agent -->
+   <!-- TODO(simulator): the simulator always opens a window, so an agent can start it and read its output, but can't see the screen or press buttons. Is there a headless/scripted mode worth adding? -->
 
    The rules are the ones from [[firmware-diagram]]. An agent that knows desktop Python
    but not the badge will happily write `time.sleep(1)`. This is how it knows not to.

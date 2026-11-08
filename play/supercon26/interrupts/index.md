@@ -6,14 +6,16 @@ topic: gpio
 workshop: false
 needs: [read-button, asyncio-basics]
 time: 25 min
-touches: []
+touches:
+  - lib/button.py#scan              # the firmware polls every button, every 1 ms; no interrupts
+  - lib/button.py#Button.scan       # a press is forgotten as soon as the button is released
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): is button {{ facts.buttons.example_label }} a direct GPIO (not through an I/O expander or a keyboard scanner)? Interrupts need a direct pin. -->
+<!-- TODO(verify) on a real badge: the IRQ and ThreadSafeFlag steps -->
 
 **Goal:** Miss button presses by polling too slowly, then catch every one with an
 interrupt, and hand the work off to an asyncio task.
@@ -108,10 +110,16 @@ counts once.
 
 ## What just happened
 
-**Polling** asks "is it pressed?" over and over. It's simple, and the badge's own apps
-mostly poll: each `run_foreground()` call checks the buttons. Its catch: anything
-shorter than the gap between checks can be missed, and checking more often costs
-processor time.
+**Polling** asks "is it pressed?" over and over. It's simple, and it's what the badge
+does: a task in `main.py` reads all five buttons every millisecond, and remembers a
+press until an app asks `UserA.pressed()`. Its catch: anything shorter than the gap
+between checks can be missed, and checking more often costs processor time. The badge
+has a second, sneakier gap: `Button.scan()` forgets a press as soon as the button is
+let go, so an app that only asks every 100 ms can still miss a quick tap (see
+[[first-app]]).
+
+Every button on this badge is wired straight to its own GPIO pin
+(`lib/button.py` lists them), so any of them can trigger an interrupt.
 
 An **interrupt** turns that around. The pin hardware watches for the edge itself and
 interrupts whatever's running to call your **handler**. Nothing is missed, and no time
@@ -136,11 +144,12 @@ don't choose:
 | `count` never goes up | Is the button really on that pin? Check with `btn.value()` while holding it. |
 | One press counts many times | That's bounce. Make the 50 ms bigger. |
 | Presses counted on release too | Use `Pin.IRQ_FALLING` (press) only, not `IRQ_RISING`. |
-| The badge's own program stopped reacting to the button | Your `irq()` replaced its handler. **Ctrl+D** to start over. |
+| The badge's own program still reacts to the button | That's fine: it polls the pin, and your interrupt doesn't change that. Both see the press. |
 
 ## Have fun!
 
 - Measure your reaction time: light an LED after a random delay, and time the press
   in the handler with `time.ticks_us()`.
-- Count presses in the background of your app, and show the total when it opens.
+- Count presses with an interrupt while another app is open (set it up the first time
+  your app opens), and show the total when you come back.
 - Detect a long press: trigger on both edges and compare the times.

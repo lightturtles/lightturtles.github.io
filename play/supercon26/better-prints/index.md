@@ -6,7 +6,8 @@ topic: watch
 workshop: false
 needs: [first-app]
 time: 25 min
-touches: [apps/userA.py]
+touches:
+  - apps/base_app.py#BaseApp.arun   # prints "<name> hit an exception ..." for errors in run()
 verified_against: null
 video: null
 ---
@@ -23,14 +24,14 @@ important it is, and only when something changed.
 
 ## Steps
 
-1. **Make some noise.** Add `print(self.ticks)` to `run_foreground()`, save, **Ctrl+D**,
+1. **Make some noise.** Add `print(self.calls)` to `run()`, save, **Ctrl+D**,
    and open your app. The shell scrolls too fast to read, and you can't tell your
    lines from the badge's.
 
 2. **Tag every line** with who printed it, and print `name=value`, not a bare number:
 
    ```python
-   print(f"[{self.name}] ticks={self.ticks}")
+   print(f"[{self.name}] calls={self.calls}")
    ```
 
    That's the whole idea behind logging. The next steps just make it easier.
@@ -41,15 +42,14 @@ important it is, and only when something changed.
    import logging
    ```
 
-   If that's an `ImportError`, install it from your laptop. The badge doesn't need WiFi:
+   On the stock badge it's an `ImportError`: it isn't built in. Install it from your
+   laptop. The badge doesn't need WiFi:
 
    ```bash
    mpremote mip install logging
    ```
 
    It lands in `{{ facts.firmware.lib_dir }}/` on the badge.
-
-   <!-- TODO(verify): whether this year's firmware includes logging already -->
 
 4. **Log instead of printing.** At the top of your app's file:
 
@@ -62,14 +62,14 @@ important it is, and only when something changed.
    And in your methods:
 
    ```python
-           log.debug("ticks=%d", self.ticks)            # detail you only want sometimes
+           log.debug("calls=%d", self.calls)            # detail you only want sometimes
            log.info("button pressed")                    # normal events
            log.warning("sensor read took %d ms", ms)    # odd, but not broken
            log.error("no reply from the sensor")         # broken
    ```
 
    Save, **Ctrl+D**. Each line now says how important it is and who said it:
-   `DEBUG:{{ facts.firmware.user_app_name }}:ticks=4`.
+   `DEBUG:{{ facts.firmware.user_app_name }}:calls=4`.
 
 5. **Turn it down without deleting anything.** The level is the volume knob. Change
    `DEBUG` to `INFO` and the `debug` lines disappear; the rest stay. Before your demo,
@@ -89,11 +89,12 @@ important it is, and only when something changed.
    logging.getLogger().handlers[0].setFormatter(Since())
    ```
 
+   (`basicConfig` only sets things up the first time it's called, so the second call
+   changes nothing; it's there so the line after it has a handler to change.)
+
    Read two lines' times and you know how long passed between them. (The library can
    also print `%(asctime)s`, the time of day, but the badge's clock says the year 2000
    until something sets it: see [[ntp-time]].)
-
-   <!-- TODO(verify): micropython-lib logging's LogRecord attributes (record.message) and handler setup -->
 
 7. **Log on change, not every call.** Most values don't change most of the time. Put
    this in `{{ facts.firmware.lib_dir }}/watch.py`:
@@ -113,7 +114,7 @@ important it is, and only when something changed.
    ```python
    from watch import watch
    ...
-           watch("userA.state", self.state, log.info)
+           watch("my_app.state", self.state, log.info)
    ```
 
    The first call always logs, so you see the starting value. After that, one line per
@@ -159,13 +160,13 @@ Unplugged, the log goes nowhere. To keep a record without a laptop, see
 |---|---|
 | `ImportError: no module named 'logging'` | Step 3. Check the file is in `{{ facts.firmware.lib_dir }}/` on the badge. |
 | Nothing logs at all | The level is too high. `basicConfig(level=logging.DEBUG)`. |
-| Every line prints twice | `basicConfig` ran twice and added two handlers. Call it in one place only. |
+| Every line prints twice | You added a second handler that prints (`addHandler`) as well as `basicConfig`'s. |
 | `watch` logs every call | The value really is different each time (a timestamp in it?). Watch something simpler, like a count or a state. |
 | The badge got slower | Too many log lines. Log on change, or raise the level. |
 
 ## Have fun!
 
-- Give each part of your app its own logger (`logging.getLogger("userA.sensor")`) and
+- Give each part of your app its own logger (`logging.getLogger("my_app.sensor")`) and
   turn just one of them up.
 - Use `watch` to print a state machine's transitions: `watch("state", self.state)` (see [[fsm]]).
-- Log how long each `run_foreground()` takes, but only when it's over 10 ms (see [[on-time]]).
+- Log how long each `run()` takes, but only when it's over 10 ms (see [[on-time]]).

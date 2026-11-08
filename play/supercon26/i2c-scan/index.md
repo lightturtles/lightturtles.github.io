@@ -89,6 +89,7 @@ Knowing the address is step one. To *talk* to the chip, you need its datasheet (
 | Every address answers | SDA or SCL is shorted to ground. Unplug and check the wiring. |
 | LIS3DH shows up at `0x18`, not `0x19` | Its address jumper is closed. That's fine; use `0x18` from now on. |
 | `ImportError` on the first line | Make your own bus instead, below. |
+| `SyntaxError` in `lib/sao.py` | Your badge still has the firmware it came with, and MicroPython can't read that `lib/sao.py`. Do [[update-firmware]], or make your own bus, below. |
 
 **No firmware bus?** Make your own on the SAO pins:
 

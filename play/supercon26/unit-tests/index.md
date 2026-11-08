@@ -53,7 +53,7 @@ every time you change something.
        return state
    ```
 
-   No `import machine`, no `self.badge`: just numbers in, numbers out. Your app imports
+   No `import machine`, no `from lib.led_bar import leds`: just numbers in, numbers out. Your app imports
    it and calls these, and does the LED-lighting itself.
 
 3. **Write the checks.** Make `tests/test_timer_logic.py` in your project folder (next
@@ -122,7 +122,7 @@ every time you change something.
    something passes on the laptop and fails here, you've found a difference between
    CPython and MicroPython before it found you.
 
-   <!-- TODO(verify): that `mount` + `run` imports from the mounted folder, and that run's __name__ is "__main__" -->
+   <!-- TODO(verify) on a real badge: that `mount` + `run` imports from the mounted folder, and that run's __name__ is "__main__" -->
 
 7. **Make it a habit.** Before every copy to the badge, run the tests. Before every
    `git commit`, run the tests. Fix a bug? First write a test that fails because of it,

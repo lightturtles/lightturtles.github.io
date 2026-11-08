@@ -116,6 +116,7 @@ workshop's four sensors all do.
 | Symptom | Fix |
 |---|---|
 | Can't find the SAO names | They're in `{{ facts.sao.pins_file }}`, not `lib/board.py`. Search for `SAO`. |
+| `SyntaxError` in `lib/sao.py` | Your badge still has the firmware it came with, and MicroPython can't read that `lib/sao.py`. Do [[update-firmware]] (or upload just the new `lib/sao.py`). |
 | Firmware and schematic disagree | Believe the schematic, and tell the badge team! |
 | An add-on gets hot when plugged in | **Switch off and unplug it now.** It's in backwards (3V3 and GND swapped). |
 | The sensor's pins don't say SDA/SCL | SPI-only boards say MOSI/MISO/CS; those won't work on I2C. Some boards do both; check its docs. |

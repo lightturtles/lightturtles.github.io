@@ -6,14 +6,17 @@ topic: display
 workshop: false
 needs: [eink-refresh]
 time: 25 min
-touches: [main.py, hardware/display.py]
+touches:
+  - lib/button.py              # the wake button's GPIO; only 0-21 can wake the chip
+  - lib/led_bar.py#leds
+  - lib/epd.py#EPaperDisplay.is_done_updating
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): the wake button ({{ facts.sleep.wake_label }}) is on an RTC-capable GPIO (0–21 on the ESP32-S3), and the display needs no shutdown command before sleep -->
+<!-- TODO(verify) on a real badge: the display needs no shutdown command before sleep (global_update already ends with _dcdc_soft_shutdown) -->
 
 **Goal:** Put the badge into deep sleep, using almost no power, while the e-ink keeps
 showing your name. Press a button to wake it up.
@@ -32,18 +35,26 @@ showing your name. Press a button to wake it up.
    They keep their last color, and their power, while the chip sleeps:
 
    ```python
-   from machine import Pin
-   import neopixel
-   np = neopixel.NeoPixel(Pin({{ facts.leds.pin }}), {{ facts.leds.count }})
-   np.fill((0, 0, 0)); np.write()
+   from lib.led_bar import leds
+   leds.fill((0, 0, 0))
    ```
 
-3. **Choose a wake button.** Wake the chip when button **{{ facts.sleep.wake_label }}**
-   is pressed (it reads 0 when pressed):
+3. **Choose a wake button.** Only three of the badge's buttons can wake it (see "What
+   just happened"). Pick one:
+
+   | Button | GPIO |
+   |---|---|
+   | **User B** | 16 |
+   | **Menu +** | 15 |
+   | **Boot** | 0 |
+
+   Then wake the chip when it's pressed (it reads 0 when pressed):
 
    ```python
    import esp32, machine
-   wake = Pin({{ facts.sleep.wake_pin }}, Pin.IN, Pin.PULL_UP)
+   from machine import Pin
+   WAKE_PIN = 16                    # User B; or 15 (Menu +), or 0 (Boot)
+   wake = Pin(WAKE_PIN, Pin.IN, Pin.PULL_UP)
    esp32.wake_on_ext0(pin=wake, level=esp32.WAKEUP_ALL_LOW)
    ```
 
@@ -55,7 +66,7 @@ showing your name. Press a button to wake it up.
 
    The USB connection drops. The screen stays exactly as it was.
 
-5. **Wake it.** Press **{{ facts.sleep.wake_label }}**. The badge starts up from the
+5. **Wake it.** Press the button you picked. The badge starts up from the
    beginning, as if you'd pressed **{{ facts.power.reset_button }}**. Reconnect, and check
    why it woke:
 
@@ -64,8 +75,9 @@ showing your name. Press a button to wake it up.
    machine.reset_cause() == machine.DEEPSLEEP_RESET
    ```
 
-6. **Make it a menu item.** Put steps 2–4 in a function in your app, and call it on a
-   button from `run_foreground()`. Now "sleep" is one press away.
+6. **Make it an app.** Put steps 2–4 in a function in your app, and call it on a
+   button from `run()`. Check `display.is_done_updating()` first (`from lib.epd import
+   display`), so you never sleep in the middle of a refresh. Now "sleep" is one press away.
 
 **✅ Done when** the badge sleeps with your image still on the screen, and a button
 wakes it.
@@ -84,7 +96,9 @@ The e-ink doesn't care: its pixels stay put with no power at all (see
 that would last hours awake.
 
 Only **RTC GPIOs** can wake the chip, because only they're connected to the part that
-stays on. On the ESP32-S3, that's GPIO 0–21. A button wired anywhere else can't wake it.
+stays on. On the ESP32-S3, that's GPIO 0–21. Of the badge's buttons (`lib/button.py`),
+that's Boot (GPIO 0), Menu + (15) and User B (16). User A (39) and Menu − (40) can't
+wake it.
 
 `deepsleep(ms)` also takes a time: the badge wakes on its own after that many
 milliseconds. Wake every minute, update the screen, sleep again: that's how e-ink
@@ -96,7 +110,7 @@ clocks and weather displays run for months.
 |---|---|
 | It wakes up straight away | The wake button reads 0 already (held, or no pull-up). Check `wake.value()` is 1 before sleeping. |
 | Button doesn't wake it | Not an RTC pin, or the wrong `level`. Try `esp32.WAKEUP_ANY_HIGH` if it reads 1 when pressed. |
-| The screen went blank | The display was told to clear on shutdown, or the refresh hadn't finished. Wait longer before step 4. |
+| The screen is half-drawn or blank | The refresh hadn't finished. Wait for `display.is_done_updating()` to be `True` before step 4. |
 | LEDs stay lit while asleep | Turn them off first (step 2). |
 | Thonny shows errors after sleep | Normal: the USB port vanished. Reconnect (**Stop/Restart**). |
 | The badge goes to sleep as soon as it starts, every time | Your sleep code runs at boot, so USB is never up long enough to stop it. See [[recover]]. |

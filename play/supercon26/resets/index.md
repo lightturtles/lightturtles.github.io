@@ -6,7 +6,10 @@ topic: advanced
 workshop: false
 needs: [first-app]
 time: 25 min
-touches: [boot.py, main.py]
+touches:
+  - boot.py    # only comments: it does nothing
+  - main.py    # aio.run(main()) only when run as the main program, so `import main` starts nothing
+  - lib/led_bar.py#LedBar.menu_display   # the menu repaints every LED once main.py is running
 verified_against: null
 video: null
 ---
@@ -39,9 +42,9 @@ program running: the starting point for testing your app by hand.
 2. **Soft reset.** Press **Ctrl+C**, then **Ctrl+D** at an empty `>>>`.
    (Or run `machine.soft_reset()`.) This is the "leave the REPL" you've been using
    since [[repl]].
-   - The badge's program restarts. Press **Ctrl+C** to get back to `>>>`.
-   - Type `x`. Is it still there?
-   - Is the LED still lit?
+   - Is the LED still lit? Look straight away: once the badge's program is running
+     again (a few seconds), the menu repaints every LED.
+   - Press **Ctrl+C** to get back to `>>>`. Type `x`. Is it still there?
 
 3. **Hard reset.** Press the **{{ facts.power.reset_button }}** button
    (or run `import machine; machine.reset()`).
@@ -70,11 +73,10 @@ program running: the starting point for testing your app by hand.
    print(open("boot.py").read())
    ```
 
-   `boot.py` is usually short: low-level set-up that has to happen first. `main.py` is
-   the badge's whole program (see [[firmware-diagram]]). It never finishes, which is why
-   you only reach `>>>` by pressing **Ctrl+C**.
-
-   <!-- TODO(verify): what this year's boot.py does (empty? USB, filesystem, pins?) -->
+   `boot.py` is for low-level set-up that has to happen first. On this badge it's all
+   comments: it does nothing. `main.py` is the badge's whole program (see
+   [[firmware-diagram]]). It never finishes, which is why you only reach `>>>` by
+   pressing **Ctrl+C**.
 
 7. **A REPL with nothing running.** Sometimes you want the badge set up by `boot.py`
    but *not* running `main.py`: no menu, no apps, no tasks, just you. At `>>>`:
@@ -91,7 +93,8 @@ program running: the starting point for testing your app by hand.
    ```
 
    Compare with what you saw in [[explore-badge]]. Almost nothing is loaded: no
-   `badge_obj`, no apps. Is the LED from step 1 still lit?
+   `switcher`, no `display`, no apps. Set the LED from step 1 again (step 1's lines),
+   then do steps 1–3 of this list once more. Does the LED survive this time?
 
 8. **Get the badge back.** Press **Ctrl+D** at the normal `>>>`. That soft reset runs
    `main.py` as usual.
@@ -110,7 +113,7 @@ running.
 | Python variables | Gone | Gone | Gone |
 | Chip hardware (pins, timers) | **Mostly left as-is** | Reset | Reset |
 | USB connection | Stays | Drops and comes back | Drops |
-| LEDs | Stay lit | Stay lit (they have power) | Off |
+| LEDs | Stay lit (until the menu repaints them) | Stay lit (they have power) | Off |
 | E-ink image | Stays | Stays | Stays (it needs no power) |
 | Files on the badge | Kept | Kept | Kept |
 | Picks up your saved edit | Yes | Yes | Yes |
@@ -163,6 +166,7 @@ mpremote reset                   # hard reset
 
 ## Have fun!
 
-- Which reset makes the badge show its boot screen fastest? Time it.
-- At a blank REPL, import `main` yourself (`import main`). What happens? How do you get
-  `>>>` back?
+- Which reset gets the menu's LEDs back fastest? Time it.
+- At a blank REPL, import `main` yourself (`import main`). It prints its start-up
+  messages, then gives you `>>>` back. What did it set up, and what didn't it start?
+  (Look at the `if __name__ == "__main__":` block at the bottom of `main.py`.)

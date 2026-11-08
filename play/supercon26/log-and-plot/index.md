@@ -96,6 +96,7 @@ before and after a fix, today and tomorrow, your badge and a friend's.
 |---|---|
 | The Plotter is empty | Your lines need numbers. Lines with only words are ignored. |
 | Lines jump to zero | Something printed a line with different names. Print only your data while plotting. |
+| Odd spikes or extra lines while your app runs | The firmware prints numbers too: the e-ink timings (a bare number of ms) and the heartbeat's memory report. Plot from `>>>` (after **Ctrl+C**), where they're quiet. |
 | Log lines from [[better-prints]] get plotted too | Their timestamps are numbers. Raise the log level (`logging.WARNING`) while you plot. |
 | `--capture` isn't recognized | Update mpremote: `pipx upgrade mpremote`. Or copy the shell's text from Thonny. |
 | The spreadsheet puts everything in one column | Check the separator: it should be a comma, with no spaces. |

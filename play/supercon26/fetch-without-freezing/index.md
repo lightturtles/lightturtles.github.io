@@ -6,14 +6,14 @@ topic: wifi
 workshop: false
 needs: [web-data, asyncio-basics]
 time: 30 min
-touches: [apps/userA.py]
+touches: []
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
 
-<!-- TODO(verify): is aiohttp in the firmware, or mip-installable? Does asyncio.open_connection(ssl=True) work on this build? -->
+<!-- TODO(verify) on a real badge: does asyncio.open_connection(ssl=True) work on this build? Does `mip install aiohttp` work? (aiohttp isn't built in.) -->
 
 **Goal:** Fetch web data in an asyncio task, so the buttons, screen and LEDs keep working
 while you wait for the reply.
@@ -66,8 +66,9 @@ while you wait for the reply.
    The ticks keep coming while the request is out. Compare with `requests` in
    [[web-data]], where everything stopped.
 
-3. **Put it in your app.** Your app's methods aren't `async`, so they *start* a task and
-   check on it later. In `{{ facts.firmware.user_app }}` (paste `fetch_json` above the class):
+3. **Put it in your app.** Your app's `run()` isn't `async`, so it *starts* a task and
+   checks on it later. In `{{ facts.firmware.user_app }}` (add `import asyncio, json` at the
+   top, and paste `HOST`, `PATH` and `fetch_json` above the class), add two methods:
 
    ```python
        def start_fetch(self):
@@ -89,7 +90,8 @@ while you wait for the reply.
 4. **Start it on a button, show it when it lands:**
 
    ```python
-       def run_foreground(self):
+       def run(self):
+           # ...whatever your run() already does, then:
            if {{ facts.buttons.app_1 }}:
                self.start_fetch()
            temp = getattr(self, "temp", None)
@@ -114,8 +116,9 @@ writes its result into `self`, and the app checks `self` each call.** It's the s
 as [[pass-data]]: a shared variable for "the latest value," plus a flag so you never
 start two fetches at once.
 
-The task you started isn't the app's own task (that one belongs to `BaseApp`), so
-nothing stops it for you. A fetch ends on its own, which makes that fine here. A task
+Your app doesn't have a task of its own (the switcher calls its `run()`), so the task
+you started is on its own: it keeps going even after you go back to the menu, and
+nothing stops it for you. A fetch ends by itself, which makes that fine here. A task
 that loops forever is different: keep a reference (`self.poller = asyncio.create_task(...)`)
 and call `self.poller.cancel()` when your app stops needing it. Inside the task, a
 `try`/`finally` around the loop runs your clean-up when the cancel arrives.
@@ -126,7 +129,7 @@ Two catches:
   doesn't `await`. It's usually quick, but on bad WiFi it can stall for a moment.
 - **This is plain HTTP.** For `https`, pass `ssl=True` and port 443 to
   `open_connection`, if your build supports it. Or install the `aiohttp` library
-  (`mpremote mip install aiohttp`), which does both for you.
+  (`mpremote mip install aiohttp`; it isn't built in), which does both for you.
 
 ## Stuck?
 
@@ -135,12 +138,12 @@ Two catches:
 | `ValueError` splitting the reply | The server sent no body, or redirected you to `https`. Print `reply[:200]`. |
 | `OSError: -202` | DNS failed. Is the badge still on WiFi? |
 | A second press does nothing | That's the `fetching` flag. If it sticks at `True`, the task died before `finally`; look for a traceback. |
-| `AttributeError: ... 'create_task'` | The firmware imports asyncio under another name (2025: `aio`). Use that, or `import asyncio`. |
+| `NameError: name 'asyncio' isn't defined` | Add `import asyncio` at the top of your app's file. (The firmware's own files import it as `aio`.) |
 
 ## Have fun!
 
-- Fetch every 10 minutes from `run_background()`, so the value is always fresh when
-  you open the app.
+- Fetch every 10 minutes from a task that keeps running (see [[firmware-diagram]]), so the
+  value is always fresh when you open the app.
 - Show a spinner on the LEDs while `self.fetching` is `True` (see [[animate-leds]]).
 - Fetch two different APIs at once with `asyncio.gather`.
 - A weather badge: a forecast refreshed every 15 minutes, with a three-color icon for each day (see [[eink-images]]).

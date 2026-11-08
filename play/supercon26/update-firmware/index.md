@@ -26,19 +26,25 @@ video: null
 
 ## Steps
 
-1. **Find what changed.** In your clone, note which version you have, get the new one,
-   and ask `git` what changed in `{{ facts.firmware.folder }}/`:
+1. **Find what changed.** Your badge came with version `{{ facts.firmware.snapshot }}` of the folder.
+   (Updated it before? Use the version you updated to instead.) Your clone, though, is
+   whatever was newest when you cloned it, so compare against the badge's version, not
+   the clone's. In your clone:
 
    ```bash
-   git rev-parse --short HEAD          # the version you have now; write it down (say, abc1234)
-   git pull
-   git diff --stat abc1234 HEAD -- {{ facts.firmware.folder }}
+   git pull                                           # the newest version
+   git diff --stat {{ facts.firmware.snapshot }} HEAD -- {{ facts.firmware.folder }}
+   git rev-parse --short HEAD                         # write this down: it's your badge's version after the update
    ```
 
-   Each line is a file that was added, changed or removed. `git diff abc1234 HEAD -- <file>`
-   shows exactly what changed in one of them.
+   Each line is a file that was added, changed or removed. `git diff {{ facts.firmware.snapshot }} HEAD -- <file>`
+   shows exactly what changed in one of them. (One that matters today: `lib/sao.py`.
+   The badge's original can't be imported, and [[sao-pinout]] and the lessons after it
+   need it.)
 
-   Downloaded ZIPs instead? Compare the two folders: `diff -rq old/{{ facts.firmware.folder }} new/{{ facts.firmware.folder }}`
+   Downloaded ZIPs instead? You need the folder your badge came with too:
+   [{{ facts.firmware.snapshot }}.zip]({{ facts.firmware.repo }}/archive/{{ facts.firmware.snapshot }}.zip).
+   Compare the two folders: `diff -rq old/{{ facts.firmware.folder }} new/{{ facts.firmware.folder }}`
    (on Windows, try [WinMerge](https://winmerge.org)).
 
 2. **Sort each changed file** into one of these:
@@ -100,7 +106,7 @@ It needs the old folder as well as the new one. With a clone, `git worktree` mak
 you a copy of the old version next to it:
 
 ```bash
-git worktree add ../badge-old abc1234      # the version you wrote down in step 1
+git worktree add ../badge-old {{ facts.firmware.snapshot }}      # the version your badge came with (or last updated to)
 python badgetool.py update {{ facts.firmware.folder }} --base ../badge-old/{{ facts.firmware.folder }} --dry-run
 python badgetool.py update {{ facts.firmware.folder }} --base ../badge-old/{{ facts.firmware.folder }}
 ```

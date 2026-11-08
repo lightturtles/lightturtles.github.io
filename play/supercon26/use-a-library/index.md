@@ -164,6 +164,7 @@ thing by hand, one step at a time.
 |---|---|
 | `ImportError` | The library isn't on the badge, or isn't in `/{{ facts.firmware.lib_dir }}`. Redo [[add-a-library]]. |
 | `NameError: name 'i2c' is not defined` | You skipped step 1, or reset since. Run it again. |
+| `SyntaxError` in `lib/sao.py` | Your badge still has the firmware it came with, and MicroPython can't read that `lib/sao.py`. Do [[update-firmware]] (or upload just the new `lib/sao.py`). |
 | `OSError: [Errno 19] ENODEV` | Nothing answered at the driver's address. Run `[hex(a) for a in i2c.scan()]` (see [[i2c-scan]]). |
 | `RuntimeError: not a ...` | Something answered, but it's a different chip. Check you imported the library for *your* sensor. |
 | `AttributeError: 'module' object has no attribute ...` | Check the capitals: the module is lower-case (`aht20`), the class upper-case (`AHT20`). |

@@ -41,7 +41,7 @@ topics:
         needs: [repl]
         workshop: true
       - id: explore-badge
-        title: Explore the badge object
+        title: Explore the badge
         description: "dir(), help() and Tab on badge_obj: what this badge can do, under the firmware's own names."
         needs: [repl]
       - id: backup

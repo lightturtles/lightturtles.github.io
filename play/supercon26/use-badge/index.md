@@ -59,9 +59,9 @@ to the menu.
    Add or rename an app and this order can change. The badge doesn't sort its apps; it
    takes them in whatever order Python happens to list them.
 
-   While an app draws, the LEDs go **cyan**. When they turn **green** the picture is
-   done. An e-ink refresh takes a few seconds and the screen flashes while it does.
-   That's normal.
+   While Nametag or a schedule draws, the LEDs go **cyan**. When they turn **green**,
+   the drawing is done and the e-ink starts to refresh. That takes about 40 seconds, and
+   the screen flashes while it does. That's normal.
 
    <!-- TODO(screenshot): Nametag on the screen; a schedule page -->
 
@@ -107,10 +107,9 @@ c.append(41, "load_counter")          # the next start-up is number 42
 
 Then press **{{ facts.power.reset_button }}**.
 
-<!-- TODO(verify) on a real badge before the workshop: main.py:46 loads
-     /data/graphics/never-epd.png, but the file is never_epd.png. Boot 42 probably
-     ends in a traceback (on the REPL) instead of a picture. If so, either say so here
-     ("you just found a real bug — read the traceback") or get it fixed upstream. -->
+On a badge that hasn't been updated yet, start-up 42 ends in a traceback instead of the
+picture: `main.py` asks for `never-epd.png`, but the file is called `never_epd.png`.
+That's a real bug, and it's already fixed in the official folder (see [[update-firmware]]).
 
 </details>
 
@@ -123,7 +122,7 @@ Then press **{{ facts.power.reset_button }}**.
 | Pressing **User A** / **User B** does nothing | You're probably already in an app. Press a **Menu** button first. |
 | Pressing **Menu** doesn't move the selection | The first press only brings the menu back. Press again to move. |
 | Gallery starts but the picture doesn't change | Known bug: the app picks from 44 pictures, but your badge may not have all of them. Go back to the menu and start Gallery again. |
-| Badge seems frozen | Give it a few seconds first (see the first row). Still stuck? Press **{{ facts.power.reset_button }}**. |
+| Badge seems frozen | Give it a minute first: a screen refresh is slow (see the first row). Still stuck? Press **{{ facts.power.reset_button }}**. |
 
 ## Have fun!
 

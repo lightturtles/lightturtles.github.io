@@ -6,7 +6,9 @@ topic: setup
 workshop: false
 needs: [start-fresh, resets]
 time: 20 min
-touches: [main.py]
+touches:
+  - main.py                 # imports every app (via lib/app_switcher.py) at start-up
+  - boot.py                 # empty on the stock badge
 verified_against: null
 video: null
 ---
@@ -37,7 +39,8 @@ can type anything:
 ## Steps
 
 1. **Make a badge that sleeps at boot** (so you can practice the rescue). In
-   `{{ facts.firmware.user_app }}`, add these as the very first lines and save:
+   `{{ facts.firmware.user_app }}`, add these as the very first lines and save. (The badge imports
+   every app at start-up, so lines at the top of an app's file run on every boot.)
 
    ```python
    import machine, time
@@ -86,8 +89,9 @@ The rescue is to **make that moment**, or find a longer one:
 
 - **Race it.** Most start-up code takes a moment before it does the damage. A loop that
   retries `mpremote` the instant the port appears will usually win.
-- **Wake it.** A sleeping badge can be woken by its wake button
-  ({{ facts.sleep.wake_label }}), or the reset button, which restarts the race.
+- **Wake it.** The reset button wakes a sleeping badge, which restarts the race.
+  (So does a wake button, if the code that put it to sleep set one up: see
+  [[sleep-with-image]].)
 {% if facts.firmware.safe_mode %}- **Safe mode.** This badge has one: {{ facts.firmware.safe_mode }}. It skips the apps for you.
 {% endif %}
 Renaming `main.py` turns a race you have to win every time into one you only have to
@@ -103,7 +107,7 @@ folder (see [[start-fresh]]), as long as the badge can be reached at all. Your
 
 | Symptom | Fix |
 |---|---|
-| `mpremote` never gets through | Make the window longer: hold the badge in reset, release it, and start the loop at once. Or use the wake button. |
+| `mpremote` never gets through | Make the window longer: hold the badge in reset, release it, and start the loop at once. |
 | `could not enter raw repl` | It got the port but not the prompt. Keep the loop running; the next try usually works. |
 | The port never appears at all | Plug into a different USB port or cable; try {{ facts.power.reset_button }} while plugged in. |
 | Nothing works, ever | Ask a helper. They can reflash MicroPython, and your [[backup]] gets your work back. |

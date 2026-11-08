@@ -6,7 +6,8 @@ topic: gpio
 workshop: false
 needs: [sao-pinout, one-led]
 time: 15 min
-touches: []
+touches:
+  - lib/sao.py      # SAO1_GPIO1 = 2, SAO1_GPIO2 = 42 (SAO2: 4/5, SAO3: 7/6); nothing in the stock firmware drives them
 verified_against: null
 video: null
 ---
@@ -78,7 +79,7 @@ badge's LEDs have a chip inside that listens for color data.
 |---|---|
 | LED never lights | Flip the LED around (it only works one way). Check you're on GPIO1, not GPIO2. |
 | Lights, but very dim | Try a smaller resistor (but not below 100 Ω). |
-| Blinks on its own | The badge's program uses that pin. **Ctrl+C** first, or try GPIO2. |
+| Blinks on its own | Something else is driving that pin: an app of yours, or another SAO plugged in. The stock firmware doesn't touch the SAO GPIOs. |
 | Need a multimeter check | Measure between GPIO1 and GND: ~3.3 V after `value(1)`, ~0 V after `value(0)`. |
 
 ## Have fun!

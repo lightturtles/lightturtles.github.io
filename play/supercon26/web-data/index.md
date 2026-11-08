@@ -62,7 +62,8 @@ the badge stutters while it waits.
 
    Try it a few times. How long? How much does it vary?
 
-5. **Feel the stutter.** Put the fetch in your app, on **{{ facts.buttons.app_1_label }}**:
+5. **Feel the stutter.** Put the fetch in your app, on **{{ facts.buttons.app_1_label }}**, at the end of
+   `run()` (with `import requests` at the top of the file, and the badge already on WiFi):
 
    ```python
            if {{ facts.buttons.app_1 }}:

@@ -76,8 +76,11 @@ Installing an app is the same move as [[add-a-library]], into a different folder
    - **A gist or repo:** paste it into a [GitHub gist](https://gist.github.com), or
      put it in a repo with a `README.md` that says the same as your comment, plus a photo.
    - **A pull request to the badge's repo.** Its README invites them: "If you come up with
-     additional apps that you'd like to share, feel free to make a pull request." Apps
-     go in `{{ facts.firmware.folder }}/apps/`.
+     additional apps that you'd like to share, feel free to make a pull request." Put
+     your app in a folder of its own under `user_apps/` (not in
+     `{{ facts.firmware.folder }}/apps/`), with a `README.md`, so everyone can choose which
+     apps to take. The ones already there (a KITT scanner, Conway's Game of Life) show the
+     shape, and they're good apps to install, too.
 
 **✅ Done when** you've run someone else's app on your badge, and someone else has your
 app's file and knows how to install it.

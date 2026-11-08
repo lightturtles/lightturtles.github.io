@@ -55,14 +55,16 @@ show it.
    ```
 
 4. **Show it in your app.** Only the minutes matter on e-ink, so check each call, but
-   change the screen once a minute:
+   change the screen once a minute. In `run()`, with the label and `show()` from
+   [[lvgl-hello]] (and `local()` above the class):
 
    ```python
            y, mo, d, h, mi, *_ = local()
            text = f"{h:02d}:{mi:02d}"
            if text != getattr(self, "shown", None):
                self.shown = text
-               self.label.set_text(text)       # your label from lvgl-hello
+               self.label.set_text(text)
+               self.show()
    ```
 
 5. **Watch it drift.** Leave the badge on for an hour, then compare `time.localtime()`
@@ -80,10 +82,10 @@ The RTC counts in **UTC**, one time for the whole planet. Time zones and dayligh
 saving are just offsets, decided by governments and changed now and then, so tiny
 devices usually leave them to you.
 
-**A daylight-saving trap, right on time:** US clocks fall back at 2 a.m. on Sunday,
-November 1, 2026. Pasadena goes from UTC−7 (PDT) to UTC−8 (PST) in the middle of the
-weekend. A hard-coded offset will be an hour off on Sunday.
-<!-- TODO(verify): Supercon 2026 dates vs. Nov 1 -->
+**A daylight-saving trap, just missed:** US clocks fell back at 2 a.m. on Sunday,
+November 1, 2026, so Pasadena is on UTC−8 (PST) for all of Supercon. Had the
+conference been a week earlier, a hard-coded offset would have been an hour off for
+part of the weekend. Next trap: March 14, 2027, back to UTC−7 (PDT).
 
 The RTC's crystal isn't perfect: it drifts by seconds a day. Re-sync now and then
 (once a day is plenty), whenever WiFi is around.
@@ -99,8 +101,8 @@ The RTC's crystal isn't perfect: it drifts by seconds a day. Re-sync now and the
 
 ## Have fun!
 
-- Handle daylight saving: if the date is on or after November 1, 2026, at 9:00 UTC, use −8.
+- Handle daylight saving: work out the offset from the date (US rules: −7 from the second Sunday in March to the first Sunday in November, −8 otherwise).
 - A countdown to the next talk, or to the badge hacking demos.
-- Sync at boot in your app's `__init__`, if WiFi is up (see [[save-settings]] to store the network).
+- Sync the first time your app opens (`if self.launched:`), if WiFi is up (see [[save-settings]] to store the network).
 - A "word clock": "quarter past ten" instead of 10:15.
 - Now / Next: fetch the con schedule (see [[web-data]]), show the current and next talk, and turn the screen red 5 minutes before the next one starts (see [[use-red]]).

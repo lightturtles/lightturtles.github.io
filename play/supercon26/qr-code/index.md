@@ -6,14 +6,13 @@ topic: display
 workshop: false
 needs: [app-screen]
 time: 20 min
-touches: [apps/userA.py]
+touches:
+  - lib/epd.py#EPaperDisplay.draw_png   # for the laptop route: reads 1-bit grayscale PNGs
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
-
-<!-- TODO(verify): is LVGL's qrcode widget compiled into this build? (dir(lvgl) has 'qrcode') -->
 
 **Goal:** Put a QR code for your website, socials or contact card on your badge, so
 people can scan it from across the table.
@@ -25,29 +24,27 @@ people can scan it from across the table.
 
 ## Steps
 
-1. **Is it built in?** At `>>>`:
+1. **Is it built in?** LVGL has a QR code widget, but only if the firmware was built
+   with it. At `>>>`:
 
    ```python
    import lvgl
    hasattr(lvgl, "qrcode")
    ```
 
-   `True`: carry on. `False`: see *No QR widget?* below.
+   On the badge it's `True`. (`False` on some other build? See *No QR widget?* below.)
 
-2. **Make the code** in your screen layout:
+2. **Make the code** in your `build()`, next to your other widgets:
 
    ```python
            URL = "https://example.com/me"          # yours
-           size = min({{ facts.display.width }}, {{ facts.display.height }}) - 40
-           self.qr = lvgl.qrcode(self.page.content)
-           self.qr.set_size(size)
-           self.qr.set_dark_color(lvgl.color_black())
-           self.qr.set_light_color(lvgl.color_white())
+           self.qr = lvgl.qrcode(self.screen)
+           self.qr.set_size(400)                   # pixels; the screen is {{ facts.display.height }} tall
+           self.qr.set_dark_color(lvgl.color_hex(0x000000))
+           self.qr.set_light_color(lvgl.color_hex(0xFFFFFF))
            self.qr.update(URL, len(URL))
-           self.qr.align(lvgl.ALIGN.CENTER, 0, 0)
+           self.qr.align(lvgl.ALIGN.RIGHT_MID, -40, 0)
    ```
-
-   And `self.qr = None` in `switch_to_background()`.
 
 3. Save, **Ctrl+D**, open your app, and scan it with your phone's camera.
 
@@ -57,9 +54,10 @@ people can scan it from across the table.
 5. **Add a caption** under it, so people know what they'll get:
 
    ```python
-           cap = lvgl.label(self.page.content)
+           cap = lvgl.label(self.screen)
            cap.set_text("my site")
-           cap.align_to(self.qr, lvgl.ALIGN.OUT_BOTTOM_MID, 0, 4)
+           cap.set_style_text_font(lvgl.font_montserrat_24, 0)
+           cap.align_to(self.qr, lvgl.ALIGN.OUT_BOTTOM_MID, 0, 8)
    ```
 
 <!-- TODO(photo): the badge's QR code being scanned by a phone -->
@@ -81,15 +79,23 @@ the edges. Don't put anything right up against the code.
 
 ## No QR widget?
 
-Generate the code on your laptop instead and show it as an image:
+Generate the code on your laptop instead and show it as a picture:
 
 ```bash
 pip install qrcode pillow
-python -c "import qrcode; qrcode.make('https://example.com/me', border=2).save('qr.png')"
+python -c "import qrcode; i = qrcode.make('https://example.com/me', box_size=12, border=2); i.save('qr.png'); print(i.size)"
 ```
 
-Then copy `qr.png` to `images/` on the badge and show it as in [[eink-images]]. It's
-already black and white, so it needs no dithering.
+Keep the printed size under {{ facts.display.height }}. Copy `qr.png` to `/data/graphics/` on the badge
+(see [[eink-images]]); it's already black and white, so it needs no conversion. Then
+draw it *after* LVGL has drawn, so LVGL doesn't paint over it. In your `show()`:
+
+```python
+    def show(self):
+        lvgl.refr_now(display.lv_display)
+        display.draw_png("/data/graphics/qr.png", row=40, col=560)
+        display.update()
+```
 
 ## Stuck?
 
@@ -97,7 +103,8 @@ already black and white, so it needs no dithering.
 |---|---|
 | Phone won't scan it | Make it bigger, the link shorter, or move the phone back a little. |
 | `TypeError` on `update` | Some versions take just the text: `self.qr.update(URL)`. |
-| The code is cut off | It's bigger than the content area. Make `size` smaller. |
+| The code is cut off | It's bigger than the space you left. Make the size smaller, or move it. |
+| (Laptop route) The code vanishes when a label changes | LVGL redrew over it. Draw the PNG in `show()`, after every `refr_now()`. |
 
 ## Have fun!
 
@@ -105,3 +112,6 @@ already black and white, so it needs no dithering.
   a phone's contacts.
 - A WiFi code: `WIFI:T:WPA;S:network;P:password;;` joins a phone to a network.
 - Cycle between two codes on a button.
+- Make the code from text that changes: your sensor's latest reading, or a link that
+  includes it (see [[use-a-library]]). `update()` it, and redraw only when it changes
+  (see [[eink-updates]]).

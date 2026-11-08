@@ -6,14 +6,14 @@ topic: display
 workshop: false
 needs: [eink-images]
 time: 20 min
-touches: [apps/userA.py, hardware/display.py]
+touches:
+  - lib/epd.py#EPaperDisplay._lv_flush       # LVGL colors → red if R ≥ 50 % and G, B < 50 %
+  - lib/epd.py#EPaperDisplay.global_update   # always sends both the black and the red plane
 verified_against: null
 video: null
 ---
 
 {% include facts.html %}
-
-<!-- TODO(verify): how the firmware maps LVGL colors to the panel's {{ facts.display.third_color }} (nearest color? a fixed hex?) -->
 
 **Goal:** Highlight the one thing that matters on your screen with
 {{ facts.display.third_color }}, and measure what it costs in refresh time.
@@ -37,8 +37,9 @@ video: null
            self.label.set_style_text_color(RED, 0)
    ```
 
-3. Save, **Ctrl+D**, and time three refreshes again. How much slower? Count the
-   flashes too: is there an extra phase?
+3. Save, **Ctrl+D**, and time three refreshes again. Is it slower? Count the
+   flashes too: is there an extra phase? (On our badge: no. About 36 seconds either
+   way. Check yours.)
 
 4. **Red only when it matters.** Make the label red only when the value needs
    attention, and black the rest of the time:
@@ -48,7 +49,7 @@ video: null
            self.label.set_style_text_color(color, 0)
    ```
 
-   Now most updates are fast, and the slow red one *means* something.
+   Now red *means* something: when it shows up, people look.
 
 5. **Other ways to stand out without red.** Try each and compare from across the room:
    - **inverse:** white text on a black box (`set_style_bg_color`, `set_style_bg_opa`)
@@ -64,9 +65,17 @@ On a three-color panel, each pixel has black, white *and* {{ facts.display.third
 particles. The colored ones are bigger and slower, so the panel needs a longer
 **waveform** to move them: extra phases, more flashing, more time (see [[eink-refresh]]).
 Many panels can only do a fast partial refresh in black and white, and need a full,
-slow refresh for any red at all.
+slow refresh for any red at all. This badge's firmware keeps it simple: every
+`display.update()` sends both the black and the red picture and does the same full,
+three-color refresh. So on this badge, red costs nothing extra in time: every refresh
+is the slow one.
 
-So red has a price, and a design rule follows: **one red thing per screen, and only
+How does a color become red? When LVGL draws, the firmware looks at each pixel
+(`_lv_flush()` in `lib/epd.py`): **mostly red** (red over half, green and blue under
+half) becomes red, **dark** becomes black, and everything else becomes white. So
+`0xFF0000` and `0xC00000` are red, but orange and pink turn white.
+
+Red still has a price in attention, and a design rule follows: **one red thing per screen, and only
 when it means something** (a warning, the current turn, the thing to look at first).
 If everything is highlighted, nothing is.
 
@@ -74,15 +83,15 @@ If everything is highlighted, nothing is.
 
 | Symptom | Fix |
 |---|---|
-| The text comes out black, not red | The firmware rounds colors to the nearest the panel has. Try pure `0xFF0000`. |
-| Everything is pinkish or dotted | Something is being dithered. Use pure colors for text. |
+| The text comes out white or black, not red | Only "mostly red" colors become red. Try pure `0xFF0000`. |
+| The edges of red text look ragged, or black | LVGL smooths letter edges with in-between colors, and each of those becomes red, black or white. Bigger fonts hide it. |
 | Red appears where you didn't ask | A style or theme default. Check the parent's styles. |
 
 ## Have fun!
 
 - A red border that appears only when a timer runs out.
 - Measure: is a screen with *a little* red as slow as one that's mostly red?
-- Read the panel's datasheet ({{ facts.display.datasheet }}): how long does it say each
-  waveform takes?
+- Read the panel's datasheet: how long does it say each waveform takes? (It's a 9.7"
+  Pervasive Displays panel; `lib/epd.py` names the driver it was ported from.)
 - A status sign: a button cycles through "Ask me about ___", "Need coffee" and "Heads down", with the key words in red. E-ink keeps the sign up even while the badge sleeps (see [[sleep-with-image]]).
-- A forest fire: trees (black) grow at random on a canvas, lightning sets one alight, and fire (red) spreads to its neighbors and burns out. Plant them too densely and the whole forest burns. (See [[draw-pixels]].)
+- A forest fire: trees (black) grow at random in the framebuffer, lightning sets one alight, and fire (red) spreads to its neighbors and burns out. Plant them too densely and the whole forest burns. (See [[draw-pixels]].)

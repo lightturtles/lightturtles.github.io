@@ -104,7 +104,7 @@ for meters. Averaging several readings helps.
 
 - A "hot and cold" game: one badge hides; the seeker's LEDs glow brighter as RSSI rises.
 - Light one LED per badge nearby (see [[all-leds]]).
-- Run it in the background all weekend and count how many different badges you met
-  (see [[firmware-diagram]] and [[save-settings]]).
+- Run it in a task that keeps going all weekend, whatever app is open, and count how
+  many different badges you met (see [[firmware-diagram]] and [[save-settings]]).
 - Hot potato: pass a "potato" to a nearby badge; your LEDs heat up the longer you hold it (see [[espnow-in-app]] and [[animate-leds]]).
 - A scavenger hunt: a few badges run as hidden beacons. Hunters follow the signal strength and collect a token from each one, saved across reboots (see [[firmware-diagram]] and [[save-settings]]).

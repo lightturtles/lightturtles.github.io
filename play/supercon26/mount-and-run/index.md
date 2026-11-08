@@ -6,7 +6,8 @@ topic: setup
 workshop: false
 needs: [backup]
 time: 30 min
-touches: [main.py]
+touches:
+  - lib/app_switcher.py#AppSwitcher.__init__   # lists /apps and imports /data/user_apps.py: absolute paths on the badge, so the whole firmware can't run from a mount
 verified_against: null
 video: null
 ---
@@ -46,26 +47,40 @@ and get it onto the badge in one command, or run it without copying at all.
 3. **Edit on the laptop.** Open the folder in your editor (VS Code, vim, anything).
    Make a change to your app and save.
 
-4. **Copy it over:** one file, then a soft reset to load it:
+4. **Copy it over:** one file, then a restart to load it:
 
    ```bash
-   mpremote cp {{ facts.firmware.folder }}/{{ facts.firmware.user_app }} :{{ facts.firmware.user_app }} + soft-reset + repl
+   mpremote cp {{ facts.firmware.folder }}/{{ facts.firmware.user_app }} :{{ facts.firmware.user_app }} + repl
    ```
 
-   One line: copy, restart, and watch the output. **Ctrl+]** to leave. `mpremote cp`
+   It copies the file, then opens the REPL. Press **Ctrl+D** there to restart the badge
+   and watch it start up. (`mpremote soft-reset` would restart it too, but the quiet
+   way, without `main.py`: see [[resets]].) **Ctrl+]** to leave. `mpremote cp`
    skips files that haven't changed, so it's quick.
 
-5. **Or don't copy at all: mount.** Run the badge's program from the laptop's files:
+5. **Or don't copy at all: mount.** Let the badge read files straight from your laptop:
 
    ```bash
-   mpremote mount {{ facts.firmware.folder }} + exec "exec(open('main.py').read())"
+   mpremote mount {{ facts.firmware.folder }}
    ```
 
-   <!-- TODO(verify): on the real badge; main.py may need `import main; main.main()` instead -->
+   You get a `>>>` with nothing running (mpremote soft-resets the badge first, the
+   quiet way: see [[resets]]), in a folder called `/remote` that *is* your laptop's
+   `{{ facts.firmware.folder }}/`. Import your app from there and try it by hand:
 
-   The badge starts up (more slowly) using *your laptop's* copies of every file.
-   Change something, **Ctrl+]**, run the same command again, and the change is there.
-   The badge's own files were never touched: press **{{ facts.power.reset_button }}** to prove it.
+   ```python
+   import apps.my_app as m
+   a = m.MyApp()
+   ```
+
+   (What to do with `a` next is in [[drive-app]].) Change the file on your laptop,
+   **Ctrl+]**, run the same command again, and the change is there. The badge's own
+   files were never touched: press **{{ facts.power.reset_button }}** to prove it.
+
+   Mounting is for trying pieces, not the whole badge: `main.py` won't start from a
+   mount. The switcher looks for apps in the badge's own `/apps`, and writes and imports
+   `/data/user_apps.py`, but under a mount, `import` looks in `/remote` instead. You'd
+   get `ImportError: no module named 'data.user_apps'`.
 
 6. **Run one script without copying it.** For a quick experiment that isn't part of the
    app, keep a scratch file on your laptop and run it on the badge as-is:
@@ -102,7 +117,8 @@ the official files, `git diff` is always "what I changed," the same question
 | | Copy (`mpremote cp`) | Mount (`mpremote mount`) |
 |---|---|---|
 | Badge's files | updated | untouched |
-| Startup | normal speed | slow: every import crosses the USB cable |
+| Imports | normal speed | slow: every import crosses the USB cable |
+| Runs the whole badge | yes | no: one app or module at a time, by hand |
 | Works unplugged | yes | no |
 | Good for | "this works; keep it" | trying many small changes quickly |
 
@@ -120,12 +136,13 @@ with a relative path land on your laptop, too.
 | Symptom | Fix |
 |---|---|
 | `could not enter raw repl` | Something else has the port: close Thonny or ViperIDE. |
-| Badge runs the *old* code | Did you save? Did the copy finish? After mount, **Ctrl+D** restarts from the badge's *own* files. |
+| Badge runs the *old* code | Did you save? Did the copy finish? Did you restart (**Ctrl+D**)? After mount, **Ctrl+D** restarts from the badge's *own* files. |
 | Mount is very slow or times out | Normal for many files. Mount only what you're changing, or copy instead. |
+| `ImportError: no module named 'data.user_apps'` | You ran `main.py` (or imported `lib.app_switcher`) from a mount. See step 5: copy instead. |
 | `git diff` shows every line changed | Line endings. On Windows: `git config core.autocrlf input`, then re-copy. |
 
 ## Have fun!
 
 - Make a script (or a `Makefile`) that copies only the files git says have changed.
 - Push your repo to GitHub, and you've shared your app (see [[share-apps]]).
-- Time startup with and without mount. Which files take longest to load?
+- Time `import apps.my_app` with and without mount. How much slower is the USB cable?

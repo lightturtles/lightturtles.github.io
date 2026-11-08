@@ -13,8 +13,6 @@ video: null
 
 {% include facts.html %}
 
-<!-- TODO(verify): does the stock firmware use ESP-NOW itself ({{ facts.espnow.firmware_uses }})? If so, which channel, and does Ctrl+C free it? -->
-
 **Goal:** Send a message straight from your badge to a neighbor's, no router or
 internet involved.
 

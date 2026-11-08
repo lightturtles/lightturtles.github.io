@@ -6,7 +6,9 @@ topic: advanced
 workshop: false
 needs: [resets]
 time: 30 min
-touches: [apps/userA.py, apps/base_app.py]
+touches:
+  - apps/base_app.py#BaseApp     # run() and launched: all the switcher ever uses
+  - lib/epd.py#EPaperDisplay.run # the display task; nothing reaches the e-ink without it
 verified_against: null
 video: null
 ---
@@ -27,17 +29,16 @@ waiting. Then change the code and test again without a reset.
 1. **Get a blank REPL.** **Ctrl+A**, **Ctrl+D**, **Ctrl+B** (or `mpremote soft-reset + repl`).
    Nothing is running: no menu, no other apps, nothing to get in your way.
 
-2. **Make your app yourself.** Import what `main.py` would have, then make the app:
+2. **Make your app yourself.** Import your app's file, then make one:
 
    ```python
-   {{ facts.firmware.badge_import }}
-   import {{ facts.firmware.user_app | remove: ".py" | replace: "/", "." }} as m
-   a = m.App("test", badge_obj)
+   import apps.my_app as m
+   a = m.MyApp()
    ```
 
-   This is the only copy of your app, and nothing calls it but you.
-
-   <!-- TODO(verify): whether importing badge_obj in a blank REPL sets up the hardware by itself, or main.py does more (LVGL set-up, etc.) that has to be copied here -->
+   It prints `[{{ facts.firmware.user_app_name }}] created`. This is the only copy of your app, and nothing
+   calls it but you. (Your file's own imports, like `lib.button`, set up the hardware
+   it needs.)
 
 3. **Look inside:**
 
@@ -47,13 +48,15 @@ waiting. Then change the code and test again without a reset.
 
    Every variable it set in `__init__`, and its value.
 
-4. **Step it by hand.** Call each method yourself and check what changed:
+4. **Step it by hand.** Be the switcher: "open" the app, then call it a few times and
+   check what changed:
 
    ```python
-   a.run_background()
-   a.ticks
-   a.run_background()
-   a.ticks
+   a.launched = True
+   a.run()
+   a.launched = False
+   for i in range(49): a.run()
+   a.calls
    ```
 
    You're the scheduler now: one call at a time, as slowly as you like.
@@ -62,7 +65,8 @@ waiting. Then change the code and test again without a reset.
    *does* into its own method:
 
    ```python
-       def run_foreground(self):
+       def run(self):
+           # ...
            if {{ facts.buttons.app_1 }}:
                self.on_press()
 
@@ -79,11 +83,9 @@ waiting. Then change the code and test again without a reset.
 
    ```python
    import sys
-   # forget the old version
-   sys.modules.pop("{{ facts.firmware.user_app | remove: ".py" | replace: "/", "." }}", None)
-   # read the file again, and make a new app from the new code
-   import {{ facts.firmware.user_app | remove: ".py" | replace: "/", "." }} as m
-   a = m.App("test", badge_obj)
+   sys.modules.pop("apps.my_app", None)     # forget the old version
+   import apps.my_app as m                  # read the file again
+   a = m.MyApp()                            # and make a new app from the new code
    a.on_press(); a.on_press()
    a.presses
    ```
@@ -99,16 +101,26 @@ waiting. Then change the code and test again without a reset.
    a.on_press()
    ```
 
-8. **The screen.** `a.switch_to_foreground()` builds your screen, but nothing is
-   running to draw it. Ask LVGL to draw now:
+8. **The screen.** If your app draws (as in [[lvgl-hello]]), `a.launched = True` and
+   `a.run()` draw into the framebuffers and ask for a refresh. But the display task
+   isn't running, so nothing reaches the e-ink. Run it yourself, for one refresh:
 
    ```python
-   import lvgl
-   a.switch_to_foreground()
-   lvgl.refr_now(None)
+   import asyncio
+   from lib.epd import display
+
+   async def refresh():
+       task = asyncio.create_task(display.run())   # the display task, for one refresh
+       await asyncio.sleep_ms(200)
+       while not display.is_done_updating():
+           await asyncio.sleep_ms(100)
+       task.cancel()
+
+   asyncio.run(refresh())
    ```
 
-   <!-- TODO(verify): refr_now draws to the e-ink without the LVGL task running, and LVGL is set up in a blank REPL -->
+   Change a label (`a.label.set_text("driven by hand")`, `a.show()`), and run
+   `asyncio.run(refresh())` again.
 
 9. **Ctrl+D** when you're done. The badge starts normally, with its own copy of your app.
 
@@ -117,8 +129,8 @@ checked a variable between calls, and tested a change without a reset.
 
 ## What just happened
 
-Your app is just a class. The badge's `main.py` makes one, and `BaseApp.run()` calls
-its methods on a schedule (see [[firmware-diagram]]). Nothing stops you doing the same
+Your app is just a class. At start-up the switcher makes one, and while the app is
+open it sets `launched` and calls `run()` on a schedule (see [[firmware-diagram]]). Nothing stops you doing the same
 by hand, and that's the quickest way to test one piece: no reboot, no menu, no pressing
 buttons, and you can look at everything between steps.
 
@@ -143,16 +155,18 @@ look at its state, then take one more step.
 | Symptom | Fix |
 |---|---|
 | The menu is running | `main.py` ran: you pressed Ctrl+D at a normal `>>>`. Start again with step 1. |
-| `TypeError` making `App` | Its `__init__` takes different arguments. Check `{{ facts.firmware.user_app }}` and `apps/base_app.py`. |
+| `TypeError` making `MyApp` | Its `__init__` takes arguments the switcher wouldn't give it. It should take only `self`. |
+| `AttributeError: 'module' object has no attribute 'MyApp'` | Your class has another name. `dir(m)` lists what's in the file. |
 | Changes don't show | You're using the old `a`. Reload the module, then make a new `a`. Or the file wasn't saved to the badge. |
-| `AttributeError` on a variable | It's set in `switch_to_foreground()`, not `__init__`. Call that first. |
-| Reloaded, but a helper module is still old | Pop that one from `sys.modules` too. For a module in a folder, use the full name: `"apps.userA"`. |
+| `AttributeError` on a variable | It's set in the `if self.launched:` part of `run()`, not `__init__`. Set `a.launched = True` and call `a.run()` first. |
+| Reloaded, but a helper module is still old | Pop that one from `sys.modules` too. For a module in a folder, use the full name: `"apps.my_app"`. |
+| The screen doesn't change in step 8 | Did `refresh()` print `Updating display to new image`? If not, nothing asked for an update: call `a.show()` (or `display.update()`) first. |
 
 ## Have fun!
 
 - Write a one-line `reload(name)` helper in `{{ facts.firmware.lib_dir }}/`. (Watch out:
-  `__import__("apps.userA")` returns the `apps` package, not `userA`.)
+  `__import__("apps.my_app")` returns the `apps` package, not `my_app`.)
 - Write a tiny test: a function that makes an app, presses 3 times, and checks
   `a.presses == 3`. Run it after every change. (Then see [[unit-tests]].)
-- Drive the background: call `run_background()` 1000 times in a loop and time it
-  (see [[on-time]]).
+- Call `run()` 1000 times in a loop and time it (see [[on-time]]). That's your code
+  alone: calling `run()` directly skips the `sleep_ms` nap that `arun()` adds.

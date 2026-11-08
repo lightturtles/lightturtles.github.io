@@ -6,7 +6,7 @@ topic: espnow
 workshop: false
 needs: [espnow-in-app]
 time: 40 min
-touches: [apps/userA.py]
+touches: []
 verified_against: null
 video: null
 ---
@@ -62,9 +62,9 @@ delivery reliable: pair two badges, confirm each message, and resend the lost on
    you hear one, add the sender as a peer:
 
    ```python
-           # sending: in run_foreground, on a button
+           # sending: in run(), on a button
            self.e.send(BROADCAST, struct.pack("BB", 1, 0))
-           # receiving: in run_foreground, for each (mac, msg) from the inbox
+           # receiving: in run(), for each (mac, msg) from the inbox
            if msg[0] == 1 and mac != self.partner:
                self.partner = mac
                try:
@@ -96,7 +96,7 @@ delivery reliable: pair two badges, confirm each message, and resend the lost on
            self.waiting = (self.seq, struct.pack("BB", 2, self.seq) + payload)
            self.tries, self.sent_at = 0, None
 
-       def retry(self):                                # call every run_foreground
+       def retry(self):                                # call from run(), every time
            if not self.waiting:
                return
            now = time.ticks_ms()
