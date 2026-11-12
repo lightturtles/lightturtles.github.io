@@ -1,0 +1,243 @@
+---
+layout: default
+title: "Relaxation Oscillator"
+type: sandbox
+subjects:
+  - analog
+  - simulation
+date: 2026-11-12
+math: true
+excerpt: >
+  Step a two-transistor astable multivibrator through time and watch its
+  collectors and bases swing. Drag the sliders to change the parts.
+---
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uplot@1.6.31/dist/uPlot.min.css">
+
+<article class="post-page osc-page">
+  <header class="post-header">
+    <div class="post-meta-top">
+      <a href="{{ '/play/' | relative_url }}" class="back-link">← Play</a>
+    </div>
+    <h1 class="post-title">{{ page.title }}</h1>
+    <p class="post-excerpt">{{ page.excerpt }}</p>
+  </header>
+
+  <div class="osc-intro">
+    <div class="post-content">
+      <p>
+        A two-transistor astable multivibrator, simulated with the step-by-step
+        method from Nuts and Volts'
+        <a href="https://www.nutsvolts.com/magazine/article/circuit-simulation-made-easy"><em>Circuit Simulation Made Easy</em></a>.
+        It uses an <strong>ideal-switch</strong> transistor model:
+      </p>
+      <ul>
+        <li><strong>ON:</strong> \(V_{CE} = V_{CE,sat}\) (0.2 V), and the base-emitter junction clamps the base at \(V_{BE,on}\) (0.6 V).</li>
+        <li><strong>OFF:</strong> no collector or base current.</li>
+      </ul>
+      <p>The circuit is symmetric:</p>
+      <ul>
+        <li>\(R_A\) is each transistor's collector resistor.</li>
+        <li>\(R_B\) is each base resistor.</li>
+        <li>\(C\) couples each collector to the <em>other</em> transistor's base.
+          <ul>
+            <li>\(C_1\) runs from Q1's collector to Q2's base.</li>
+            <li>\(C_2\) runs from Q2's collector to Q1's base.</li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <figure class="osc-schematic" aria-label="Schematic of the two-transistor astable multivibrator">
+      {% include_relative schematic.svg %}
+    </figure>
+  </div>
+
+  <section class="osc-sim" aria-label="Simulator">
+    <div class="post-content">
+      <h2>Simulation</h2>
+      <p>Drag a slider or type a value into its box to re-run the simulation.</p>
+    </div>
+
+    <div class="osc-controls">
+      <label for="ra">\(R_A\) (kΩ)</label>
+      <input type="range" id="ra" min="0.5" max="10" step="0.1" value="2.2">
+      <input type="number" data-for="ra" min="0.5" max="10" step="0.1" aria-label="R_A in kilohms">
+
+      <label for="v">\(V\) (V)</label>
+      <input type="range" id="v" min="3" max="15" step="0.1" value="9">
+      <input type="number" data-for="v" min="3" max="15" step="0.1" aria-label="Supply voltage in volts">
+
+      <label for="rb">\(R_B\) (kΩ)</label>
+      <input type="range" id="rb" min="5" max="100" step="0.1" value="33">
+      <input type="number" data-for="rb" min="5" max="100" step="0.1" aria-label="R_B in kilohms">
+
+      <label for="dt">\(\Delta t\) (µs)</label>
+      <input type="range" id="dt" min="1" max="100" step="1" value="10">
+      <input type="number" data-for="dt" min="1" max="100" step="1" aria-label="Time step in microseconds">
+
+      <label for="c">\(C\) (nF)</label>
+      <input type="range" id="c" min="10" max="500" step="1" value="100">
+      <input type="number" data-for="c" min="10" max="500" step="1" aria-label="C in nanofarads">
+
+      <label for="tend">Duration (ms)</label>
+      <input type="range" id="tend" min="5" max="100" step="5" value="25">
+      <input type="number" data-for="tend" min="5" max="100" step="5" aria-label="Duration in milliseconds">
+    </div>
+
+    <p class="osc-warn" id="warn" hidden>
+      <strong>Δt is too large</strong> compared with the fast recovery time constant
+      R<sub>A</sub>C (<span id="warn-tau"></span> µs). The simple stepping method
+      gets inaccurate or unstable here, so try Δt ≤ 0.2 R<sub>A</sub>C.
+    </p>
+
+    <h3 class="osc-plot-title">Collector voltages</h3>
+    <div class="osc-plot" id="plot-collectors"></div>
+    <h3 class="osc-plot-title">Base voltages</h3>
+    <div class="osc-plot" id="plot-bases"></div>
+
+    <div class="osc-export">
+      <button type="button" class="btn btn-primary" id="dl-csv">Download CSV</button>
+      <button type="button" class="btn btn-ghost" id="dl-png-collectors">Collectors PNG</button>
+      <button type="button" class="btn btn-ghost" id="dl-png-bases">Bases PNG</button>
+    </div>
+    <p class="osc-hint">
+      The CSV holds the whole run (time in seconds, voltages in volts,
+      <code>q1</code>/<code>q2</code> as 1 = ON). Each PNG saves that graph as you
+      see it right now, zoom and hidden traces included.
+    </p>
+    <p class="osc-hint">
+      <strong>Plot controls:</strong> drag across a graph to zoom in time, and
+      double-click to zoom back out. Hover to read values, and click a legend
+      entry to hide that trace.
+    </p>
+
+    <div class="post-content">
+      <details class="osc-code">
+        <summary>Show the simulation code (<code>simulate()</code>)</summary>
+{% highlight javascript %}{% include_relative simulate.js %}{% endhighlight %}
+        <p>
+          This is the exact code running the simulation above.
+          <a href="simulate.js" download>Download simulate.js</a>
+        </p>
+      </details>
+    </div>
+  </section>
+
+  <div class="post-content">
+    <h2>Method</h2>
+    <p>
+      The only things that carry over from one time step to the next are the two
+      <strong>capacitor voltages</strong>, since a capacitor's voltage can't jump.
+      They are defined as \(V_{C1} = V_{B2} - V_{C,Q1}\) and
+      \(V_{C2} = V_{B1} - V_{C,Q2}\). Every other voltage follows from those two
+      and from which transistor is ON:
+    </p>
+    <table>
+      <thead><tr><th></th><th>Q1 ON, Q2 OFF</th><th>Q1 OFF, Q2 ON</th></tr></thead>
+      <tbody>
+        <tr><td>Q1 collector</td><td>\(V_{CE,sat}\)</td><td>\(V_{BE,on} - V_{C1}\)</td></tr>
+        <tr><td>Q1 base</td><td>\(V_{BE,on}\) (clamped)</td><td>\(V_{CE2} + V_{C2}\)</td></tr>
+        <tr><td>Q2 collector</td><td>\(V_{BE,on} - V_{C2}\)</td><td>\(V_{CE,sat}\)</td></tr>
+        <tr><td>Q2 base</td><td>\(V_{CE1} + V_{C1}\)</td><td>\(V_{BE,on}\) (clamped)</td></tr>
+      </tbody>
+    </table>
+    <p>Each capacitor's current depends on which end is free to move:</p>
+    <ul>
+      <li><strong>The far transistor is OFF.</strong> Its base is free, so all of
+        \(R_B\)'s current charges \(C\). This is the slow <em>timing</em> charge,
+        \(\tau = R_B C\).</li>
+      <li><strong>The far transistor is ON.</strong> Its base is clamped, so
+        \(R_A\)'s current flows through \(C\) into that base. This is the fast
+        <em>recovery</em> charge, \(\tau = R_A C\).</li>
+    </ul>
+    <p>Each time step \(n\) goes in this order:</p>
+    <ol>
+      <li>Decide the switch states using only values from step \(n-1\). This is
+        what avoids a circular reference. If the OFF transistor's base reached
+        \(V_{BE,on}\), the pair swaps.</li>
+      <li>Update the capacitor voltages: \(V_{C,n} = V_{C,n-1} + I_{C,n-1}\,\Delta t / C\).</li>
+      <li>Work out the node voltages from the table.</li>
+      <li>Work out the capacitor currents for the next step.</li>
+    </ol>
+    <p>
+      When a transistor turns ON, its collector drops by about \(V\). The
+      capacitor carries that drop straight through to the other transistor's
+      base, which lands near \(-(V - 0.8)\) V and shuts that transistor off. That
+      base then charges back toward \(V\) through \(R_B\), which gives a
+      half-period of:
+    </p>
+    \[t_{1/2} = R_B C \ln\!\left(\frac{2V - V_{CE,sat} - V_{BE,on}}{V - V_{BE,on}}\right)\]
+    <p>
+      If \(V \gg V_{CE,sat} + V_{BE,on}\), the fraction inside the log approaches
+      \(2V/V = 2\), and since \(\ln 2 \approx 0.693\):
+    </p>
+    \[t_{1/2} \approx 0.7\,R_B C \qquad\Rightarrow\qquad T \approx 1.4\,R_B C\]
+
+    <h2>References</h2>
+    <ul>
+      <li><a href="https://www.nutsvolts.com/magazine/article/circuit-simulation-made-easy"><em>Circuit Simulation Made Easy</em></a>, Nuts and Volts: the step-by-step method used here.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Multivibrator">Multivibrator</a>, Wikipedia.</li>
+      <li><a href="https://www.learnabout-electronics.org/Oscillators/osc41.php">BJT Astable Multivibrators</a>, Learn About Electronics.</li>
+      <li><a href="https://www.falstad.com/s.py?s=QaGqfZ">The circuit in Falstad's CircuitJS</a>, an interactive circuit simulator.</li>
+    </ul>
+  </div>
+</article>
+
+<style>
+  .osc-page { max-width: 900px; }
+  .osc-intro {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 2rem;
+    align-items: center;
+  }
+  .osc-schematic { margin: 0; color: var(--text); }
+  .osc-schematic svg { display: block; margin: 0 auto; font-family: var(--font-mono); }
+  .osc-sim { margin: 1rem 0 3rem; }
+  .osc-controls {
+    display: grid;
+    grid-template-columns: auto 1fr 5.5rem auto 1fr 5.5rem;
+    align-items: center;
+    gap: 0.75rem 0.75rem;
+    margin-bottom: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+  .osc-controls label { white-space: nowrap; }
+  .osc-controls input[type="range"] { width: 100%; min-width: 0; accent-color: var(--primary); }
+  .osc-controls input[type="number"] {
+    width: 100%;
+    padding: 0.2rem 0.4rem;
+    font: inherit;
+    color: var(--text);
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .osc-controls input[type="number"]:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+  .osc-controls input[type="number"].bad { border-color: var(--orange); outline-color: var(--orange); }
+  .osc-warn {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid var(--orange);
+    background: var(--bg-raised);
+  }
+  .osc-plot-title { font-size: 1rem; margin: 1.5rem 0 0.25rem; color: var(--primary); }
+  .osc-plot { width: 100%; }
+  .osc-sim .uplot { font-family: var(--font-mono); }
+  .osc-export { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+  .osc-export .btn { padding: 0.5rem 1rem; }
+  .osc-hint { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.75rem; }
+  .osc-code { margin-top: 2rem; }
+  .osc-code summary { cursor: pointer; font-family: var(--font-mono); color: var(--primary); }
+  .osc-code[open] summary { margin-bottom: 0.75rem; }
+  @media (max-width: 700px) {
+    .post-page.osc-page { padding-left: 1rem; padding-right: 1rem; }
+    .osc-intro { grid-template-columns: 1fr; }
+    .osc-controls { grid-template-columns: auto 1fr 5rem; }
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/uplot@1.6.31/dist/uPlot.iife.min.js"></script>
+<script src="simulate.js?v={{ site.time | date: '%s' }}"></script>
+<script src="sim.js?v={{ site.time | date: '%s' }}"></script>

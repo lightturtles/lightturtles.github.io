@@ -1,0 +1,36 @@
+<svg viewBox="40 10 420 345" width="100%" style="max-width:420px"
+     xmlns="http://www.w3.org/2000/svg" font-family="sans-serif" font-size="14"
+     stroke="currentColor" stroke-width="2" fill="currentColor">
+  <g fill="none">
+    <!-- Supply and ground rails -->
+    <line x1="110" y1="40" x2="390" y2="40"/>
+    <line x1="110" y1="330" x2="390" y2="330"/>
+    <line x1="250" y1="330" x2="250" y2="338"/>
+    <line x1="236" y1="338" x2="264" y2="338"/>
+    <line x1="242" y1="343" x2="258" y2="343"/>
+    <line x1="247" y1="348" x2="253" y2="348"/>
+    <!-- Collector resistors R_A -->
+    <line x1="110" y1="40" x2="110" y2="60"/><polyline points="110,60 118,65.0 102,75.0 118,85.0 102,95.0 118,105.0 102,115.0 110,120" fill="none"/><line x1="110" y1="120" x2="110" y2="222"/>
+    <line x1="390" y1="40" x2="390" y2="60"/><polyline points="390,60 398,65.0 382,75.0 398,85.0 382,95.0 398,105.0 382,115.0 390,120" fill="none"/><line x1="390" y1="120" x2="390" y2="222"/>
+    <!-- Base resistors R_B -->
+    <line x1="200" y1="40" x2="200" y2="60"/><polyline points="200,60 208,65.0 192,75.0 208,85.0 192,95.0 208,105.0 192,115.0 200,120" fill="none"/><line x1="200" y1="120" x2="200" y2="250"/>
+    <line x1="300" y1="40" x2="300" y2="60"/><polyline points="300,60 308,65.0 292,75.0 308,85.0 292,95.0 308,105.0 292,115.0 300,120" fill="none"/><line x1="300" y1="120" x2="300" y2="250"/>
+    <!-- Transistors and emitters to ground -->
+    <line x1="200" y1="250" x2="140" y2="250"/><line x1="140" y1="232" x2="140" y2="268" stroke-width="3"/><line x1="140" y1="242" x2="110" y2="222"/><line x1="140" y1="258" x2="110" y2="278"/><polygon points="116.7054908485857,273.52967276760955 121.9744869661675,265.210205213533 126.41153632834165,271.86577925679427" fill="currentColor" stroke="none"/><text x="150" y="300" text-anchor="middle" stroke="none" fill="currentColor">Q<tspan baseline-shift="sub" font-size="11">1</tspan></text>
+    <line x1="300" y1="250" x2="360" y2="250"/><line x1="360" y1="232" x2="360" y2="268" stroke-width="3"/><line x1="360" y1="242" x2="390" y2="222"/><line x1="360" y1="258" x2="390" y2="278"/><polygon points="383.29450915141433,273.52967276760955 373.58846367165836,271.86577925679427 378.02551303383257,265.210205213533" fill="currentColor" stroke="none"/><text x="350" y="300" text-anchor="middle" stroke="none" fill="currentColor">Q<tspan baseline-shift="sub" font-size="11">2</tspan></text>
+    <line x1="110" y1="278" x2="110" y2="330"/>
+    <line x1="390" y1="278" x2="390" y2="330"/>
+    <!-- Cross-coupling capacitors (wires cross without connecting) -->
+    <line x1="110" y1="150" x2="245" y2="150"/><line x1="255" y1="150" x2="300" y2="150"/><line x1="245" y1="138" x2="245" y2="162" stroke-width="3"/><line x1="255" y1="138" x2="255" y2="162" stroke-width="3"/><text x="250" y="131" text-anchor="middle" stroke="none" fill="currentColor">C<tspan baseline-shift="sub" font-size="11">1</tspan></text>
+    <line x1="200" y1="190" x2="245" y2="190"/><line x1="255" y1="190" x2="390" y2="190"/><line x1="245" y1="178" x2="245" y2="202" stroke-width="3"/><line x1="255" y1="178" x2="255" y2="202" stroke-width="3"/><text x="250" y="220" text-anchor="middle" stroke="none" fill="currentColor">C<tspan baseline-shift="sub" font-size="11">2</tspan></text>
+  </g>
+  <circle cx="110" cy="150" r="3.5" fill="currentColor" stroke="none"/><circle cx="300" cy="150" r="3.5" fill="currentColor" stroke="none"/><circle cx="390" cy="190" r="3.5" fill="currentColor" stroke="none"/><circle cx="200" cy="190" r="3.5" fill="currentColor" stroke="none"/>
+  <circle cx="200" cy="40" r="3.5" fill="currentColor" stroke="none"/><circle cx="300" cy="40" r="3.5" fill="currentColor" stroke="none"/><circle cx="250" cy="330" r="3.5" fill="currentColor" stroke="none"/>
+  <g stroke="none">
+    <text x="250" y="30" text-anchor="middle">+V</text>
+    <text x="96" y="95" text-anchor="end">R<tspan baseline-shift="sub" font-size="11">A</tspan></text>
+    <text x="404" y="95">R<tspan baseline-shift="sub" font-size="11">A</tspan></text>
+    <text x="186" y="95" text-anchor="end">R<tspan baseline-shift="sub" font-size="11">B</tspan></text>
+    <text x="314" y="95">R<tspan baseline-shift="sub" font-size="11">B</tspan></text>
+  </g>
+</svg>
